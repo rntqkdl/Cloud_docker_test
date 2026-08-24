@@ -6,6 +6,7 @@ import com.skala.dashboard.repository.QuestProgressRepository;
 import com.skala.dashboard.repository.StudyNoteRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,14 +30,18 @@ public class ApiController {
     private final DataSource dataSource;
     private final RestTemplate restTemplate;
 
-    @Value("${OLLAMA_HOST:http://host.docker.internal:11434}")
+    @Value("${OLLAMA_HOST:http://ollama:11434}")
     private String ollamaHost;
 
     public ApiController(QuestProgressRepository progressRepo, StudyNoteRepository noteRepo, DataSource dataSource) {
         this.progressRepo = progressRepo;
         this.noteRepo = noteRepo;
         this.dataSource = dataSource;
-        this.restTemplate = new RestTemplate();
+        
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);
+        factory.setReadTimeout(45000);
+        this.restTemplate = new RestTemplate(factory);
     }
 
     private String getHostName() {
@@ -179,7 +184,7 @@ public class ApiController {
     public ResponseEntity<Map<String, Object>> petChat(@RequestBody Map<String, Object> payload) {
         String question = (String) payload.getOrDefault("question", "도커가 왜 필요한지 비유로 알려줘!");
         String contextInfo = (String) payload.getOrDefault("context", "사용자가 도커 실습을 진행 중입니다.");
-        String modelName = (String) payload.getOrDefault("model", "qwen2.5");
+        String modelName = (String) payload.getOrDefault("model", "qwen2.5:1.5b");
 
         Map<String, Object> res = new HashMap<>();
         res.put("petName", "도키 (Docky)");
@@ -194,7 +199,7 @@ public class ApiController {
             contextInfo, question
         );
 
-        // 1. 로컬 sLLM (qwen2.5) Ollama 호출 시도
+        // 1. 로컬 sLLM (qwen2.5:1.5b) Ollama 호출 시도
         try {
             Map<String, Object> req = new HashMap<>();
             req.put("model", modelName);
@@ -221,7 +226,7 @@ public class ApiController {
                 }
             }
         } catch (Exception e) {
-            // Ollama 미가동 시 내장 스마트 지식베이스 폴백 (무중단 작동)
+            // Ollama 로딩 중 시 내장 스마트 지식베이스 폴백
         }
 
         // 2. Fallback 내장 스마트 지식베이스

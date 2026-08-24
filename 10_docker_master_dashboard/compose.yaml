@@ -20,14 +20,14 @@ services:
       DB_USER: postgres
       DB_PASSWORD: password123
       DB_NAME: dashboard_db
-      OLLAMA_HOST: http://host.docker.internal:11434
+      OLLAMA_HOST: http://ollama:11434
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       db:
         condition: service_healthy
+      ollama:
+        condition: service_started
     restart: unless-stopped
 
   db:
@@ -47,5 +47,15 @@ services:
       retries: 10
     restart: unless-stopped
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: dashboard-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
 volumes:
   postgres-db-data:
+  ollama-models:
