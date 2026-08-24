@@ -124,9 +124,17 @@
       line-height: 1.6;
       tab-size: 2;
     }
+    /* Floating Pet Animations */
+    @keyframes floatPet {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    .animate-pet-float {
+      animation: floatPet 3.5s ease-in-out infinite;
+    }
   </style>
 </head>
-<body class="p-2 sm:p-6 flex justify-center text-ink selection:bg-signal selection:text-white">
+<body class="p-2 sm:p-6 flex justify-center text-ink selection:bg-signal selection:text-white pb-32">
 
   <!-- Main Chassis Container -->
   <div id="app" class="w-full max-w-5xl beveled-plate shadow-2xl flex flex-col overflow-hidden">
@@ -180,7 +188,7 @@
       <!-- Live Service Badge -->
       <div class="flex items-center gap-2">
         <button @click="setView('terminal_live')" class="bg-nintendo-red hover:bg-rose-600 text-white px-3 py-1 text-xs sm:text-sm font-black rounded-xs uppercase flex items-center gap-1.5 shadow">
-          <i class="fa-solid fa-terminal"></i> 🖥️ 진짜 도커 터미널 실행기
+          <i class="fa-solid fa-terminal"></i> 🖥️ 실시간 터미널
         </button>
       </div>
     </nav>
@@ -215,7 +223,7 @@
             <div class="flex gap-2.5 flex-wrap">
               <span class="bg-signal text-white text-xs font-black px-3 py-1 rounded-xs">STUDY GUIDELINE</span>
               <span class="bg-carbon border border-white/40 text-amber text-xs font-black px-3 py-1 rounded-xs">4반 G124 안성민</span>
-              <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">SPRING BOOT + POSTGRESQL</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">qwen2.5 AI 펫 '도키' 탑재</span>
             </div>
             <h1 class="boxart-wordmark text-3xl sm:text-5xl text-white">비전공자 도커 마스터 로드맵</h1>
             <p class="text-base sm:text-lg text-slate-200 max-w-3xl leading-relaxed font-medium">
@@ -370,7 +378,7 @@
       </div>
 
       <!-- ========================================================
-           VIEW 3: CONCEPT MAP (비전공자를 위한 외계어 번역 & 8단계 여정)
+           VIEW 3: CONCEPT MAP (외계어 번역 & 8단계 여정)
            ======================================================== -->
       <div v-else-if="currentView === 'concepts'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
@@ -763,7 +771,7 @@
       </div>
 
       <!-- ========================================================
-           VIEW 6: CHEATSHEET & ENCYCLOPEDIA (완전 자세한 백과사전)
+           VIEW 6: CHEATSHEET & ENCYCLOPEDIA (명령어 대백과)
            ======================================================== -->
       <div v-else-if="currentView === 'cheatsheet'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
@@ -838,11 +846,121 @@
         © 1997–2001 DOCKER 64 SYSTEM · SKALA 4반 G124 안성민
       </div>
       <div class="bg-emerald-600 text-white font-black text-[10px] px-2.5 py-0.5 rounded-xs tracking-wider uppercase">
-        SPRING BOOT 3 &amp; POSTGRESQL 16 &amp; REAL DOCKER ENGINE
+        SPRING BOOT 3 &amp; POSTGRESQL 16 &amp; qwen2.5 AI PET READY
       </div>
     </footer>
 
-    <!-- 6. Fullscreen Zoom Modal -->
+    <!-- ========================================================
+         6. 🍄 실시간 나를 따라다니는 AI 펫 '도키 (Docky)' 플로팅 컴포넌트
+         ======================================================== -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2 pointer-events-none">
+      
+      <!-- Speech Thought Bubble -->
+      <div v-if="petThought"
+           class="pointer-events-auto max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md p-4 rounded-xl border-2 border-chrome-indigo shadow-2xl space-y-2 text-ink transition-all duration-300">
+        <div class="flex items-center justify-between text-xs font-black text-chrome-indigo border-b pb-1">
+          <span class="flex items-center gap-1.5">
+            <span class="text-base">🍄</span> <strong>AI 펫 도키 (Docky)</strong>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono">{{ petSourceBadge }}</span>
+          </span>
+          <button @click="petThought = ''" class="text-slate-400 hover:text-carbon font-bold">✕</button>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap" v-html="petThought"></p>
+        <div class="pt-1 flex justify-end">
+          <button @click="openPetChat" class="text-[11px] font-black text-signal hover:underline flex items-center gap-1">
+            💬 도키에게 더 질문하기 →
+          </button>
+        </div>
+      </div>
+
+      <!-- Floating Animated Mushroom Pet Sprite -->
+      <div @click="togglePetModal"
+           title="클릭하여 도키와 대화하기!"
+           class="pointer-events-auto cursor-pointer animate-pet-float bg-canvas border-2 border-white shadow-[0_8px_25px_rgba(0,0,0,0.4)] hover:scale-110 active:scale-95 transition p-3 rounded-full flex items-center justify-center relative group">
+        <span class="text-3xl sm:text-4xl filter drop-shadow">🍄</span>
+        <!-- Online Status Dot -->
+        <span class="absolute top-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full animate-ping"></span>
+        <span class="absolute top-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+        <span class="absolute -bottom-2 bg-carbon text-nav-gold font-pixel text-[9px] px-1.5 py-0.5 rounded border border-white/60">DOCKY</span>
+      </div>
+
+    </div>
+
+    <!-- 7. 🍄 도키 AI 펫 실시간 대화창 모달 (qwen2.5 Q&A) -->
+    <div v-if="petModalOpen" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" @click.self="petModalOpen = false">
+      <div class="bg-canvas max-w-lg w-full max-h-[85vh] overflow-y-auto beveled-plate p-6 sm:p-8 space-y-4 relative text-ink">
+        <button @click="petModalOpen = false" class="absolute right-4 top-4 w-8 h-8 rounded-xs bg-carbon text-white hover:bg-nintendo-red flex items-center justify-center font-black transition">
+          ✕
+        </button>
+
+        <div class="flex items-center gap-3 border-b-2 border-chrome-indigo pb-3">
+          <div class="text-4xl">🍄</div>
+          <div>
+            <h3 class="boxart-wordmark text-xl text-white">AI 펫 도키 (Docky)</h3>
+            <p class="text-xs text-carbon font-bold">로컬 sLLM (qwen2.5) 기반 실시간 공부 도우미</p>
+          </div>
+        </div>
+
+        <!-- Preset Quick Questions -->
+        <div class="space-y-1.5">
+          <span class="text-xs font-black text-carbon">💡 자주 묻는 질문:</span>
+          <div class="flex flex-wrap gap-1.5">
+            <button v-for="q in quickQuestions" :key="q"
+                    @click="askPet(q)"
+                    class="px-2.5 py-1 bg-white hover:bg-slate-100 text-chrome-indigo text-xs font-bold rounded-xs border border-chrome-indigo shadow-sm transition">
+              {{ q }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat History Window -->
+        <div class="p-4 bg-white border-2 border-chrome-indigo rounded-xs max-h-60 overflow-y-auto space-y-3 text-xs sm:text-sm">
+          <div class="flex gap-2">
+            <span class="text-xl">🍄</span>
+            <div class="bg-slate-100 p-2.5 rounded-xs border border-slate-300 space-y-1">
+              <strong>도키:</strong>
+              <p>안녕 성민님! 🍄 저는 도커 마스터 여정을 함께하는 AI 펫 도키예요. 무엇이든 질문해 주세요!</p>
+            </div>
+          </div>
+
+          <div v-for="(chat, cIdx) in petChatHistory" :key="cIdx" class="space-y-2">
+            <div class="flex justify-end">
+              <div class="bg-signal text-white p-2.5 rounded-xs max-w-[80%] font-medium">
+                {{ chat.question }}
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <span class="text-xl">🍄</span>
+              <div class="bg-slate-100 p-2.5 rounded-xs border border-slate-300 space-y-1 max-w-[85%]">
+                <div class="flex items-center justify-between text-[10px] text-slate-500">
+                  <strong>도키 ({{ chat.source || 'qwen2.5' }})</strong>
+                </div>
+                <p class="leading-relaxed font-medium whitespace-pre-wrap" v-html="chat.reply"></p>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="petLoading" class="flex gap-2 items-center text-xs text-slate-500 animate-pulse">
+            <span>🍄</span> <span>도키가 qwen2.5로 생각하고 있어요...</span>
+          </div>
+        </div>
+
+        <!-- Question Input Box -->
+        <div class="flex gap-2 pt-2">
+          <input type="text" v-model="petUserInput"
+                 @keyup.enter="askPet(petUserInput)"
+                 placeholder="도키에게 질문할 내용을 입력하세요..."
+                 class="flex-1 p-2 text-xs bg-white border border-chrome-indigo rounded-xs text-ink font-medium focus:outline-none focus:ring-2 focus:ring-signal">
+          <button @click="askPet(petUserInput)"
+                  class="px-4 py-2 bg-signal hover:bg-amber text-white font-black text-xs rounded-xs shadow">
+            질문
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 8. Fullscreen Zoom Modal -->
     <div v-if="modalActive" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" @click.self="closeModal">
       <div class="bg-canvas max-w-4xl w-full max-h-[90vh] overflow-y-auto beveled-plate p-6 sm:p-8 space-y-4 relative text-ink">
         <button @click="closeModal" class="absolute right-4 top-4 w-8 h-8 rounded-xs bg-carbon text-white hover:bg-nintendo-red flex items-center justify-center font-black transition">
@@ -864,47 +982,15 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="vueToast" class="fixed bottom-6 right-6 carbon-command-slab border-2 border-signal text-white px-5 py-2.5 rounded-xs text-sm font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50 flex items-center gap-2">
+    <div id="vueToast" class="fixed bottom-20 right-6 carbon-command-slab border-2 border-signal text-white px-5 py-2.5 rounded-xs text-sm font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50 flex items-center gap-2">
       <i class="fa-solid fa-check text-signal"></i> <span id="vueToastMsg">완료되었습니다!</span>
     </div>
 
   </div>
 
-  <!-- Audio Synthesizer & Vue Application Logic -->
+  <!-- Vue 3 Application Logic (NO SOUND / PURE SILENT & SMOOTH) -->
   <script>
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playBeep() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.08);
-    }
-
-    function playCoinSound() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
-      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.25);
-    }
-
-    const { createApp, ref, computed, nextTick } = Vue;
+    const { createApp, ref, computed, nextTick, watch } = Vue;
 
     createApp({
       setup() {
@@ -915,6 +1001,21 @@
         const modalType = ref('');
         const modalData = ref('');
         
+        // AI Pet "Docky" Reactive States
+        const petThought = ref('안녕 성민님! 🍄 도커 마스터 대백과에 오신 것을 환영해요! 로드맵 1단계부터 차근차근 시작해 봐요!');
+        const petSourceBadge = ref('qwen2.5 ready');
+        const petModalOpen = ref(false);
+        const petUserInput = ref('');
+        const petLoading = ref(false);
+        const petChatHistory = ref([]);
+
+        const quickQuestions = [
+          '포트포워딩(-p)이 왜 필요한지 비유해줘!',
+          '볼륨(-v)은 컨테이너랑 무슨 관계야?',
+          '도커 컴포즈가 왜 편한 거야?',
+          '멀티스테이지 다이어트 비결이 뭐야?'
+        ];
+
         // Terminal Live Execution Engine States
         const terminalRunning = ref(false);
         const terminalOutput = ref('');
@@ -983,8 +1084,6 @@
         const backendHealthy = ref(false);
         const dbLatency = ref(0);
         const wasContainer = ref('spring-was');
-        const notesList = ref([]);
-        const newNote = ref({ author: '4반 G124 안성민', category: '실습 팁', content: '' });
 
         const stepTitles = [
           '퀘스트 브리핑 (Why)',
@@ -1294,14 +1393,61 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
         });
 
+        // 🍄 AI 펫 도키 (Docky) 자동 상황 인식 & 질의응답 함수
+        async function askPet(questionText) {
+          if (!questionText || !questionText.trim()) return;
+          const q = questionText.trim();
+          petUserInput.value = '';
+          petLoading.value = true;
+
+          const currentContext = `현재 사용자 화면: ${currentView.value}, 활성 스텝: STEP ${activeStep.value}`;
+
+          try {
+            const res = await fetch('/api/ai/pet/chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                question: q,
+                context: currentContext,
+                model: 'qwen2.5'
+              })
+            });
+            const data = await res.json();
+            petChatHistory.value.push({
+              question: q,
+              reply: data.reply,
+              source: data.source || 'qwen2.5'
+            });
+            petThought.value = data.reply;
+            petSourceBadge.value = data.source || 'qwen2.5';
+          } catch (e) {
+            petChatHistory.value.push({
+              question: q,
+              reply: '🍄 도키가 생각 중이에요! 포트포워딩, 볼륨, 컴포즈 등 무엇이든 물어보세요!',
+              source: '스마트 지식베이스'
+            });
+          } finally {
+            petLoading.value = false;
+          }
+        }
+
+        function togglePetModal() {
+          petModalOpen.value = !petModalOpen.value;
+        }
+
+        function openPetChat() {
+          petModalOpen.value = true;
+        }
+
         // Live Real Terminal Execution
         async function executeLiveCommand(cmd) {
           if (!cmd || !cmd.trim()) return;
-          playBeep();
           terminalRunning.value = true;
           terminalOutput.value = '';
           currentView.value = 'terminal_live';
           window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          petThought.value = `🍄 방금 <code>${cmd}</code> 명령어를 실행하셨네요! 도커 데몬이 실제 결과를 반환하고 있어요.`;
 
           try {
             const res = await fetch('/api/terminal/run', {
@@ -1313,8 +1459,14 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
             terminalExitCode.value = data.exitCode;
             terminalOutput.value = `$ ${cmd}\n\n${data.output || '(출력 결과 없음 - Exit Code: ' + data.exitCode + ')'}`;
             terminalResultTime.value = new Date().toLocaleTimeString();
-            if (data.exitCode === 0) playCoinSound();
             showToast(`실제 실행 완료! (Exit Code: ${data.exitCode})`);
+
+            // AI 펫 반응
+            if (cmd.includes('ps -a')) {
+              petThought.value = `🍄 <code>docker ps -a</code>로 멈춰있는(Exited) 컨테이너까지 전부 확인하셨군요! 정상 종료는 Exit 0이 뜬답니다!`;
+            } else if (cmd.includes('stats')) {
+              petThought.value = `🍄 실시간 CPU와 RAM 점유율을 확인하셨네요! 우리 Spring Boot WAS와 PostgreSQL이 가볍게 잘 돌고 있어요!`;
+            }
           } catch (e) {
             terminalOutput.value = `명령어 실행 통신 오류: ${e.message}`;
           } finally {
@@ -1370,30 +1522,28 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
 
         function onTypingInput() {
           if (isTypingComplete.value) {
-            playCoinSound();
-            showToast('🎉 축하합니다! 100% 정확하게 코드를 작성했습니다!');
+            petThought.value = `🍄 와아! 성민님 최고예요! 정확도 100%로 코드를 완벽하게 타이핑하셨어요! ⭐`;
+            showToast('축하합니다! 100% 정확하게 코드를 작성했습니다!');
+          } else if (typingHasError.value) {
+            petThought.value = `🍄 앗! 빨간 글자(오타)가 생겼어요! 띄어쓰기나 철자를 천천히 다시 확인해 봐요!`;
           }
         }
 
         function selectTypingExercise(idx) {
-          playBeep();
           selectedTypingIdx.value = idx;
           userTypingInput.value = '';
+          petThought.value = `🍄 #${idx + 1}번 예제 <code>${typingExercises[idx].title}</code> 연습을 시작합니다! 파이팅!`;
         }
 
         function resetTyping() {
-          playBeep();
           userTypingInput.value = '';
         }
 
         function autoFillTyping() {
-          playBeep();
           userTypingInput.value = currentExercise.value.code;
-          playCoinSound();
         }
 
         function nextTypingExercise() {
-          playCoinSound();
           if (selectedTypingIdx.value < typingExercises.length - 1) {
             selectedTypingIdx.value++;
             userTypingInput.value = '';
@@ -1441,22 +1591,19 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
         }
 
         function toggleLabTypingMode() {
-          playBeep();
           isLabTypingMode.value = !isLabTypingMode.value;
           userLabTypingInput.value = '';
         }
 
         function onLabTypingInput() {
           if (isLabTypingComplete.value) {
-            playCoinSound();
-            showToast('🎉 스테이지 코드 타이핑 완료!');
+            petThought.value = `🍄 STAGE ${currentLab.value.num} 코드 타이핑을 멋지게 마쳤어요! 4단계 검증으로 넘어가 볼까요?`;
+            showToast('스테이지 코드 타이핑 완료!');
           }
         }
 
         function autoFillLabTyping() {
-          playBeep();
           userLabTypingInput.value = currentLabCodeTarget.value;
-          playCoinSound();
         }
 
         // Clean & Bug-free Mermaid Diagram Code
@@ -1486,22 +1633,21 @@ flowchart TD
         }
 
         async function checkLiveHealth() {
-          playBeep();
           try {
             const res = await fetch('/api/health');
             const data = await res.json();
             backendHealthy.value = data.status === 'healthy';
             dbLatency.value = data.database?.latency_ms || 1;
             wasContainer.value = data.container || 'spring-was';
-            showToast(`✅ Spring Boot & PostgreSQL 정상 연동! (지연: ${dbLatency.value}ms / ${wasContainer.value})`);
+            petThought.value = `🍄 3-Tier 핑 진단 성공! Spring Boot와 PostgreSQL이 ${dbLatency.value}ms로 초고속 통신 중이에요!`;
+            showToast(`Spring Boot & PostgreSQL 정상 연동! (지연: ${dbLatency.value}ms / ${wasContainer.value})`);
           } catch (e) {
             backendHealthy.value = false;
-            showToast('⚠️ 백엔드 연결 확인 중...');
+            showToast('백엔드 연결 확인 중...');
           }
         }
 
         async function saveProgressToDb() {
-          playCoinSound();
           try {
             const completed = labs.value.filter(l => l.completed).map(l => l.id);
             await fetch('/api/progress', {
@@ -1514,67 +1660,56 @@ flowchart TD
                 completedLabs: JSON.stringify(completed)
               })
             });
-            showToast('💾 퀘스트 진척도가 PostgreSQL에 저장되었습니다!');
+            showToast('퀘스트 진척도가 PostgreSQL에 저장되었습니다!');
           } catch (e) {
             showToast('진척도 로컬 저장 완료!');
           }
         }
 
-        async function loadNotes() {
-          try {
-            const res = await fetch('/api/notes');
-            const data = await res.json();
-            notesList.value = data.notes || [];
-          } catch (e) {
-            console.warn('Load notes fallback');
-          }
-        }
-
-        async function submitNote() {
-          if (!newNote.value.content.trim()) return;
-          playBeep();
-          try {
-            await fetch('/api/notes', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(newNote.value)
-            });
-            newNote.value.content = '';
-            showToast('🎉 새로운 공부 메모가 PostgreSQL에 저장되었습니다!');
-            loadNotes();
-          } catch (e) {
-            showToast('메모 저장 실패');
-          }
-        }
-
         function setView(viewId) {
-          playBeep();
           currentView.value = viewId;
           activeStep.value = 1;
           isLabTypingMode.value = false;
           renderCleanDiagrams();
-          if (viewId === 'notes') loadNotes();
           window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          // AI 펫 상황 자동 반응
+          if (viewId === 'roadmap') {
+            petThought.value = '🍄 추천 로드맵이에요! 1단계(생명주기/포트)부터 시작하는 걸 추천해요!';
+          } else if (viewId === 'terminal_live') {
+            petThought.value = '🍄 진짜 도커 터미널이에요! 상단의 프리셋 버튼을 눌러 실제 컨테이너 목록을 조회해 보세요!';
+          } else if (viewId === 'concepts') {
+            petThought.value = '🍄 어려운 외계어 IT 용어를 식당과 택배 비유로 쉽게 번역해 둔 사전이에요!';
+          } else if (viewId === 'typing_hub') {
+            petThought.value = '🍄 타자 실습장에 오셨군요! 손끝으로 명령어를 직접 쳐보며 익혀봐요!';
+          } else if (viewId.startsWith('lab')) {
+            const labObj = labs.value.find(l => l.id === viewId);
+            if (labObj) {
+              petThought.value = `🍄 STAGE ${labObj.num} (${labObj.shortTitle})에 오신 것을 환영해요! ${labObj.subtitle}`;
+            }
+          }
         }
 
         function setLabStep(stepNum) {
-          playBeep();
           activeStep.value = stepNum;
           isLabTypingMode.value = false;
           nextTick(() => {
             Prism.highlightAll();
           });
+
+          if (stepNum === 1) petThought.value = `🍄 1단계: 왜 이 방식을 쓰는지 일상 비유로 이해해 봐요!`;
+          else if (stepNum === 3) petThought.value = `🍄 3단계: 실제 소스코드예요! '타이핑 모드'로 직접 쳐볼 수도 있어요!`;
+          else if (stepNum === 5) petThought.value = `🍄 5단계: 보스 공략과 초보자 실수 방지 팁을 꼭 읽어보세요!`;
         }
 
         function completeStage(lab) {
-          playCoinSound();
           lab.completed = true;
           saveProgressToDb();
-          showToast(`🎉 STAGE ${lab.num} 학습 완료!`);
+          petThought.value = `🍄 와아! 축하합니다! STAGE ${lab.num} 클리어 완료! PostgreSQL에 영구 저장되었어요! ⭐`;
+          showToast(`STAGE ${lab.num} 학습 완료!`);
         }
 
         async function openModal(type, data) {
-          playBeep();
           modalType.value = type;
           modalData.value = data;
           modalActive.value = true;
@@ -1589,12 +1724,10 @@ flowchart TD
         }
 
         function closeModal() {
-          playBeep();
           modalActive.value = false;
         }
 
         function copyText(text) {
-          playBeep();
           navigator.clipboard.writeText(text).then(() => {
             showToast('클립보드에 복사되었습니다!');
           });
@@ -1614,7 +1747,6 @@ flowchart TD
         nextTick(() => {
           renderCleanDiagrams();
           checkLiveHealth();
-          loadNotes();
         });
 
         return {
@@ -1623,7 +1755,6 @@ flowchart TD
           stepTitles,
           mainMenus,
           labs,
-          metaphors: [],
           cheatsheet,
           currentLab,
           prevLabId,
@@ -1637,8 +1768,6 @@ flowchart TD
           backendHealthy,
           dbLatency,
           wasContainer,
-          notesList,
-          newNote,
           typingExercises,
           selectedTypingIdx,
           currentExercise,
@@ -1670,6 +1799,16 @@ flowchart TD
           quickTerminalPresets,
           executeLiveCommand,
           runPresetCommand,
+          petThought,
+          petSourceBadge,
+          petModalOpen,
+          petUserInput,
+          petLoading,
+          petChatHistory,
+          quickQuestions,
+          askPet,
+          togglePetModal,
+          openPetChat,
           setView,
           setLabStep,
           completeStage,
@@ -1677,11 +1816,7 @@ flowchart TD
           closeModal,
           copyText,
           checkLiveHealth,
-          saveProgressToDb,
-          submitNote,
-          loadNotes,
-          playBeep,
-          playCoinSound
+          saveProgressToDb
         };
       }
     }).mount('#app');
