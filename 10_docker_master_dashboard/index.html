@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DOCKER 64 : 비전공자를 위한 클라우드 & 도커 마스터 대백과 | 4반 G124 안성민</title>
+  <title>DOCKER 64 : RPG 퀘스트 에디션 | 4반 G124 안성민</title>
   
   <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -31,9 +31,6 @@
             sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Arial', 'sans-serif'],
             mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
             pixel: ['Silkscreen', 'monospace']
-          },
-          fontSize: {
-            'xxs': '0.7rem'
           }
         }
       }
@@ -52,12 +49,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 
   <!-- Mermaid.js -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'Pretendard, sans-serif' });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'Pretendard, sans-serif', securityLevel: 'loose' });
   </script>
 
   <style>
@@ -92,12 +88,24 @@
       letter-spacing: -0.5px;
       text-shadow: 2px 2px 0px #3d4f97, -1px -1px 0px #3d4f97, 1px -1px 0px #3d4f97, -1px 1px 0px #3d4f97, 4px 4px 0px #1e222d;
     }
-    /* Enlarged typography code block */
     pre[class*="language-"] {
       font-size: 0.925rem !important;
       line-height: 1.65 !important;
       padding: 1.25rem !important;
       border-radius: 0.5rem !important;
+      background: #0f172a !important;
+    }
+    /* Step Animation */
+    .step-fade-enter-active, .step-fade-leave-active {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .step-fade-enter-from {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    .step-fade-leave-to {
+      opacity: 0;
+      transform: translateX(-10px);
     }
   </style>
 </head>
@@ -106,16 +114,33 @@
   <!-- Vue Root Application Container -->
   <div id="app" class="w-full max-w-6xl bg-canvas bevel-plate shadow-2xl flex flex-col overflow-hidden">
     
-    <!-- 1. Masthead Header -->
-    <header class="bg-canvas px-4 sm:px-6 py-3.5 flex items-center justify-between border-b-2 border-chrome-indigo">
+    <!-- 1. Masthead Header (Player Status & Game Header) -->
+    <header class="bg-canvas px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between border-b-2 border-chrome-indigo gap-3">
       <div class="flex items-center gap-3">
-        <div class="text-3xl filter drop-shadow">🍄</div>
-        <div class="bg-white border-2 border-chrome-indigo px-3.5 py-1 rounded-xl text-xs sm:text-sm font-extrabold shadow-[2px_2px_0px_#3d4f97]">
-          "클릭하면 모달로 크게 확대해서 볼 수 있습니다!"
+        <div class="text-3xl filter drop-shadow">🎮</div>
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-nintendo-red text-white text-xs font-black px-2 py-0.5 rounded font-pixel">PLAYER</span>
+            <strong class="text-xs sm:text-sm font-black text-carbon">4반 G124 안성민</strong>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-chrome-indigo">
+            <span>LEVEL {{ playerLevel }}</span>
+            <span class="text-slate-400">|</span>
+            <span>EXP: {{ completedStagesCount * 11 }}%</span>
+            <span class="text-slate-400">|</span>
+            <span class="text-emerald-700">HP 100% MAX</span>
+          </div>
         </div>
       </div>
-      <div class="font-pixel text-xs sm:text-sm text-chrome-indigo font-bold tracking-wider">
-        SKALA 4반 G124 안성민 · HARBOR v2.0
+
+      <!-- Quick Control Gamepad Buttons -->
+      <div class="flex items-center gap-2">
+        <button @click="playBeep(); resetAllProgress()" class="bg-white hover:bg-slate-100 text-chrome-indigo px-2.5 py-1 text-xs font-bold rounded border border-chrome-indigo flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> 처음부터 다시
+        </button>
+        <div class="bg-white border-2 border-chrome-indigo px-3 py-1 rounded-xl text-xs font-extrabold shadow-[2px_2px_0px_#3d4f97]">
+          "각 스테이지를 스텝 바이 스텝으로 클리어하세요!"
+        </div>
       </div>
     </header>
 
@@ -128,7 +153,7 @@
         </div>
       </div>
 
-      <!-- Main Navigation Menu Tabs (Larger Text) -->
+      <!-- Main Navigation Menu Tabs -->
       <div class="flex items-center gap-1 sm:gap-2">
         <button v-for="menu in mainMenus" :key="menu.id"
                 @click="setView(menu.id)"
@@ -148,7 +173,7 @@
       </div>
     </nav>
 
-    <!-- 3. Stage Selector Subnav (Stage 1 ~ 9 Quick Jump Tabs) -->
+    <!-- 3. Stage Selector Subnav (Stage 1 ~ 9 Progress Bar) -->
     <div class="bg-canvas-soft px-4 sm:px-6 py-2 flex items-center justify-between border-b-2 border-chrome-indigo overflow-x-auto gap-2">
       <div class="flex items-center gap-1.5 text-xs sm:text-sm font-black text-slate-900 shrink-0">
         <i class="fa-solid fa-gamepad text-chrome-indigo"></i> STAGES:
@@ -156,8 +181,9 @@
       <div class="flex items-center gap-1.5 overflow-x-auto py-1">
         <button v-for="lab in labs" :key="lab.id"
                 @click="setView(lab.id)"
-                :class="currentView === lab.id ? 'bg-nintendo-red text-white font-black shadow' : 'bg-white hover:bg-white/90 text-chrome-indigo font-bold border border-chrome-indigo/50'"
+                :class="currentView === lab.id ? 'bg-nintendo-red text-white font-black shadow' : (lab.completed ? 'bg-emerald-100 text-emerald-800 font-bold border border-emerald-500' : 'bg-white text-chrome-indigo font-bold border border-chrome-indigo/50')"
                 class="px-3 py-1 text-xs sm:text-sm rounded transition shrink-0 flex items-center gap-1.5">
+          <span v-if="lab.completed" class="text-emerald-600 font-black">⭐</span>
           <span class="font-mono text-xs opacity-90">{{ lab.num }}</span>
           <span>{{ lab.shortTitle }}</span>
         </button>
@@ -176,13 +202,13 @@
         <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-carbon bevel-plate p-6 sm:p-10 text-white relative overflow-hidden">
           <div class="relative z-10 space-y-4">
             <div class="flex gap-2.5 flex-wrap">
-              <span class="bg-signal text-white text-xs font-black px-3 py-1 rounded shadow">FULL CURRICULUM</span>
+              <span class="bg-signal text-white text-xs font-black px-3 py-1 rounded shadow">RPG QUEST EDITION</span>
               <span class="bg-carbon border border-white/40 text-amber text-xs font-black px-3 py-1 rounded">4반 G124 안성민</span>
               <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded">HARBOR v2.0 LIVE</span>
             </div>
             <h1 class="boxart-title text-3xl sm:text-5xl text-white">DOCKER CLOUD MASTER</h1>
             <p class="text-base sm:text-lg text-slate-200 max-w-3xl leading-relaxed font-medium">
-              비전공자의 시선에서 도커의 5대 핵심(프로세스 격리, 가상 네트워크, 볼륨 영속화, 컴포즈 오케스트레이션, 이미지 다이어트)을 직관적인 페이지 컴포넌트 뷰로 깊이있게 마스터합니다.
+              비전공자의 시선에서 도커의 5대 핵심(프로세스 격리, 가상 네트워크, 볼륨 영속화, 컴포즈 오케스트레이션, 이미지 다이어트)을 <strong>스텝 바이 스텝 퀘스트</strong>로 클리어합니다!
             </p>
           </div>
           <div class="mt-6 pt-5 border-t border-white/20 flex flex-wrap gap-6 text-sm font-bold text-slate-300">
@@ -191,7 +217,7 @@
           </div>
         </div>
 
-        <!-- 3-Tier Interactive Diagram Module with Zoom Button -->
+        <!-- 3-Tier Interactive Diagram Module with Safe Render Container -->
         <div class="bg-white bevel-plate p-6 sm:p-8 space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 border-slate-100">
             <div>
@@ -206,20 +232,10 @@
             </button>
           </div>
 
-          <div class="p-6 bg-slate-50 border-2 border-chrome-indigo/30 rounded-xl flex justify-center overflow-x-auto cursor-pointer hover:border-chrome-indigo transition"
+          <!-- Safe Rendered SVG Container -->
+          <div id="homeDiagramContainer" class="p-6 bg-slate-50 border-2 border-chrome-indigo/30 rounded-xl flex justify-center overflow-x-auto cursor-pointer hover:border-chrome-indigo transition"
                @click="openModal('diagram', null)">
-            <div class="mermaid">
-            graph TD
-              Client["🌐 외부 손님 웹브라우저"] -->|http://localhost:80| HostPort["호스트 머신 포트 :80"]
-              subgraph Machine["🎮 DOCKER 64 가상 격리 시스템"]
-                HostPort --> Web["🤵 [1계층 Web] Nginx 문지기 (:80)"]
-                subgraph PrivateNet["비밀 무전기 사설망 (3tier-net)"]
-                  Web -->|내부 DNS 'proxy_pass http://was:8080'| WAS["👨‍🍳 [2계층 WAS] Node.js 주방 (:8080)"]
-                  WAS -->|내부 DNS 'host: db:3306'| DB["🔒 [3계층 DB] MariaDB 금고 (:3306)"]
-                end
-                DB -.->|실시간 마운트 동기화 /var/lib/mysql| Vol[("💾 [영구 볼륨] mariadb-data")]
-              end
-            </div>
+            <!-- Mermaid SVG rendered dynamically by Vue -->
           </div>
 
           <!-- 3-Tier Security Deep Dive Principles -->
@@ -251,18 +267,24 @@
           </div>
         </div>
 
-        <!-- 9 Stages Quick Navigation Grid -->
+        <!-- 9 Stages Quest Navigation Grid -->
         <div class="bg-white bevel-plate p-6 sm:p-8 space-y-5">
-          <h2 class="text-xl sm:text-2xl font-black text-carbon flex items-center gap-2.5">
-            <i class="fa-solid fa-map-location-dot text-signal"></i> 9대 실습 스테이지 맵 (클릭하여 전용 뷰로 이동)
-          </h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl sm:text-2xl font-black text-carbon flex items-center gap-2.5">
+              <i class="fa-solid fa-map-location-dot text-signal"></i> 9대 실습 퀘스트 월드맵 (클릭하여 스테이지 진입)
+            </h2>
+            <span class="text-xs font-black text-chrome-indigo">완료율: {{ completedStagesCount }} / 9</span>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div v-for="lab in labs" :key="lab.id"
                  @click="setView(lab.id)"
-                 class="p-4 bg-slate-50 hover:bg-canvas-soft/40 border-2 border-slate-200 hover:border-chrome-indigo rounded-xl cursor-pointer transition space-y-2 group shadow-sm">
+                 :class="lab.completed ? 'bg-emerald-50/70 border-emerald-500' : 'bg-slate-50 hover:bg-canvas-soft/40 border-slate-200'"
+                 class="p-4 border-2 hover:border-chrome-indigo rounded-xl cursor-pointer transition space-y-2 group shadow-sm">
               <div class="flex items-center justify-between">
                 <span class="font-mono text-sm font-black text-nintendo-red">STAGE {{ lab.num }}</span>
-                <span class="text-xs text-slate-400 group-hover:text-chrome-indigo font-black">상세 공부하기 →</span>
+                <span v-if="lab.completed" class="text-xs font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">퀘스트 완료 ⭐</span>
+                <span v-else class="text-xs text-slate-400 group-hover:text-chrome-indigo font-black">퀘스트 시작 →</span>
               </div>
               <div class="font-black text-sm text-slate-900">{{ lab.title }}</div>
               <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">{{ lab.subtitle }}</p>
@@ -312,7 +334,7 @@
             </p>
           </div>
 
-          <!-- Kernel Table with Larger Typography -->
+          <!-- Kernel Table -->
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left border-collapse">
               <thead>
@@ -346,30 +368,25 @@
             </table>
           </div>
 
-          <!-- Runtime Layer Diagram with Zoom Button -->
+          <!-- Runtime Layer Diagram Container -->
           <div class="p-5 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm font-black text-carbon">⚙️ 도커 저수준 런타임 호출 스택 (Low-level Call Stack)</span>
               <button @click="openModal('runtime', null)" class="text-xs font-bold text-signal hover:underline">크게 보기 →</button>
             </div>
-            <div class="mermaid">
-            flowchart LR
-              CLI["💻 docker CLI"] -->|REST API| Daemon["⚙️ dockerd 데몬"]
-              Daemon -->|gRPC 통신| Containerd["📦 containerd"]
-              Containerd --> Shim["🔗 containerd-shim"]
-              Shim --> Runc["🚀 runc (OCI 표준 도구)"]
-              Runc --> Process["🐧 Linux Kernel (PID 1 프로세스 격리)"]
+            <div id="runtimeDiagramContainer" class="flex justify-center overflow-x-auto">
+              <!-- Rendered dynamically -->
             </div>
           </div>
         </div>
       </div>
 
       <!-- ========================================================
-           VIEW 4: LABS 1 ~ 9 (Individual Dedicated Deep-Dive Views)
+           VIEW 4: LABS 1 ~ 9 (Step-by-Step RPG Interactive Quest Walker)
            ======================================================== -->
       <div v-else-if="currentLab" class="space-y-6">
         
-        <!-- Lab Header Plate -->
+        <!-- Lab Header Plate with Step Progress Bar -->
         <div class="bg-white bevel-plate p-6 sm:p-8 space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b-2 border-slate-100">
             <div class="flex items-center gap-3">
@@ -381,43 +398,68 @@
                 <p class="text-sm text-slate-500 font-medium">{{ currentLab.subtitle }}</p>
               </div>
             </div>
-            <span class="text-xs sm:text-sm font-black px-3 py-1 bg-canvas-soft text-carbon rounded">교재 {{ currentLab.page }}</span>
+            <div class="flex items-center gap-2">
+              <span v-if="currentLab.completed" class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded border border-emerald-500">
+                ⭐ STAGE COMPLETED
+              </span>
+              <span class="text-xs sm:text-sm font-black px-3 py-1 bg-canvas-soft text-carbon rounded">교재 {{ currentLab.page }}</span>
+            </div>
           </div>
 
-          <!-- Section 1: Why & Intuitive Metaphor -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-5 bg-amber-50/80 border-l-4 border-amber rounded-xl space-y-2">
-              <div class="text-sm font-black text-amber-900 flex items-center gap-1.5">
-                <i class="fa-solid fa-lightbulb text-base"></i> 왜 이 방식을 쓰는가? (Why this approach?)
+          <!-- Interactive Step-by-Step Navigation Bar -->
+          <div class="p-3 bg-slate-100 border-2 border-chrome-indigo/30 rounded-xl flex items-center justify-between gap-2 overflow-x-auto">
+            <div class="flex items-center gap-1 sm:gap-2">
+              <button v-for="(stepName, sIdx) in stepTitles" :key="sIdx"
+                      @click="setLabStep(sIdx + 1)"
+                      :class="activeStep === sIdx + 1 ? 'bg-signal text-white font-black shadow' : 'bg-white hover:bg-slate-50 text-slate-700 font-bold border border-slate-300'"
+                      class="px-3 py-1.5 text-xs sm:text-sm rounded transition shrink-0 flex items-center gap-1.5">
+                <span class="font-mono text-xs opacity-80">{{ sIdx + 1 }}.</span>
+                <span>{{ stepName }}</span>
+              </button>
+            </div>
+            <div class="text-xs font-black text-chrome-indigo shrink-0">
+              STEP {{ activeStep }} / 5
+            </div>
+          </div>
+
+          <!-- Step 1: Quest Briefing & Why -->
+          <div v-if="activeStep === 1" class="space-y-5">
+            <div class="p-5 bg-amber-50/90 border-l-4 border-amber rounded-xl space-y-2">
+              <div class="text-base font-black text-amber-900 flex items-center gap-2">
+                <i class="fa-solid fa-scroll text-amber-600"></i> 1단계: 퀘스트 브리핑 &amp; 왜 이 방식을 쓰는가? (Why?)
               </div>
-              <p class="text-sm text-slate-700 leading-relaxed font-medium" v-html="currentLab.why"></p>
+              <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium" v-html="currentLab.why"></p>
             </div>
 
-            <div class="p-5 bg-blue-50/80 border-l-4 border-chrome-indigo rounded-xl space-y-2">
-              <div class="text-sm font-black text-chrome-indigo flex items-center gap-1.5">
-                <i class="fa-solid fa-gamepad text-base"></i> 비전공자 맞춤 일상 &amp; 게임 비유
+            <div class="p-5 bg-blue-50/90 border-l-4 border-chrome-indigo rounded-xl space-y-2">
+              <div class="text-base font-black text-chrome-indigo flex items-center gap-2">
+                <i class="fa-solid fa-gamepad"></i> 비전공자를 위한 실생활 &amp; 게임 비유
               </div>
-              <p class="text-sm text-slate-700 leading-relaxed font-medium" v-html="currentLab.metaphor"></p>
+              <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium" v-html="currentLab.metaphor"></p>
             </div>
           </div>
 
-          <!-- Section 2: Key Observables & Connected Concepts -->
-          <div class="p-5 bg-indigo-50/70 border-l-4 border-indigo-600 rounded-xl space-y-2">
-            <div class="text-sm font-black text-indigo-900 flex items-center gap-1.5">
-              <i class="fa-solid fa-glasses text-base"></i> 반드시 챙겨봐야 할 관전 포인트 &amp; 연관 IT 개념
+          <!-- Step 2: Observables & Connected Concepts -->
+          <div v-else-if="activeStep === 2" class="space-y-5">
+            <div class="p-5 bg-indigo-50/90 border-l-4 border-indigo-600 rounded-xl space-y-2">
+              <div class="text-base font-black text-indigo-900 flex items-center gap-2">
+                <i class="fa-solid fa-glasses text-indigo-600"></i> 2단계: 핵심 관전 포인트 &amp; 연관 IT 개념
+              </div>
+              <p class="text-sm sm:text-base text-slate-700 leading-relaxed" v-html="currentLab.observables"></p>
             </div>
-            <p class="text-sm text-slate-700 leading-relaxed" v-html="currentLab.observables"></p>
           </div>
 
-          <!-- Section 3: Step-by-Step Code with Syntax Highlighting -->
-          <div class="space-y-4 pt-2">
-            <h3 class="font-black text-carbon text-base sm:text-lg flex items-center gap-2">
-              <i class="fa-solid fa-terminal text-chrome-indigo"></i> 단계별 실행 명령어 &amp; 소스코드
-            </h3>
+          <!-- Step 3: Command Execution & Code -->
+          <div v-else-if="activeStep === 3" class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-black text-carbon text-base sm:text-lg flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-chrome-indigo"></i> 3단계: 커맨드 시전 (실행 명령어 &amp; 소스코드)
+              </h3>
+              <span class="text-xs text-slate-500 font-bold">원클릭 복사 후 터미널에 붙여넣으세요!</span>
+            </div>
+
             <div v-for="(code, cIdx) in currentLab.codes" :key="cIdx" class="space-y-1.5">
-              <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-600">
-                <span>{{ code.label }}</span>
-              </div>
+              <div class="text-xs sm:text-sm font-bold text-slate-600">{{ code.label }}</div>
               <div class="relative group">
                 <button @click="copyText(code.content)"
                         class="absolute right-3 top-3 bg-signal hover:bg-amber text-white text-xs font-black px-3 py-1 rounded shadow bevel-button z-10">
@@ -428,38 +470,55 @@
             </div>
           </div>
 
-          <!-- Section 4: Actual Test Results & Verification Logs -->
-          <div class="space-y-3 pt-2">
+          <!-- Step 4: Actual Raw Test Verification -->
+          <div v-else-if="activeStep === 4" class="space-y-4">
             <div class="flex items-center justify-between">
               <h3 class="font-black text-carbon text-base sm:text-lg flex items-center gap-2">
-                <i class="fa-solid fa-square-poll-vertical text-emerald-600"></i> 실제 테스트 결과 화면 &amp; 검증 로그
+                <i class="fa-solid fa-trophy text-emerald-600"></i> 4단계: 전리품 &amp; 실제 테스트 결과 검증 로그
               </h3>
               <button @click="openModal('result', currentLab.actualOutput)"
                       class="text-xs font-bold text-signal hover:underline">크게 보기 →</button>
             </div>
-            <div class="p-4 bg-slate-900 text-emerald-400 font-mono text-xs sm:text-sm rounded-xl border border-slate-800 overflow-x-auto leading-relaxed whitespace-pre-wrap">
+            <div class="p-5 bg-slate-900 text-emerald-400 font-mono text-xs sm:text-sm rounded-xl border border-slate-800 overflow-x-auto leading-relaxed whitespace-pre-wrap">
 {{ currentLab.actualOutput }}
             </div>
           </div>
 
-          <!-- Section 5: Common Troubleshooting & Interview Tips -->
-          <div class="p-5 bg-rose-50/80 border-l-4 border-nintendo-red rounded-xl space-y-2">
-            <div class="text-sm font-black text-nintendo-red flex items-center gap-1.5">
-              <i class="fa-solid fa-triangle-exclamation text-base"></i> 초보자 실수 방지 &amp; 실무 면접 핵심 팁
+          <!-- Step 5: Boss Strategy & Troubleshooting -->
+          <div v-else-if="activeStep === 5" class="space-y-5">
+            <div class="p-5 bg-rose-50/90 border-l-4 border-nintendo-red rounded-xl space-y-2">
+              <div class="text-base font-black text-nintendo-red flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i> 5단계: 보스 공략 &amp; 초보자 실수 방지 팁
+              </div>
+              <p class="text-sm sm:text-base text-slate-700 leading-relaxed" v-html="currentLab.troubleshooting"></p>
             </div>
-            <p class="text-sm text-slate-700 leading-relaxed" v-html="currentLab.troubleshooting"></p>
+
+            <!-- Stage Complete Button -->
+            <div class="p-6 bg-emerald-50 border-2 border-emerald-500 rounded-xl text-center space-y-3">
+              <div class="text-2xl">🎉</div>
+              <h4 class="text-lg font-black text-emerald-900">STAGE {{ currentLab.num }} 퀘스트를 모두 확인하셨나요?</h4>
+              <button @click="completeStage(currentLab)"
+                      class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-black rounded-lg bevel-button shadow-lg">
+                <i class="fa-solid fa-star text-amber mr-1.5"></i> 이 스테이지 클리어 완료하기!
+              </button>
+            </div>
           </div>
 
-          <!-- Bottom Stage Navigation Buttons -->
+          <!-- Step Navigation Control Buttons -->
           <div class="flex justify-between items-center pt-6 border-t border-slate-200">
-            <button v-if="prevLabId" @click="setView(prevLabId)"
+            <button v-if="activeStep > 1" @click="setLabStep(activeStep - 1)"
                     class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-carbon text-sm font-bold rounded-lg flex items-center gap-2">
-              <i class="fa-solid fa-chevron-left"></i> 이전 실습 (STAGE {{ labs.find(l => l.id === prevLabId).num }})
+              <i class="fa-solid fa-chevron-left"></i> 이전 스텝 ({{ stepTitles[activeStep - 2] }})
             </button>
             <div v-else></div>
-            <button v-if="nextLabId" @click="setView(nextLabId)"
+
+            <button v-if="activeStep < 5" @click="setLabStep(activeStep + 1)"
                     class="px-5 py-2 bg-signal hover:bg-amber text-white text-sm font-black rounded-lg bevel-button flex items-center gap-2 shadow">
-              다음 실습 (STAGE {{ labs.find(l => l.id === nextLabId).num }}) <i class="fa-solid fa-chevron-right"></i>
+              다음 스텝 ({{ stepTitles[activeStep] }}) <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button v-else-if="nextLabId" @click="setView(nextLabId)"
+                    class="px-5 py-2 bg-nintendo-red hover:bg-rose-500 text-white text-sm font-black rounded-lg bevel-button flex items-center gap-2 shadow">
+              다음 스테이지로 진격! <i class="fa-solid fa-forward"></i>
             </button>
           </div>
 
@@ -468,7 +527,7 @@
       </div>
 
       <!-- ========================================================
-           VIEW 5: CHEATSHEET & DICTIONARY (검색 가능한 치트시트)
+           VIEW 5: CHEATSHEET & DICTIONARY
            ======================================================== -->
       <div v-else-if="currentView === 'cheatsheet'" class="space-y-6">
         <div class="bg-white bevel-plate p-6 sm:p-8 space-y-6">
@@ -523,7 +582,7 @@
       </div>
     </footer>
 
-    <!-- 6. Fullscreen Zoom Modal -->
+    <!-- 6. Fullscreen Zoom Modal (Safe Diagram Rendering) -->
     <div v-if="modalActive" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" @click.self="closeModal">
       <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto bevel-plate p-6 sm:p-8 space-y-4 relative">
         <button @click="closeModal" class="absolute right-4 top-4 w-8 h-8 rounded-full bg-slate-200 hover:bg-nintendo-red hover:text-white flex items-center justify-center font-black transition">
@@ -534,30 +593,12 @@
           <i class="fa-solid fa-magnifying-glass-plus text-signal"></i> 크게 보기 (확대 뷰)
         </h3>
 
-        <div v-if="modalType === 'diagram'" class="p-6 bg-slate-50 border rounded-xl flex justify-center overflow-x-auto">
-          <div class="mermaid">
-          graph TD
-            Client["🌐 외부 브라우저 (사용자)"] -->|http://localhost:80| HostPort["내 컴퓨터 호스트 포트 :80"]
-            subgraph Host["🎮 DOCKER 64 가상 격리 시스템"]
-              HostPort --> Web["🤵 [1계층 Web] Nginx 문지기 (:80)"]
-              subgraph PrivateNet["비밀 무전기 사설망 (3tier-net)"]
-                Web -->|내부 DNS 'proxy_pass http://was:8080'| WAS["👨‍🍳 [2계층 WAS] Node.js 주방 (:8080)"]
-                WAS -->|내부 DNS 'host: db:3306'| DB["🔒 [3계층 DB] MariaDB 금고 (:3306)"]
-              end
-              DB -.->|실시간 마운트 동기화 /var/lib/mysql| Vol[("💾 [영구 볼륨] mariadb-data")]
-            end
-          </div>
+        <div v-if="modalType === 'diagram'" id="modalDiagramContainer" class="p-6 bg-slate-50 border rounded-xl flex justify-center overflow-x-auto">
+          <!-- Rendered dynamically -->
         </div>
 
-        <div v-else-if="modalType === 'runtime'" class="p-6 bg-slate-50 border rounded-xl flex justify-center overflow-x-auto">
-          <div class="mermaid">
-          flowchart LR
-            CLI["💻 docker CLI"] -->|REST API| Daemon["⚙️ dockerd 데몬"]
-            Daemon -->|gRPC 통신| Containerd["📦 containerd"]
-            Containerd --> Shim["🔗 containerd-shim"]
-            Shim --> Runc["🚀 runc (OCI 표준 도구)"]
-            Runc --> Process["🐧 Linux Kernel (PID 1 프로세스 격리)"]
-          </div>
+        <div v-else-if="modalType === 'runtime'" id="modalRuntimeContainer" class="p-6 bg-slate-50 border rounded-xl flex justify-center overflow-x-auto">
+          <!-- Rendered dynamically -->
         </div>
 
         <div v-else-if="modalType === 'result'" class="p-6 bg-slate-900 text-emerald-400 font-mono text-sm sm:text-base rounded-xl overflow-x-auto whitespace-pre-wrap leading-relaxed">
@@ -573,17 +614,59 @@
 
   </div>
 
-  <!-- Vue Application Logic -->
+  <!-- Audio Synthesizer & Vue Application Logic -->
   <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playBeep() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    function playCoinSound() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
+    }
+
     const { createApp, ref, computed, nextTick } = Vue;
 
     createApp({
       setup() {
         const currentView = ref('home');
+        const activeStep = ref(1);
         const searchQuery = ref('');
         const modalActive = ref(false);
         const modalType = ref('');
         const modalData = ref('');
+        const playerLevel = ref(1);
+
+        const stepTitles = [
+          '퀘스트 브리핑 (Why)',
+          '관전 포인트 & 연관개념',
+          '커맨드 시전 (코드)',
+          '전리품 & 결과 검증',
+          '보스 공략 & 트러블슈팅'
+        ];
 
         const mainMenus = [
           { id: 'home', title: '홈 & 3-Tier 아키텍처', icon: 'fa-solid fa-house' },
@@ -592,9 +675,9 @@
           { id: 'cheatsheet', title: '명령어 사전', icon: 'fa-solid fa-book' }
         ];
 
-        const labs = [
+        const labs = ref([
           {
-            id: 'lab1', num: '01', page: '4쪽', shortTitle: 'hello-world',
+            id: 'lab1', num: '01', page: '4쪽', shortTitle: 'hello-world', completed: true,
             title: '단순 컨테이너 생성과 생명주기 (hello-world)',
             subtitle: '도커 이미지 다운로드, 컨테이너 실행, 자동 종료(Exited 0) 관찰',
             why: '모든 컨테이너가 24시간 켜져 있는 서버는 아닙니다. 데이터 백업, 일회성 배치 작업, 테스트 등은 <strong>작업이 끝나면 스스로 종료되어 자원을 반납하는 것이 정상</strong>입니다.',
@@ -611,7 +694,7 @@ This message shows that your installation appears to be working correctly.`,
             troubleshooting: '<code>docker ps</code>에 아무것도 안 나온다고 에러가 아닙니다. 이미 실행이 끝나고 쉬고 있는 것이므로 <code>docker ps -a</code>로 확인해야 합니다.'
           },
           {
-            id: 'lab2', num: '02', page: '5쪽', shortTitle: 'Nginx 웹서버',
+            id: 'lab2', num: '02', page: '5쪽', shortTitle: 'Nginx 웹서버', completed: true,
             title: 'Nginx 웹서버 실행 및 포트 포워딩 (-d, -p 8080:80)',
             subtitle: '24시간 백그라운드 웹서버 구동 및 외부 브라우저 통신 연결',
             why: '컨테이너는 외부와 완전히 격리된 밀실입니다. <strong>내 컴퓨터(Host)의 포트와 컨테이너 내부 포트를 연결(Port Forwarding)</strong>해주지 않으면 손님이 찾아올 수 없습니다.',
@@ -627,7 +710,7 @@ This message shows that your installation appears to be working correctly.`,
             troubleshooting: '<code>Bind for 0.0.0.0:8080 failed: port is already allocated</code> 에러가 발생하면 다른 프로그램이 8080을 쓰고 있는 것이므로 <code>-p 8088:80</code>처럼 다른 포트를 쓰거나 충돌 컨테이너를 정리해야 합니다.'
           },
           {
-            id: 'lab3', num: '03', page: '6쪽', shortTitle: '나만의 이미지',
+            id: 'lab3', num: '03', page: '6쪽', shortTitle: '나만의 이미지', completed: true,
             title: 'Dockerfile로 나만의 Node.js 이미지 빌드',
             subtitle: 'FROM, COPY, CMD 3대 뼈대로 내 자바스크립트 코드를 이미지로 패키징',
             why: '내 컴퓨터에서는 잘 되는데 남의 컴퓨터에서는 안 되는 <strong>환경 불일치 문제(It works on my machine!)</strong>를 해결하기 위해, 소스코드와 런타임을 하나의 통조림(이미지)으로 박제합니다.',
@@ -646,7 +729,7 @@ Hello from Docker! Node.js version: v18.20.4`,
             troubleshooting: '<code>docker build</code> 맨 뒤의 <strong>마침표(.)</strong>는 현재 폴더의 Dockerfile을 읽으라는 뜻이므로 절대로 빠뜨리면 안 됩니다.'
           },
           {
-            id: 'lab4', num: '04', page: '7~9쪽', shortTitle: '볼륨(Volume)',
+            id: 'lab4', num: '04', page: '7~9쪽', shortTitle: '볼륨(Volume)', completed: true,
             title: '볼륨(Volume) - 데이터 영속화와 삭제 검증',
             subtitle: '컨테이너를 삭제해도 DB 원본 데이터가 영구 보존되는 메커니즘',
             why: '컨테이너는 언제든 버리고 다시 만드는 <strong>소모품(Stateless)</strong>입니다. 하지만 데이터베이스의 고객 정보(State)는 컨테이너와 운명을 함께하면 안 되므로 외부 영구 볼륨에 격리 보관해야 합니다.',
@@ -670,7 +753,7 @@ Hello from Docker! Node.js version: v18.20.4`,
             troubleshooting: '<code>docker volume rm mariadb-data</code>까지 실행하면 외장 메모리카드 자체를 파기한 것이므로 데이터가 영구 소멸됩니다.'
           },
           {
-            id: 'lab5', num: '05', page: '10~11쪽', shortTitle: 'Harbor 배포',
+            id: 'lab5', num: '05', page: '10~11쪽', shortTitle: 'Harbor 배포', completed: true,
             title: 'Harbor Registry에 올리고 내려받기 (g124 태깅)',
             subtitle: '사내 중앙 저장소에 내 고유번호 이미지 업로드(Push) 및 재다운로드(Pull) 검증',
             why: '내 컴퓨터에만 있는 이미지는 남들이 쓸 수 없습니다. <strong>엔터프라이즈 사내 저장소(Harbor)에 올려서 팀원들과 CI/CD 배포 파이프라인에 공유</strong>해야 합니다.',
@@ -689,7 +772,7 @@ Status: Downloaded newer image for harbor.skala-gj.com/skala-gj4/skala-webserver
             troubleshooting: 'Push 전에 <code>docker login harbor.skala-gj.com</code>으로 인증을 완료해야 <code>unauthorized</code> 권한 에러를 피할 수 있습니다.'
           },
           {
-            id: 'lab6', num: '06', page: '12~17쪽', shortTitle: '3-Tier 수동구성',
+            id: 'lab6', num: '06', page: '12~17쪽', shortTitle: '3-Tier 수동구성', completed: true,
             title: '3-Tier (Web-WAS-DB) 수동 네트워크 구성',
             subtitle: '가상 사설망(3tier-net) 안에서 IP 대신 컨테이너 이름(DNS)으로 3계층 연결',
             why: '상용 시스템은 보안과 확장성을 위해 <strong>[웹서버 - 백엔드 - DB]</strong>로 역할을 쪼갭니다. 외부 해킹을 막기 위해 DB와 WAS 포트는 닫고 오직 Nginx만 문을 엽니다.',
@@ -712,7 +795,7 @@ Status: Downloaded newer image for harbor.skala-gj.com/skala-gj4/skala-webserver
             troubleshooting: '손으로 띄우면 명령어를 6~7개나 순서대로 쳐야 하고 휴먼 에러가 발생하기 쉽습니다. 다음 실습 7에서 Compose로 자동화합니다.'
           },
           {
-            id: 'lab7', num: '07', page: '18~23쪽', shortTitle: 'Docker Compose',
+            id: 'lab7', num: '07', page: '18~23쪽', shortTitle: 'Docker Compose', completed: true,
             title: 'Docker Compose로 3-Tier 한 번에 띄우기',
             subtitle: 'compose.yaml 한 장과 healthcheck로 지능형 순서 제어 및 일괄 가동',
             why: '컨테이너가 10개, 100개로 늘어나면 손으로 일일이 띄울 수 없습니다. <strong>선언적 인프라 명세서(compose.yaml)</strong>로 전체 서비스를 코드로 관리(IaC)합니다.',
@@ -729,7 +812,7 @@ Status: Downloaded newer image for harbor.skala-gj.com/skala-gj4/skala-webserver
             troubleshooting: '<code>docker compose down</code>은 컨테이너만 지우고 볼륨은 남기지만, <code>down -v</code>는 볼륨까지 초기화하므로 목적에 맞게 옵션을 써야 합니다.'
           },
           {
-            id: 'lab8', num: '08', page: '24~27쪽', shortTitle: '스케일아웃 & HA',
+            id: 'lab8', num: '08', page: '24~27쪽', shortTitle: '스케일아웃 & HA', completed: true,
             title: '서버 증설 (--scale was=3) 및 무중단 로드밸런싱',
             subtitle: 'WAS를 3대로 수평 확장하고 1대가 죽어도 서비스가 중단되지 않는 Failover 검증',
             why: '트래픽이 폭주할 때 컴퓨터를 더 비싼 걸로 바꾸는 것(Scale-up)보다 <strong>가벼운 서버를 여러 대로 늘리는 것(Scale-out)이 훨씬 저렴하고 무중단 장애 복구</strong>가 가능합니다.',
@@ -748,7 +831,7 @@ Status: Downloaded newer image for harbor.skala-gj.com/skala-gj4/skala-webserver
             troubleshooting: 'WAS 컨테이너에 <code>ports: ["8080:8080"]</code>이 박혀 있으면 3대로 늘릴 때 호스트 포트 충돌이 나므로, 반드시 포트 개방 없이 내부망으로만 스케일링해야 합니다.'
           },
           {
-            id: 'lab9', num: '09', page: '28~32쪽', shortTitle: '이미지 다이어트',
+            id: 'lab9', num: '09', page: '28~32쪽', shortTitle: '이미지 다이어트', completed: true,
             title: '이미지 다이어트 대회 (1.78GB → 185MB)',
             subtitle: 'Alpine 베이스 교체, 캐시 순서 최적화, Multi-Stage Build로 10분의 1 압축',
             why: '이미지가 무거우면 클라우드 배포 속도가 느려지고, 네트워크 비용이 증가하며, 불필요한 패키지로 인해 보안 취약점 공격 면적이 넓어집니다.',
@@ -764,7 +847,7 @@ image-diet     v3        c3d4e5f6a1b2   321MB      6.5s
 image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 달성!)`,
             troubleshooting: '소스코드(<code>COPY . .</code>)를 <code>RUN npm install</code>보다 먼저 복사하면 코드 1줄 바꿀 때마다 npm install이 다시 돌아 캐시가 깨지므로 순서가 생명입니다.'
           }
-        ];
+        ]);
 
         const metaphors = [
           { icon: '🎮 ↔ 📺', title: '이미지 vs 컨테이너', desc: '<strong>이미지:</strong> 게임 롬팩 (절대 안 변하는 읽기 전용 설계도).<br><strong>컨테이너:</strong> 전원을 켜서 실제 플레이 중인 게임 화면(Process).' },
@@ -788,16 +871,17 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           { cmd: 'FROM node:18-alpine AS builder', desc: '멀티스테이지 1단계 빌드 환경', tip: '최종 이미지 10분의 1 다이어트 비결' }
         ];
 
-        const currentLab = computed(() => labs.find(l => l.id === currentView.value));
+        const currentLab = computed(() => labs.value.find(l => l.id === currentView.value));
+        const completedStagesCount = computed(() => labs.value.filter(l => l.completed).length);
 
         const prevLabId = computed(() => {
-          const idx = labs.findIndex(l => l.id === currentView.value);
-          return idx > 0 ? labs[idx - 1].id : null;
+          const idx = labs.value.findIndex(l => l.id === currentView.value);
+          return idx > 0 ? labs.value[idx - 1].id : null;
         });
 
         const nextLabId = computed(() => {
-          const idx = labs.findIndex(l => l.id === currentView.value);
-          return idx >= 0 && idx < labs.length - 1 ? labs[idx + 1].id : null;
+          const idx = labs.value.findIndex(l => l.id === currentView.value);
+          return idx >= 0 && idx < labs.value.length - 1 ? labs.value[idx + 1].id : null;
         });
 
         const filteredCheatsheet = computed(() => {
@@ -806,49 +890,135 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
         });
 
+        // Bulletproof Mermaid Renderer for Vue
+        const diagram3TierCode = `
+graph TD
+  Client["🌐 외부 손님 웹브라우저"] -->|http://localhost:80| HostPort["호스트 80번 포트"]
+  subgraph Machine["🎮 DOCKER 64 가상 격리 본체"]
+    HostPort --> Web["🤵 1계층 Web: Nginx 문지기 (Port 80)"]
+    subgraph PrivateNet["비밀 무전기 사설망 (3tier-net)"]
+      Web -->|proxy_pass was:8080| WAS["👨‍🍳 2계층 WAS: Node.js 주방 (Port 8080)"]
+      WAS -->|host db:3306| DB["🔒 3계층 DB: MariaDB 금고 (Port 3306)"]
+    end
+    DB -.->|볼륨 마운트| Vol[("💾 세이브 메모리카드: mariadb-data")]
+  end
+`;
+
+        const runtimeDiagramCode = `
+flowchart LR
+  CLI["💻 docker CLI"] -->|REST API| Daemon["⚙️ dockerd 데몬"]
+  Daemon -->|gRPC 통신| Containerd["📦 containerd"]
+  Containerd --> Shim["🔗 containerd-shim"]
+  Shim --> Runc["🚀 runc OCI 도구"]
+  Runc --> Process["🐧 Linux Kernel PID 1 격리"]
+`;
+
+        async function renderCleanDiagrams() {
+          await nextTick();
+          // Home Diagram
+          const homeEl = document.getElementById('homeDiagramContainer');
+          if (homeEl) {
+            try {
+              const { svg } = await mermaid.render('homeDiagramSvg_' + Date.now(), diagram3TierCode);
+              homeEl.innerHTML = svg;
+            } catch (err) {
+              console.error('Home diagram render error:', err);
+            }
+          }
+          // Runtime Diagram
+          const runtimeEl = document.getElementById('runtimeDiagramContainer');
+          if (runtimeEl) {
+            try {
+              const { svg } = await mermaid.render('runtimeDiagramSvg_' + Date.now(), runtimeDiagramCode);
+              runtimeEl.innerHTML = svg;
+            } catch (err) {
+              console.error('Runtime diagram render error:', err);
+            }
+          }
+          Prism.highlightAll();
+        }
+
         function setView(viewId) {
+          playBeep();
           currentView.value = viewId;
+          activeStep.value = 1;
+          renderCleanDiagrams();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setLabStep(stepNum) {
+          playBeep();
+          activeStep.value = stepNum;
           nextTick(() => {
             Prism.highlightAll();
-            mermaid.run();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
           });
         }
 
-        function openModal(type, data) {
+        function completeStage(lab) {
+          playCoinSound();
+          lab.completed = true;
+          playerLevel.value = Math.min(9, completedStagesCount.value);
+          showToast(`🎉 STAGE ${lab.num} 클리어 완료! EXP 획득!`);
+        }
+
+        function resetAllProgress() {
+          labs.value.forEach(l => l.completed = false);
+          playerLevel.value = 1;
+          showToast('진척도가 초기화되었습니다. Stage 1부터 도전해보세요!');
+        }
+
+        async function openModal(type, data) {
+          playBeep();
           modalType.value = type;
           modalData.value = data;
           modalActive.value = true;
-          nextTick(() => {
-            if (type === 'diagram' || type === 'runtime') {
-              mermaid.run();
+          await nextTick();
+          if (type === 'diagram') {
+            const el = document.getElementById('modalDiagramContainer');
+            if (el) {
+              const { svg } = await mermaid.render('modalDiagramSvg_' + Date.now(), diagram3TierCode);
+              el.innerHTML = svg;
             }
-          });
+          } else if (type === 'runtime') {
+            const el = document.getElementById('modalRuntimeContainer');
+            if (el) {
+              const { svg } = await mermaid.render('modalRuntimeSvg_' + Date.now(), runtimeDiagramCode);
+              el.innerHTML = svg;
+            }
+          }
         }
 
         function closeModal() {
+          playBeep();
           modalActive.value = false;
         }
 
         function copyText(text) {
+          playBeep();
           navigator.clipboard.writeText(text).then(() => {
-            const toast = document.getElementById('vueToast');
-            toast.classList.remove('opacity-0', 'translate-y-4');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => {
-              toast.classList.remove('opacity-100', 'translate-y-0');
-              toast.classList.add('opacity-0', 'translate-y-4');
-            }, 1600);
+            showToast('클립보드에 복사되었습니다!');
           });
         }
 
+        function showToast(msg) {
+          const toast = document.getElementById('vueToast');
+          document.getElementById('vueToastMsg').innerText = msg;
+          toast.classList.remove('opacity-0', 'translate-y-4');
+          toast.classList.add('opacity-100', 'translate-y-0');
+          setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'translate-y-4');
+          }, 1800);
+        }
+
         nextTick(() => {
-          Prism.highlightAll();
-          mermaid.run();
+          renderCleanDiagrams();
         });
 
         return {
           currentView,
+          activeStep,
+          stepTitles,
           mainMenus,
           labs,
           metaphors,
@@ -856,15 +1026,22 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           currentLab,
           prevLabId,
           nextLabId,
+          completedStagesCount,
+          playerLevel,
           searchQuery,
           filteredCheatsheet,
           modalActive,
           modalType,
           modalData,
           setView,
+          setLabStep,
+          completeStage,
+          resetAllProgress,
           openModal,
           closeModal,
-          copyText
+          copyText,
+          playBeep,
+          playCoinSound
         };
       }
     }).mount('#app');
