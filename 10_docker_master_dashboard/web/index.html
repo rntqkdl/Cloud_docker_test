@@ -1393,7 +1393,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
         });
 
-        // 🍄 AI 펫 도키 (Docky) 자동 상황 인식 & 질의응답 함수
+        // 🍄 AI 펫 도키 (Docky) 자동 상황 인식 & 멀티턴 질의응답 함수
         async function askPet(questionText) {
           if (!questionText || !questionText.trim()) return;
           const q = questionText.trim();
@@ -1402,6 +1402,13 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
 
           const currentContext = `현재 사용자 화면: ${currentView.value}, 활성 스텝: STEP ${activeStep.value}`;
 
+          // 대화 문맥 (Multi-turn History) 구성
+          const historyList = [];
+          petChatHistory.value.forEach(item => {
+            historyList.push({ role: 'user', content: item.question });
+            historyList.push({ role: 'assistant', content: item.reply });
+          });
+
           try {
             const res = await fetch('/api/ai/pet/chat', {
               method: 'POST',
@@ -1409,7 +1416,8 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
               body: JSON.stringify({
                 question: q,
                 context: currentContext,
-                model: 'qwen2.5'
+                model: 'qwen2.5',
+                history: historyList
               })
             });
             const data = await res.json();

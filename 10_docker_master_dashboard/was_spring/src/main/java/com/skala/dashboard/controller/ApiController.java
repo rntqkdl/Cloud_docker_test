@@ -179,31 +179,31 @@ public class ApiController {
         }
     }
 
-    // 7. 🍄 AI 펫 "도키 (Docky)" sLLM (qwen2.5) Chat API (반복 방지 & 정밀 가이드 탑재)
+    // 7. 🍄 AI 펫 "도키 (Docky)" Multi-Turn 대화 문맥 기억 Chat API
     @PostMapping("/ai/pet/chat")
     public ResponseEntity<Map<String, Object>> petChat(@RequestBody Map<String, Object> payload) {
         String question = (String) payload.getOrDefault("question", "내가 뭐부터 공부해야 할까?");
         String contextInfo = (String) payload.getOrDefault("context", "사용자가 도커 학습 로드맵을 확인 중입니다.");
-        String modelName = (String) payload.getOrDefault("model", "qwen2.5:1.5b");
+        String modelName = (String) payload.getOrDefault("model", "qwen2.5:latest");
+        List<Map<String, String>> history = (List<Map<String, String>>) payload.getOrDefault("history", Collections.emptyList());
 
         Map<String, Object> res = new HashMap<>();
         res.put("petName", "도키 (Docky)");
         res.put("mood", "happy");
 
         String systemPrompt =
-            "너는 비전공자 학생(4반 G124 안성민)을 가르쳐주는 친절한 닌텐도 아기 버섯 AI 펫 '도키(Docky)'야.\n" +
-            "규칙:\n" +
-            "1. 부드럽고 자연스러운 존댓말(~해요, ~답니다, ~해봐요)로 말해.\n" +
-            "2. 똑같은 말을 반복하지 마.\n" +
-            "3. 2~3문장으로 짧고 명쾌하게 답변해.\n\n" +
-            "추천 학습 순서:\n" +
-            "1단계: STAGE 01 hello-world (생명주기, Exit 0) 및 STAGE 02 Nginx (-p 8080:80 포트포워딩)\n" +
-            "2단계: STAGE 03 Dockerfile 및 STAGE 04 볼륨 (-v 영속화)\n" +
-            "3단계: STAGE 06~07 Compose 및 STAGE 08 스케일아웃\n" +
-            "4단계: STAGE 09 멀티스테이지 다이어트\n\n" +
-            "학생이 뭐부터 공부할지 물어보면 반드시 '1단계의 STAGE 01 hello-world와 STAGE 02 Nginx 포트포워딩'부터 시작하라고 밝게 권해줘.";
+            "너는 비전공자 학생(4반 G124 안성민)을 항상 따라다니며 도커와 클라우드를 친절하게 가르쳐주는 닌텐도 아기 버섯 AI 펫 '도키(Docky)'야.\n" +
+            "[대화 원칙]:\n" +
+            "1. 말투: 친절하고 다정한 존댓말('~해요!', '~랍니다!', '~해 보세요!')을 써줘.\n" +
+            "2. 문맥 파악: 이전 대화 내용을 반드시 기억하고, 학생이 '그걸 왜 해야 해?', '그게 뭔데?'라고 물어보면 바로 이전 대화에서 언급한 주제(hello-world, 포트포워딩, 볼륨 등)에 대해 '왜 필요한지 이유와 장점'을 쉽고 명쾌하게 설명해줘.\n" +
+            "3. 일상 비유: 어려운 용어는 게임, 택배, 아파트, 식당 비유를 활용해 2~3문장으로 짧고 똑똑하게 답해줘.\n" +
+            "4. 문맥 지식:\n" +
+            "   - 1단계(hello-world/Nginx): 컨테이너가 켜지고 꺼지는 생명주기(Exit 0)와 외부 포트 연결(-p 8080:80)을 모르면 뒤의 DB나 3-Tier를 연결할 수 없기 때문에 가장 먼저 필수적으로 배워야 합니다.\n" +
+            "   - 2단계(Dockerfile/볼륨): 컨테이너를 부숴도 DB 데이터를 살리는 외장 세이브팩(-v)과 나만의 이미지 패키징.\n" +
+            "   - 3단계(Compose/스케일아웃): 3-Tier 파티 일괄 소환과 고가용성 무중단 로드밸런싱.\n" +
+            "   - 4단계(다이어트): 1.78GB 이미지를 185MB로 줄이는 멀티스테이지 기술.";
 
-        // 1. Ollama /api/chat 호출 (repeat_penalty, temperature, num_predict 제어)
+        // 1. Ollama /api/chat 호출 (멀티턴 히스토리 전달)
         try {
             Map<String, Object> req = new HashMap<>();
             req.put("model", modelName);
@@ -211,6 +211,20 @@ public class ApiController {
 
             List<Map<String, String>> messages = new ArrayList<>();
             messages.add(Map.of("role", "system", "content", systemPrompt));
+
+            // 최근 6개 대화 히스토리 주입 (문맥 기억)
+            if (history != null && !history.isEmpty()) {
+                int start = Math.max(0, history.size() - 6);
+                for (int i = start; i < history.size(); i++) {
+                    Map<String, String> h = history.get(i);
+                    String role = h.getOrDefault("role", "user");
+                    String content = h.getOrDefault("content", "");
+                    if (!content.trim().isEmpty()) {
+                        messages.add(Map.of("role", role, "content", content));
+                    }
+                }
+            }
+
             messages.add(Map.of("role", "user", "content", question));
             req.put("messages", messages);
 
@@ -218,7 +232,7 @@ public class ApiController {
             options.put("temperature", 0.4);
             options.put("top_p", 0.9);
             options.put("repeat_penalty", 1.25);
-            options.put("num_predict", 180);
+            options.put("num_predict", 220);
             req.put("options", options);
 
             HttpHeaders headers = new HttpHeaders();
@@ -238,25 +252,42 @@ public class ApiController {
                     String aiContent = (String) msg.get("content");
                     if (aiContent != null && !aiContent.trim().isEmpty()) {
                         res.put("reply", aiContent.trim());
-                        res.put("source", "sLLM (" + modelName + " live)");
+                        res.put("source", "sLLM (qwen2.5 live)");
                         return ResponseEntity.ok(res);
                     }
                 }
             }
         } catch (Exception e) {
-            // Ollama 지연/오류 시 내장 지식베이스 Fallback
+            // Ollama 미가동/지연 시 스마트 Fallback
         }
 
         // 2. Fallback 내장 스마트 지식베이스
-        String fallbackReply = generateSmartFallbackReply(question, contextInfo);
+        String fallbackReply = generateSmartFallbackReply(question, contextInfo, history);
         res.put("reply", fallbackReply);
         res.put("source", "내장 스마트 지식베이스");
         return ResponseEntity.ok(res);
     }
 
-    private String generateSmartFallbackReply(String question, String contextInfo) {
+    private String generateSmartFallbackReply(String question, String contextInfo, List<Map<String, String>> history) {
         String q = question.toLowerCase();
-        if (q.contains("뭐부터") || q.contains("어디서") || q.contains("학습 순서") || q.contains("공부해야")) {
+        
+        // 이전 질문 문맥 체크
+        String lastAssistantMsg = "";
+        if (history != null && !history.isEmpty()) {
+            for (int i = history.size() - 1; i >= 0; i--) {
+                if ("assistant".equals(history.get(i).get("role"))) {
+                    lastAssistantMsg = history.get(i).getOrDefault("content", "").toLowerCase();
+                    break;
+                }
+            }
+        }
+
+        if (q.contains("왜 해야") || q.contains("왜해야") || q.contains("이유") || q.contains("왜 배워")) {
+            if (lastAssistantMsg.contains("1단계") || lastAssistantMsg.contains("hello-world") || lastAssistantMsg.contains("nginx")) {
+                return "🍄 1단계(hello-world & Nginx)를 먼저 해야 하는 이유는 **컨테이너의 전원 켜고 끄는 법(생명주기)**과 **외부에서 내 컨테이너로 들어오는 문(포트포워딩)**을 먼저 알아야, 뒤에 나오는 복잡한 DB나 3-Tier 백엔드를 연결할 수 있기 때문이랍니다!";
+            }
+            return "🍄 도커를 배우면 '내 컴퓨터에선 잘 되는데 서버에선 안 돌아가는' 환경 불일치 문제를 100% 없애고, 어디서나 똑같이 1초 만에 프로그램을 실행할 수 있기 때문이에요!";
+        } else if (q.contains("뭐부터") || q.contains("어디서") || q.contains("학습 순서") || q.contains("공부해야")) {
             return "🍄 성민님! 가장 먼저 **1단계(입문)**부터 시작하는 것을 강력 추천해요!\n1. **STAGE 01 (hello-world)**: 컨테이너의 생명주기와 Exit 0 종료 코드를 확인하고,\n2. **STAGE 02 (Nginx)**: 브라우저와 통신하는 `-p 8080:80` 포트포워딩을 연습해 보세요!\n기초가 잡히면 2단계 Dockerfile과 볼륨으로 나아가시면 된답니다 🍄✨";
         } else if (q.contains("포트") || q.contains("포워딩") || q.contains("8080")) {
             return "🍄 포트포워딩은 **아파트 인터폰 텔레포트**예요! 내 Mac 아파트의 8088번 인터폰을 누르면 컨테이너 안쪽 80번 문으로 손님을 쏙 연결해 주는 멋진 통로랍니다!";
