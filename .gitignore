@@ -1,2 +1,19 @@
-.DS_Store
+# Environment variables & secrets
+.env
+.env.*
+*.secret
+*.key
+*.pem
+*.token
+credentials.json
+
+# Logs & Temporary files
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node modules & build artifacts
+node_modules/
+dist/
+.DS_Store
