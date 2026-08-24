@@ -3,937 +3,708 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DOCKER 64 : 비전공자를 위한 클라우드 마스터 대백과 | 4반 G124 안성민</title>
+  <title>DOCKER 64 : 클라우드 & 도커 마스터 대백과 | 4반 G124 안성민</title>
   
-  <!-- Pretendard & Silkscreen Pixel Font -->
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#7a8aba',
+            periwinkle: '#8ba1d4',
+            'canvas-soft': '#9fbee7',
+            'chrome-indigo': '#3d4f97',
+            'muted-indigo': '#60619c',
+            platinum: '#f1f5f9',
+            carbon: '#21242e',
+            'nintendo-red': '#e60012',
+            signal: '#f68d1f',
+            amber: '#ecab37',
+            'nav-gold': '#e48600'
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Arial', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Consolas', 'Courier New', 'monospace'],
+            pixel: ['Silkscreen', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Pretendard Font & Icons -->
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
-  <!-- Mermaid.js for Diagrams -->
+  <!-- Prism.js Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+  <!-- Mermaid.js -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'neutral',
-      fontFamily: 'Pretendard, sans-serif'
-    });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'Pretendard, sans-serif' });
   </script>
 
   <style>
-    /* =========================================================
-       2001 NINTENDO CONSOLE HARDWARE DESIGN SYSTEM TOKENS
-       ========================================================= */
-    :root {
-      /* Brand & Accent */
-      --color-primary: #e60012;       /* Nintendo Red */
-      --color-signal: #f68d1f;        /* Signal Orange (Forward/Action) */
-      --color-amber: #ecab37;         /* Amber Utility / Chips */
-      --color-nav-gold: #e48600;      /* Nav Gold glowing text */
-      
-      /* Surface & Metal Chassis */
-      --color-canvas: #7a8aba;        /* Periwinkle Metallic Base */
-      --color-periwinkle: #8ba1d4;    /* Raised Light Periwinkle */
-      --color-canvas-soft: #9fbee7;   /* Pale Sky Subnav */
-      --color-lavender: #acace7;      /* Pale Lavender */
-      --color-ice: #c0d5e6;           /* Pale Ice */
-      --color-chrome-indigo: #3d4f97; /* Beveled Shadow / Chamfer Line */
-      --color-muted-indigo: #60619c;  /* Recessed Dotted Rule */
-      --color-platinum: #dedede;      /* Inset Content Surface */
-      --color-carbon: #21242e;        /* Carbon-Navy Command Layer */
-      --color-surface: #ffffff;       /* Pure White Content */
-      
-      /* Typography */
-      --color-ink: #21242e;           /* Primary Text */
-      --color-ink-soft: #3d4f97;      /* Small-caps Chrome Labels */
-      --color-on-primary: #ffffff;
-      
-      /* Spacing */
-      --space-xs: 4px;
-      --space-sm: 8px;
-      --space-md: 12px;
-      --space-lg: 16px;
-      --space-xl: 24px;
+    /* Beveled Metal Plate Styling */
+    .bevel-plate {
+      border-top: 2px solid rgba(255, 255, 255, 0.8);
+      border-left: 2px solid rgba(255, 255, 255, 0.6);
+      border-right: 2px solid #3d4f97;
+      border-bottom: 3px solid #3d4f97;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      background-color: var(--color-canvas);
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-      background-size: 20px 20px;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-      color: var(--color-ink);
-      line-height: 1.5;
-      padding: 20px 10px;
-      display: flex;
-      justify-content: center;
+    .bevel-button {
+      border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+      border-left: 1.5px solid rgba(255, 255, 255, 0.6);
+      border-right: 2px solid #1a1c24;
+      border-bottom: 2px solid #1a1c24;
     }
-
-    /* Fixed Application-style Chassis Container (~880px) */
-    .console-chassis {
-      width: 100%;
-      max-width: 900px;
-      background: var(--color-canvas);
-      border-top: 3px solid rgba(255, 255, 255, 0.85);
-      border-left: 3px solid rgba(255, 255, 255, 0.6);
-      border-right: 3px solid var(--color-chrome-indigo);
-      border-bottom: 4px solid var(--color-chrome-indigo);
-      box-shadow: 0 16px 32px rgba(33, 36, 46, 0.35);
-      position: relative;
-    }
-
-    /* Masthead Header */
-    .masthead-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px 8px 16px;
-      background: var(--color-canvas);
-    }
-    
-    .mascot-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .mario-icon {
-      font-size: 28px;
-      filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.3));
-    }
-    .speech-bubble {
-      background: var(--color-surface);
-      color: var(--color-ink);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--color-chrome-indigo);
-      position: relative;
-      box-shadow: 2px 2px 0px var(--color-chrome-indigo);
-    }
-    .speech-bubble::before {
-      content: "";
-      position: absolute;
-      left: -6px;
-      top: 10px;
-      border-width: 4px 6px 4px 0;
-      border-style: solid;
-      border-color: transparent var(--color-surface) transparent transparent;
-    }
-
-    .top-meta-info {
-      font-family: 'Silkscreen', monospace;
-      font-size: 10px;
-      color: var(--color-chrome-indigo);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-align: right;
-    }
-
-    /* Dual Navigation Bars */
-    .primary-nav-bar {
-      background-color: var(--color-carbon);
-      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-      background-size: 4px 4px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      border-top: 1px solid rgba(255,255,255,0.2);
-      border-bottom: 2px solid var(--color-chrome-indigo);
-    }
-
-    .logo-pill {
-      background: var(--color-surface);
-      border-radius: 9999px;
-      padding: 3px 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: 1.5px solid var(--color-primary);
-      box-shadow: 1px 1px 0px rgba(0,0,0,0.5);
-    }
-    .logo-pill span {
-      font-family: 'Arial Black', Impact, sans-serif;
-      font-size: 13px;
-      font-weight: 900;
-      color: var(--color-primary);
-      letter-spacing: -0.5px;
-      font-style: italic;
-    }
-
-    .nav-words {
-      display: flex;
-      gap: 16px;
-    }
-    .nav-word {
-      color: var(--color-nav-gold);
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      text-decoration: none;
-      transition: color 0.1s;
-      cursor: pointer;
-    }
-    .nav-word:hover { color: #ffba42; text-shadow: 0 0 6px rgba(236,171,55,0.6); }
-
-    .utility-chips {
-      display: flex;
-      gap: 8px;
-    }
-    .util-chip {
-      background: var(--color-amber);
-      color: var(--color-carbon);
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 2px;
-      border-top: 1px solid rgba(255,255,255,0.8);
-      border-bottom: 1.5px solid #a67215;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .util-chip:active {
-      background: var(--color-nav-gold);
+    .bevel-button:active {
       transform: translateY(1px);
+      border-top: 1.5px solid #1a1c24;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
     }
-
-    /* Secondary Nav Strip */
-    .secondary-nav-strip {
-      background: var(--color-canvas-soft);
-      padding: 5px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--color-chrome-indigo);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--color-ink);
+    /* Carbon Halftone Dot-Matrix */
+    .carbon-slab {
+      background-color: #21242e;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0);
+      background-size: 4px 4px;
     }
-    .subnav-links { display: flex; gap: 14px; }
-    .subnav-link { color: var(--color-ink); text-decoration: none; font-size: 11px; }
-    .subnav-link:hover { color: var(--color-chrome-indigo); text-decoration: underline; }
-
-    /* Hero Plate (Chamfered Beveled Module) */
-    .hero-panel {
-      margin: 14px;
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border-top: 2px solid rgba(255, 255, 255, 0.4);
-      border-left: 2px solid rgba(255, 255, 255, 0.3);
-      border-right: 2px solid var(--color-chrome-indigo);
-      border-bottom: 3px solid var(--color-chrome-indigo);
-      padding: 24px;
-      color: white;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero-title-boxart {
-      font-family: 'Arial Black', 'Pretendard', sans-serif;
-      font-size: 28px;
-      font-weight: 900;
-      color: white;
+    /* Game Boxart Display Font */
+    .boxart-title {
+      font-family: 'Arial Black', Impact, sans-serif;
       text-transform: uppercase;
       letter-spacing: -0.5px;
-      text-shadow: 
-        2px 2px 0px var(--color-chrome-indigo),
-        -1px -1px 0px var(--color-chrome-indigo),
-        1px -1px 0px var(--color-chrome-indigo),
-        -1px 1px 0px var(--color-chrome-indigo),
-        4px 4px 0px var(--color-carbon);
-      line-height: 1.2;
-      margin-bottom: 8px;
-    }
-
-    .hero-tagline {
-      font-size: 13px;
-      font-weight: 700;
-      color: #cbd5e1;
-      margin-bottom: 16px;
-    }
-
-    .hero-status-badges {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .status-badge {
-      background: var(--color-carbon);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: var(--color-amber);
-      font-size: 10px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 2px;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Two-Column Hardware Layout */
-    .main-body-split {
-      display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: 14px;
-      padding: 0 14px 14px 14px;
-    }
-
-    /* Left Content Column */
-    .content-column {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* Beveled Section Plate */
-    .beveled-plate {
-      background: var(--color-periwinkle);
-      border-top: 2px solid rgba(255, 255, 255, 0.7);
-      border-left: 2px solid rgba(255, 255, 255, 0.5);
-      border-right: 2px solid var(--color-chrome-indigo);
-      border-bottom: 3px solid var(--color-chrome-indigo);
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .section-label-bar {
-      background: var(--color-canvas);
-      padding: 8px 12px;
-      border-bottom: 2px solid var(--color-chrome-indigo);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .section-label-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--color-ink);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .plate-body {
-      padding: 14px;
-      background: var(--color-platinum);
-    }
-
-    /* Quest Stage Cards (Labs 1~9) */
-    .stage-item {
-      background: var(--color-surface);
-      border: 1px solid var(--color-chrome-indigo);
-      margin-bottom: 10px;
-      padding: 12px;
-      border-radius: 2px;
-      box-shadow: 2px 2px 0px rgba(61, 79, 151, 0.2);
-    }
-    .stage-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-    .stage-number-badge {
-      background: var(--color-primary);
-      color: white;
-      font-family: 'Silkscreen', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 2px;
-    }
-    .stage-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--color-ink);
-      flex: 1;
-      margin-left: 8px;
-    }
-    .stage-metaphor-box {
-      background: var(--color-canvas-soft);
-      border-left: 4px solid var(--color-chrome-indigo);
-      padding: 8px 10px;
-      font-size: 12px;
-      color: var(--color-ink);
-      margin: 8px 0;
-      font-weight: 500;
-    }
-
-    /* Terminal Code Display */
-    .code-terminal-box {
-      background: #0f172a;
-      border: 1px solid var(--color-chrome-indigo);
-      padding: 10px 12px;
-      border-radius: 2px;
-      color: #38bdf8;
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 12px;
-      line-height: 1.5;
-      margin: 8px 0;
-      position: relative;
-      overflow-x: auto;
-    }
-    .btn-action-copy {
-      position: absolute;
-      right: 6px;
-      top: 6px;
-      background: var(--color-signal);
-      color: white;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-      box-shadow: 1px 1px 0px black;
-    }
-    .btn-action-copy:active { transform: translateY(1px); }
-
-    /* Right Action Rail */
-    .right-rail {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .rail-btn-slab {
-      background: var(--color-carbon);
-      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0);
-      background-size: 4px 4px;
-      border-top: 1px solid rgba(255,255,255,0.3);
-      border-bottom: 2px solid var(--color-chrome-indigo);
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
-    }
-    .rail-btn-slab:hover { background-color: #2c313f; }
-    .rail-btn-slab .btn-arrow-circle {
-      width: 20px;
-      height: 20px;
-      background: var(--color-signal);
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      color: white;
-    }
-
-    /* Player's Poll Module */
-    .poll-module {
-      background: var(--color-periwinkle);
-      border-top: 2px solid rgba(255,255,255,0.8);
-      border-bottom: 2px solid var(--color-chrome-indigo);
-      padding: 12px;
-      border-radius: 2px;
-    }
-    .poll-question {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--color-ink);
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-    .poll-option {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--color-ink);
-      margin-bottom: 6px;
-      cursor: pointer;
-    }
-    .btn-poll-submit {
-      width: 100%;
-      background: var(--color-signal);
-      color: white;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 6px 0;
-      border: 1px solid rgba(255,255,255,0.4);
-      border-bottom: 2px solid #a6560b;
-      margin-top: 8px;
-      cursor: pointer;
-    }
-
-    /* Footer Command Slab */
-    .footer-slab {
-      background: var(--color-carbon);
-      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0);
-      background-size: 4px 4px;
-      border-top: 2px solid var(--color-chrome-indigo);
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--color-canvas-soft);
-      font-size: 10px;
-    }
-    .esrb-badge-pill {
-      background: var(--color-amber);
-      color: var(--color-carbon);
-      font-weight: 900;
-      font-size: 9px;
-      padding: 4px 8px;
-      border-radius: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Sound notification toast */
-    #soundToast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--color-carbon);
-      border: 2px solid var(--color-signal);
-      color: white;
-      padding: 10px 16px;
-      font-size: 11px;
-      font-weight: 800;
-      box-shadow: 4px 4px 0px rgba(0,0,0,0.4);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.2s;
-      pointer-events: none;
-      z-index: 999;
-    }
-    #soundToast.show {
-      opacity: 1;
-      transform: translateY(0);
+      text-shadow: 2px 2px 0px #3d4f97, -1px -1px 0px #3d4f97, 1px -1px 0px #3d4f97, -1px 1px 0px #3d4f97, 3px 3px 0px #21242e;
     }
   </style>
 </head>
-<body>
+<body class="bg-canvas min-h-screen text-slate-800 p-3 sm:p-6 flex justify-center selection:bg-signal selection:text-white">
 
-  <!-- Console Chassis Wrapper -->
-  <div class="console-chassis">
-
-    <!-- 1. Masthead Row -->
-    <div class="masthead-row">
-      <div class="mascot-group">
-        <div class="mario-icon">🍄</div>
-        <div class="speech-bubble">
-          "Welcome to Docker 64! 실습을 게임 퀘스트로 즐겨보세요!"
+  <!-- Vue Root Application Container -->
+  <div id="app" class="w-full max-w-5xl bg-canvas bevel-plate shadow-2xl flex flex-col overflow-hidden">
+    
+    <!-- 1. Console Masthead Header -->
+    <header class="bg-canvas px-4 py-3 flex items-center justify-between border-b-2 border-chrome-indigo">
+      <div class="flex items-center gap-3">
+        <div class="text-2xl filter drop-shadow">🍄</div>
+        <div class="bg-white border border-chrome-indigo px-3 py-1 rounded-xl text-xs font-bold shadow-[2px_2px_0px_#3d4f97]">
+          "Vue SPA 모듈로 각 실습을 한 페이지씩 깊이있게 마스터하세요!"
         </div>
       </div>
-      <div class="top-meta-info">
+      <div class="font-pixel text-[11px] text-chrome-indigo font-bold tracking-wider">
         SKALA 4반 G124 안성민 · HARBOR v2.0
       </div>
-    </div>
+    </header>
 
-    <!-- 2. Primary Navigation Bar (Carbon Slab) -->
-    <div class="primary-nav-bar">
-      <div class="logo-pill">
-        <i class="fa-brands fa-docker" style="color: var(--color-primary); font-size: 16px;"></i>
-        <span>DOCKER 64</span>
+    <!-- 2. Carbon Primary Navigation Bar -->
+    <nav class="carbon-slab px-4 py-2 flex flex-wrap items-center justify-between gap-3 border-b-2 border-chrome-indigo">
+      <div class="flex items-center gap-2">
+        <div class="bg-white px-3 py-1 rounded-full border-2 border-nintendo-red flex items-center gap-1.5 shadow-[1px_1px_0px_black] cursor-pointer" @click="setView('home')">
+          <i class="fa-brands fa-docker text-nintendo-red text-sm"></i>
+          <span class="font-black italic text-xs tracking-tighter text-nintendo-red">DOCKER 64</span>
+        </div>
       </div>
 
-      <div class="nav-words">
-        <a class="nav-word" onclick="playBeep(); scrollToSection('sec-metaphors')">개념비유</a>
-        <a class="nav-word" onclick="playBeep(); scrollToSection('sec-3tier')">3-Tier</a>
-        <a class="nav-word" onclick="playBeep(); scrollToSection('sec-stages')">스테이지 1~9</a>
-        <a class="nav-word" onclick="playBeep(); scrollToSection('sec-cheatsheet')">치트시트</a>
-      </div>
-
-      <div class="utility-chips">
-        <a class="util-chip" href="https://github.com/rntqkdl/Cloud_docker_test" target="_blank" onclick="playBeep()">
-          <i class="fa-brands fa-github"></i> GITHUB
-        </a>
-        <button class="util-chip" onclick="playCoinSound(); alert('⭐ [QUEST COMPLETED] 4반 G124 안성민 Harbor v2.0 배포 완료!')">
-          <i class="fa-solid fa-star"></i> LEVEL 9
+      <!-- Main Navigation Menu Tabs -->
+      <div class="flex items-center gap-1 sm:gap-2">
+        <button v-for="menu in mainMenus" :key="menu.id"
+                @click="setView(menu.id)"
+                :class="currentView === menu.id ? 'bg-signal text-white shadow-inner font-extrabold' : 'text-nav-gold hover:text-amber font-bold'"
+                class="px-2.5 py-1 text-xs uppercase tracking-wider rounded transition flex items-center gap-1.5">
+          <i :class="menu.icon" class="text-[11px]"></i>
+          <span>{{ menu.title }}</span>
         </button>
       </div>
-    </div>
 
-    <!-- 3. Secondary Nav Strip -->
-    <div class="secondary-nav-strip">
-      <div class="subnav-links">
-        <span class="subnav-link">📍 이미지: 롬팩</span>
-        <span class="subnav-link">📍 컨테이너: 실행화면</span>
-        <span class="subnav-link">📍 볼륨: 세이브메모리카드</span>
-        <span class="subnav-link">📍 컴포즈: 파티결성</span>
+      <!-- Utility Action Chips -->
+      <div class="flex items-center gap-2">
+        <a href="https://github.com/rntqkdl/Cloud_docker_test" target="_blank"
+           class="bg-amber text-carbon px-2.5 py-1 text-xs font-black rounded bevel-button uppercase flex items-center gap-1">
+          <i class="fa-brands fa-github"></i> GITHUB
+        </a>
       </div>
-      <div style="font-size: 10px; font-weight: 800; color: var(--color-chrome-indigo);">
+    </nav>
+
+    <!-- 3. Stage Selector Subnav (Stage 1 ~ 9 Quick Jump Tabs) -->
+    <div class="bg-canvas-soft px-4 py-2 flex items-center justify-between border-b-2 border-chrome-indigo overflow-x-auto gap-2">
+      <div class="flex items-center gap-1 text-xs font-bold text-slate-800 shrink-0">
+        <i class="fa-solid fa-gamepad text-chrome-indigo"></i> STAGES:
+      </div>
+      <div class="flex items-center gap-1 overflow-x-auto py-0.5">
+        <button v-for="lab in labs" :key="lab.id"
+                @click="setView(lab.id)"
+                :class="currentView === lab.id ? 'bg-nintendo-red text-white font-black shadow-sm' : 'bg-white/80 hover:bg-white text-chrome-indigo font-bold border border-chrome-indigo/40'"
+                class="px-2.5 py-0.5 text-xs rounded transition shrink-0 flex items-center gap-1">
+          <span class="font-mono text-[10px] opacity-80">{{ lab.num }}</span>
+          <span>{{ lab.shortTitle }}</span>
+        </button>
+      </div>
+      <div class="text-[11px] font-mono font-bold text-chrome-indigo shrink-0 hidden md:block">
         PORT 8088 LIVE
       </div>
     </div>
 
-    <!-- 4. Hero Panel -->
-    <div class="hero-panel">
-      <div class="hero-title-boxart">DOCKER CLOUD MASTER</div>
-      <div class="hero-tagline">비전공자를 위한 리눅스 커널 가상화 & 3-Tier 아키텍처 완전 공략집</div>
-      
-      <div class="hero-status-badges">
-        <div class="status-badge"><i class="fa-solid fa-gamepad"></i> 9 STAGES ALL CLEAR</div>
-        <div class="status-badge"><i class="fa-solid fa-server"></i> HARBOR: skala-webserver-g124</div>
-        <div class="status-badge"><i class="fa-solid fa-network-wired"></i> 3-TIER REVERSE PROXY</div>
-      </div>
-    </div>
+    <!-- 4. Dynamic Component View Area (Main Content) -->
+    <main class="p-4 sm:p-6 bg-slate-100 flex-1 space-y-6">
 
-    <!-- 5. Main Body 2-Column Split -->
-    <div class="main-body-split">
-
-      <!-- Left Column: Core Content -->
-      <div class="content-column">
-
-        <!-- 3-Tier Architecture Diagram Module -->
-        <div class="beveled-plate" id="sec-3tier">
-          <div class="section-label-bar">
-            <span class="section-label-title">
-              <i class="fa-solid fa-sitemap"></i> 3-TIER 아키텍처 데이터 흐름도
-            </span>
-            <span style="font-size: 10px; font-weight: 800; color: var(--color-ink-soft);">실습 6 & 7</span>
-          </div>
-          <div class="plate-body" style="background: #ffffff;">
-            <p style="font-size: 11px; color: #475569; margin-bottom: 10px;">
-              손님의 주문(브라우저)이 들어왔을 때, 1층 문지기(Nginx)가 주문을 받아 2층 주방(WAS)으로 넘기고, 3층 비밀금고(DB & Volume)에서 데이터를 꺼내오는 과정입니다.
+      <!-- ========================================================
+           VIEW 1: HOME (Hero & 3-Tier Core Architecture)
+           ======================================================== -->
+      <div v-if="currentView === 'home'" class="space-y-6">
+        
+        <!-- Hero Boxart Banner -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-carbon bevel-plate p-6 sm:p-8 text-white relative overflow-hidden">
+          <div class="relative z-10 space-y-3">
+            <div class="flex gap-2 flex-wrap">
+              <span class="bg-signal text-white text-[10px] font-black px-2.5 py-0.5 rounded">FULL CURRICULUM</span>
+              <span class="bg-carbon border border-white/30 text-amber text-[10px] font-black px-2.5 py-0.5 rounded">4반 G124 안성민</span>
+              <span class="bg-emerald-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded">HARBOR v2.0 READY</span>
+            </div>
+            <h1 class="boxart-title text-2xl sm:text-4xl text-white">DOCKER CLOUD MASTER</h1>
+            <p class="text-sm text-slate-300 max-w-2xl leading-relaxed">
+              비전공자의 시선에서 도커의 5대 핵심(프로세스 격리, 가상 네트워크, 볼륨 영속화, 컴포즈 오케스트레이션, 이미지 다이어트)을 직관적인 뷰(View)로 하나씩 정복합니다.
             </p>
+          </div>
+          <div class="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-4 text-xs font-bold text-slate-300">
+            <div><i class="fa-solid fa-server text-amber mr-1"></i> 레지스트리: <code class="text-white">harbor.skala-gj.com/skala-gj4/skala-webserver-g124</code></div>
+            <div><i class="fa-brands fa-github text-emerald-400 mr-1"></i> 리포지토리: <a href="https://github.com/rntqkdl/Cloud_docker_test" target="_blank" class="text-amber underline">rntqkdl/Cloud_docker_test</a></div>
+          </div>
+        </div>
+
+        <!-- 3-Tier Interactive Diagram Module -->
+        <div class="bg-white bevel-plate p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b-2 border-slate-100">
+            <h2 class="text-base font-extrabold text-carbon flex items-center gap-2">
+              <i class="fa-solid fa-sitemap text-nintendo-red"></i> 3-Tier 상용 웹 아키텍처 데이터 흐름도
+            </h2>
+            <span class="text-xs font-bold px-2 py-0.5 bg-canvas-soft text-carbon rounded">실습 6 & 7 핵심 구조</span>
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            웹 브라우저의 HTTP 요청이 들어왔을 때, 1층 문지기(Nginx)가 요청을 받고 2층 주방(Node.js WAS)이 3층 비밀 금고(MariaDB)에서 데이터를 꺼내오는 전체 여정을 시각화한 구조도입니다.
+          </p>
+
+          <div class="p-4 bg-slate-50 border border-chrome-indigo/30 rounded flex justify-center overflow-x-auto">
             <div class="mermaid">
             graph TD
-              Client["🌐 손님 웹브라우저"] -->|http://localhost:80| HostPort["호스트 80포트"]
-              subgraph Machine["🎮 DOCKER 64 본체"]
-                HostPort --> Web["🤵 1층 안내원 (Nginx:80)"]
-                subgraph PrivateNet["비밀 무전기 채널 (3tier-net)"]
-                  Web -->|proxy_pass was:8080| WAS["👨‍🍳 2층 주방 (Node.js WAS)"]
-                  WAS -->|host: db:3306| DB["🔒 3층 비밀금고 (MariaDB)"]
+              Client["🌐 외부 브라우저 (사용자)"] -->|http://localhost:80| HostPort["내 컴퓨터 호스트 포트 :80"]
+              subgraph Host["🎮 DOCKER 64 가상 격리 시스템"]
+                HostPort --> Web["🤵 [1계층 Web] Nginx 문지기 (:80)"]
+                subgraph PrivateNet["비밀 무전기 사설망 (3tier-net)"]
+                  Web -->|내부 DNS 'proxy_pass http://was:8080'| WAS["👨‍🍳 [2계층 WAS] Node.js 주방 (:8080)"]
+                  WAS -->|내부 DNS 'host: db:3306'| DB["🔒 [3계층 DB] MariaDB 금고 (:3306)"]
                 end
-                DB -.->|실시간 동기화| Vol[("💾 세이브 메모리카드 (mariadb-data)")]
+                DB -.->|실시간 마운트 동기화 /var/lib/mysql| Vol[("💾 [영구 볼륨] mariadb-data")]
               end
             </div>
           </div>
-        </div>
 
-        <!-- Easy Metaphors 8 Module -->
-        <div class="beveled-plate" id="sec-metaphors">
-          <div class="section-label-bar">
-            <span class="section-label-title">
-              <i class="fa-solid fa-lightbulb"></i> 비전공자 맞춤 일상 & 게임 비유 8선
-            </span>
-          </div>
-          <div class="plate-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              
-              <div class="stage-item" style="margin:0;">
-                <div style="font-size: 18px; margin-bottom: 4px;">🎮 ↔ 📺</div>
-                <strong style="font-size: 12px;">1. 이미지 vs 컨테이너</strong>
-                <p style="font-size: 11px; color: #475569; margin-top: 4px;">
-                  <strong>이미지:</strong> 절대 안 변하는 게임 팩(ROM).<br>
-                  <strong>컨테이너:</strong> 전원을 켜서 실제 플레이 중인 게임 화면(Process).
-                </p>
-              </div>
-
-              <div class="stage-item" style="margin:0;">
-                <div style="font-size: 18px; margin-bottom: 4px;">💾</div>
-                <strong style="font-size: 12px;">2. 볼륨 (Volume, -v)</strong>
-                <p style="font-size: 11px; color: #475569; margin-top: 4px;">
-                  <strong>메모리 카드:</strong> 본체 전원을 끄고 게임 팩을 뽑아도 내 레벨과 아이템은 영구 보존됩니다.
-                </p>
-              </div>
-
-              <div class="stage-item" style="margin:0;">
-                <div style="font-size: 18px; margin-bottom: 4px;">🔌</div>
-                <strong style="font-size: 12px;">3. 포트 포워딩 (-p)</strong>
-                <p style="font-size: 11px; color: #475569; margin-top: 4px;">
-                  <strong>패드 연결 단자:</strong> <code>-p 8080:80</code>은 본체 1번 단자에 조이스틱을 꽂아 80번 방을 조작하는 통로입니다.
-                </p>
-              </div>
-
-              <div class="stage-item" style="margin:0;">
-                <div style="font-size: 18px; margin-bottom: 4px;">👥</div>
-                <strong style="font-size: 12px;">4. 스케일아웃 (--scale was=3)</strong>
-                <p style="font-size: 11px; color: #475569; margin-top: 4px;">
-                  <strong>3인 파티 레이드:</strong> 1명이 쓰러져도 나머지 2명이 보스를 계속 공격하여 무중단 클리어!
-                </p>
-              </div>
-
+          <!-- 3-Tier Security Principle Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+            <div class="p-3 bg-blue-50 border-l-4 border-chrome-indigo rounded text-xs space-y-1">
+              <strong class="text-chrome-indigo font-black">1. Web (Nginx:80)</strong>
+              <p class="text-slate-600">유일하게 밖으로 문(-p 80:80)을 열어둡니다. 손님을 맞이하고 주문을 WAS로 안전하게 토스합니다.</p>
+            </div>
+            <div class="p-3 bg-emerald-50 border-l-4 border-emerald-600 rounded text-xs space-y-1">
+              <strong class="text-emerald-700 font-black">2. WAS (Node.js:8080)</strong>
+              <p class="text-slate-600">포트를 외부에 열지 않습니다(-p 없음). 오직 사설망(3tier-net) 안에서만 안전하게 연산합니다.</p>
+            </div>
+            <div class="p-3 bg-amber-50 border-l-4 border-amber rounded text-xs space-y-1">
+              <strong class="text-amber-800 font-black">3. DB (MariaDB &amp; Volume)</strong>
+              <p class="text-slate-600">외부 침입을 차단하고, 컨테이너가 폭파되어도 볼륨(Volume)으로 데이터를 영구 보존합니다.</p>
             </div>
           </div>
         </div>
 
-        <!-- 9 Stages Quest Guide Module -->
-        <div class="beveled-plate" id="sec-stages">
-          <div class="section-label-bar">
-            <span class="section-label-title">
-              <i class="fa-solid fa-flag-checkered"></i> STAGE 1 ~ 9 실습 퀘스트 공략
-            </span>
-          </div>
-          <div class="plate-body">
-
-            <!-- Stage 1 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 01</span>
-                <span class="stage-title">첫 캐릭터 소환과 생명주기 (hello-world)</span>
+        <!-- 9 Stages Quick Map Card -->
+        <div class="bg-white bevel-plate p-5 sm:p-6 space-y-4">
+          <h2 class="text-base font-extrabold text-carbon flex items-center gap-2">
+            <i class="fa-solid fa-map-location-dot text-signal"></i> 9대 실습 스테이지 맵 (클릭하여 이동)
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div v-for="lab in labs" :key="lab.id"
+                 @click="setView(lab.id)"
+                 class="p-3 bg-slate-50 hover:bg-canvas-soft/30 border border-slate-200 hover:border-chrome-indigo rounded cursor-pointer transition space-y-1 group">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-xs font-bold text-nintendo-red">{{ lab.num }}</span>
+                <span class="text-[10px] text-slate-400 group-hover:text-chrome-indigo font-bold">열기 →</span>
               </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 1회성 튜토리얼 몬스터를 소환해서 대사를 듣고 나면 스스로 사라지는 원리!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code>docker run hello-world
-docker ps -a   # Exited (0) 정상 완료 확인</code>
-              </div>
+              <div class="font-extrabold text-xs text-slate-800">{{ lab.title }}</div>
+              <p class="text-[11px] text-slate-500 line-clamp-1">{{ lab.subtitle }}</p>
             </div>
-
-            <!-- Stage 4 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 04</span>
-                <span class="stage-title">영구 세이브 메모리카드(볼륨) 장착 실습</span>
-              </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 게임기를 부숴도(<code>docker rm -f</code>) 메모리카드(볼륨)만 꽂으면 데이터 100% 부활!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code>docker volume create mariadb-data
-docker run -d --name mariadb -v mariadb-data:/var/lib/mysql -p 3306:3306 mariadb:11
-# 컨테이너 삭제 후 다시 띄워도 alice, bob, carol 생존 확인!</code>
-              </div>
-            </div>
-
-            <!-- Stage 5 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 05</span>
-                <span class="stage-title">Harbor 클라우드 창고에 내 이름표 달아 업로드</span>
-              </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 내가 만든 커스텀 팩을 전 세계 유저가 다운받을 수 있는 중앙 서버에 등록하기!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code>docker tag skala-webserver:1.0.0 harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0
-docker push harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0</code>
-              </div>
-            </div>
-
-            <!-- Stage 7 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 07</span>
-                <span class="stage-title">Docker Compose - 3인 파티 원클릭 결성</span>
-              </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 계약서(<code>compose.yaml</code>) 한 장으로 기사, 마법사, 힐러를 1초 만에 동시 소환!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code>docker compose up -d       # 3-Tier 전체 자동 소환
-docker compose ps          # 파티원 체력(healthy) 확인
-docker compose down -v     # 파티 해산 및 초기화</code>
-              </div>
-            </div>
-
-            <!-- Stage 8 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 08</span>
-                <span class="stage-title">분신술(Scale=3)과 무중단 방어막 (HA Failover)</span>
-              </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 공격수 1명이 기절해도 Nginx가 즉시 다른 공격수로 넘겨 손님이 렉을 못 느낌!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code>docker compose up -d --scale was=3
-docker stop 08_scale_and_loadbalancing-was-2  # 1대 고의 종료
-curl -s localhost/whoami                      # 끊김 없이 200 OK!</code>
-              </div>
-            </div>
-
-            <!-- Stage 9 -->
-            <div class="stage-item">
-              <div class="stage-header">
-                <span class="stage-number-badge">STAGE 09</span>
-                <span class="stage-title">멀티스테이지 다이어트 (1.78GB → 185MB)</span>
-              </div>
-              <div class="stage-metaphor-box">
-                💡 <strong>쉬운 비유:</strong> 게임 개발 툴(수십 GB)은 버리고 오직 롬팩에 최종 카트리지(185MB)만 압축해 담기!
-              </div>
-              <div class="code-terminal-box">
-                <button class="btn-action-copy" onclick="copySnippet(this)">복사</button>
-                <code># Dockerfile (Multi-Stage)
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --omit=dev
-
-FROM node:18-alpine
-COPY --from=builder /app/node_modules ./node_modules
-COPY server.js .
-CMD ["node", "server.js"]   # 185MB 극강 압축 달성!</code>
-              </div>
-            </div>
-
           </div>
         </div>
 
       </div>
 
-      <!-- Right Action Rail -->
-      <div class="right-rail">
-
-        <!-- Action Slabs -->
-        <a class="rail-btn-slab" onclick="playBeep(); alert('4반 G124 안성민 - 클라우드 도커 마스터 인증 완료!')">
-          <span>🎮 PLAYER STATUS</span>
-          <div class="btn-arrow-circle"><i class="fa-solid fa-chevron-right"></i></div>
-        </a>
-
-        <a class="rail-btn-slab" href="https://github.com/rntqkdl/Cloud_docker_test" target="_blank" onclick="playBeep()">
-          <span>📦 GIT REPOSITORY</span>
-          <div class="btn-arrow-circle"><i class="fa-solid fa-chevron-right"></i></div>
-        </a>
-
-        <a class="rail-btn-slab" onclick="playCoinSound(); alert('Harbor Registry: harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0')">
-          <span>🚀 HARBOR PUSH HUB</span>
-          <div class="btn-arrow-circle"><i class="fa-solid fa-chevron-right"></i></div>
-        </a>
-
-        <!-- Player's Poll Mini-Game -->
-        <div class="poll-module">
-          <div class="poll-question">
-            ❓ <strong>[PLAYER'S POLL]</strong><br>
-            컨테이너를 지워도 DB 데이터를 영구 보존하는 비결은?
+      <!-- ========================================================
+           VIEW 2: METAPHORS (비전공자를 위한 핵심 비유 8선)
+           ======================================================== -->
+      <div v-else-if="currentView === 'metaphors'" class="space-y-6">
+        <div class="bg-white bevel-plate p-6 space-y-6">
+          <div class="space-y-1 pb-4 border-b-2 border-slate-100">
+            <span class="text-xs font-bold text-signal uppercase tracking-wider">Intuitive Learning</span>
+            <h2 class="text-xl font-extrabold text-carbon flex items-center gap-2">
+              <i class="fa-solid fa-lightbulb text-amber"></i> 비전공자를 위한 도커 & 클라우드 핵심 비유 8선
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              어려운 컴퓨터 공학 용어를 친숙한 게임과 일상생활의 비유로 완벽하게 이해합니다.
+            </p>
           </div>
-          <label class="poll-option">
-            <input type="radio" name="quiz" value="1"> 1. 도커 볼륨(Volume) 마운트
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="quiz" value="2"> 2. 컨테이너 재부팅
-          </label>
-          <label class="poll-option">
-            <input type="radio" name="quiz" value="3"> 3. 포트 포워딩 열기
-          </label>
-          <button class="btn-poll-submit" onclick="submitPoll()">
-            SUBMIT ANSWER <i class="fa-solid fa-chevron-right"></i>
-          </button>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div v-for="(m, idx) in metaphors" :key="idx" class="p-4 bg-slate-50 border border-chrome-indigo/30 rounded space-y-2">
+              <div class="text-2xl">{{ m.icon }}</div>
+              <h3 class="font-extrabold text-sm text-carbon">{{ idx + 1 }}. {{ m.title }}</h3>
+              <p class="text-xs text-slate-600 leading-relaxed" v-html="m.desc"></p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Info Box -->
-        <div class="stage-item" style="background: white; border-top: 3px solid var(--color-amber);">
-          <div style="font-size: 11px; font-weight: 800; color: var(--color-ink); margin-bottom: 4px;">
-            ⭐ WHAT IS DOCKER?
+      <!-- ========================================================
+           VIEW 3: KERNEL & CS DEEP DIVE (리눅스 커널 심화)
+           ======================================================== -->
+      <div v-else-if="currentView === 'kernel'" class="space-y-6">
+        <div class="bg-white bevel-plate p-6 space-y-6">
+          <div class="space-y-1 pb-4 border-b-2 border-slate-100">
+            <span class="text-xs font-bold text-chrome-indigo uppercase tracking-wider">CS Engineering Deep Dive</span>
+            <h2 class="text-xl font-extrabold text-carbon flex items-center gap-2">
+              <i class="fa-solid fa-microchip text-chrome-indigo"></i> 리눅스 커널 가상화 격리 메커니즘
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              도커 컨테이너가 어떻게 내 컴퓨터의 OS 커널을 공유하면서도 완벽하게 독립된 방을 만드는지 파헤칩니다.
+            </p>
           </div>
-          <p style="font-size: 10.5px; color: #475569; line-height: 1.4;">
-            내 컴퓨터의 심장(리눅스 커널)을 공유하면서, 프로세스를 독립된 캡슐로 띄워 0.1초 만에 실행하는 가상화 마법입니다!
-          </p>
+
+          <!-- Kernel Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 font-extrabold text-carbon border-b-2 border-slate-200">
+                  <th class="p-3">구분</th>
+                  <th class="p-3">리눅스 커널 핵심 기술</th>
+                  <th class="p-3">실제 동작 원리</th>
+                  <th class="p-3">미적용 시 발생 위험</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr>
+                  <td class="p-3 font-bold text-carbon">시야 격리</td>
+                  <td class="p-3 font-mono font-bold text-chrome-indigo">Namespace</td>
+                  <td class="p-3">PID(프로세스), NET(네트워크 veth), MNT(마운트), UTS(호스트명), IPC, USER를 완전 독립시킴</td>
+                  <td class="p-3 text-nintendo-red font-bold">다른 컨테이너의 프로세스를 강제 종료하거나 패킷 탈취</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-carbon">자원 통제</td>
+                  <td class="p-3 font-mono font-bold text-chrome-indigo">cgroups v2</td>
+                  <td class="p-3">CPU 사용률 상한선, RAM 최대 메모리 한도를 지정하고 초과 시 OOM Killer로 통제</td>
+                  <td class="p-3 text-nintendo-red font-bold">하나의 컨테이너 메모리 누수로 호스트 서버 전체 다운</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-bold text-carbon">계층 스토리지</td>
+                  <td class="p-3 font-mono font-bold text-chrome-indigo">OverlayFS (CoW)</td>
+                  <td class="p-3">읽기 전용 이미지 레이어(LowerDir) 위에 얇은 쓰기 층(UpperDir)을 얹어 변경분만 기록</td>
+                  <td class="p-3 text-nintendo-red font-bold">컨테이너 생성마다 수 GB의 OS 파일 전체 복사 낭비</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Runtime Layer Flow Diagram -->
+          <div class="p-4 bg-slate-50 border border-slate-200 rounded space-y-2">
+            <div class="text-xs font-bold text-carbon">⚙️ 도커 저수준 런타임 호출 스택 (Low-level Call Stack)</div>
+            <div class="mermaid">
+            flowchart LR
+              CLI["💻 docker CLI"] -->|REST API| Daemon["⚙️ dockerd 데몬"]
+              Daemon -->|gRPC 통신| Containerd["📦 containerd"]
+              Containerd --> Shim["🔗 containerd-shim"]
+              Shim --> Runc["🚀 runc (OCI 표준 도구)"]
+              Runc --> Process["🐧 Linux Kernel (PID 1 프로세스 격리)"]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================================
+           VIEW 4: LABS 1 ~ 9 (Individual Dedicated Deep-Dive Views)
+           ======================================================== -->
+      <div v-else-if="currentLab" class="space-y-6">
+        
+        <!-- Lab Header Plate -->
+        <div class="bg-white bevel-plate p-6 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b-2 border-slate-100">
+            <div class="flex items-center gap-3">
+              <span class="bg-nintendo-red text-white font-mono font-black text-sm px-2.5 py-1 rounded shadow">
+                STAGE {{ currentLab.num }}
+              </span>
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-carbon">{{ currentLab.title }}</h2>
+                <p class="text-xs text-slate-500">{{ currentLab.subtitle }}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold px-2.5 py-1 bg-canvas-soft text-carbon rounded">교재 {{ currentLab.page }}</span>
+            </div>
+          </div>
+
+          <!-- Lab Intuitive Metaphor Callout -->
+          <div class="p-4 bg-amber-50/70 border-l-4 border-amber rounded space-y-1">
+            <div class="text-xs font-black text-amber-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-lightbulb"></i> 비전공자를 위한 핵심 비유
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium" v-html="currentLab.metaphor"></p>
+          </div>
+
+          <!-- Lab Core Concept Details -->
+          <div class="space-y-2 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <h3 class="font-extrabold text-carbon text-sm flex items-center gap-2">
+              <i class="fa-solid fa-bullseye text-signal"></i> 실습의 핵심 목표 & 원리
+            </h3>
+            <p v-html="currentLab.concept"></p>
+          </div>
+
+          <!-- Code Snippets with Copy Button -->
+          <div class="space-y-3 pt-2">
+            <h3 class="font-extrabold text-carbon text-sm flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-chrome-indigo"></i> 실행 명령어 & 소스코드
+            </h3>
+            <div v-for="(code, cIdx) in currentLab.codes" :key="cIdx" class="space-y-1">
+              <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+                <span>{{ code.label }}</span>
+              </div>
+              <div class="relative group">
+                <button @click="copyText(code.content)"
+                        class="absolute right-2 top-2 bg-signal hover:bg-amber text-white text-[10px] font-black px-2.5 py-1 rounded shadow bevel-button z-10">
+                  <i class="fa-solid fa-copy mr-1"></i> 복사
+                </button>
+                <pre><code :class="'language-' + (code.lang || 'bash')">{{ code.content }}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Execution Verification & Lecture Points -->
+          <div class="p-4 bg-emerald-50/70 border-l-4 border-emerald-600 rounded space-y-1.5">
+            <div class="text-xs font-black text-emerald-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check"></i> 실행 결과 검증 포인트 (교재 핵심 해설)
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed" v-html="currentLab.verification"></p>
+          </div>
+
+          <!-- Common Troubleshooting & Tips -->
+          <div class="p-4 bg-rose-50/70 border-l-4 border-nintendo-red rounded space-y-1.5">
+            <div class="text-xs font-black text-nintendo-red flex items-center gap-1.5">
+              <i class="fa-solid fa-triangle-exclamation"></i> 초보자가 자주 겪는 에러 & 트러블슈팅
+            </div>
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed" v-html="currentLab.troubleshooting"></p>
+          </div>
+
+          <!-- Bottom Stage Navigation Buttons -->
+          <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+            <button v-if="prevLabId" @click="setView(prevLabId)"
+                    class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-carbon text-xs font-bold rounded flex items-center gap-1.5">
+              <i class="fa-solid fa-chevron-left"></i> 이전 실습
+            </button>
+            <div v-else></div>
+            <button v-if="nextLabId" @click="setView(nextLabId)"
+                    class="px-4 py-1.5 bg-signal hover:bg-amber text-white text-xs font-black rounded bevel-button flex items-center gap-1.5">
+              다음 실습 <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
         </div>
 
       </div>
 
-    </div>
+      <!-- ========================================================
+           VIEW 5: CHEATSHEET & DICTIONARY (검색 가능한 치트시트)
+           ======================================================== -->
+      <div v-else-if="currentView === 'cheatsheet'" class="space-y-6">
+        <div class="bg-white bevel-plate p-6 space-y-6">
+          <div class="space-y-1 pb-4 border-b-2 border-slate-100">
+            <span class="text-xs font-bold text-signal uppercase tracking-wider">Quick Reference</span>
+            <h2 class="text-xl font-extrabold text-carbon flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-emerald-600"></i> 도커 명령어 &amp; Dockerfile 마스터 사전
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600">
+              실무와 시험에서 가장 자주 쓰이는 필수 도커 명령어와 키워드 모음집입니다.
+            </p>
+          </div>
 
-    <!-- 6. Footer Command Slab -->
-    <div class="footer-slab">
+          <!-- Search Filter Bar -->
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+            <input type="text" v-model="searchQuery" placeholder="명령어나 키워드 검색 (예: volume, run, compose, exec)..."
+                   class="w-full pl-9 pr-4 py-2 text-xs bg-slate-50 border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-chrome-indigo text-slate-800">
+          </div>
+
+          <!-- Dictionary Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 font-extrabold text-carbon border-b-2 border-slate-200">
+                  <th class="p-3">명령어 / 키워드</th>
+                  <th class="p-3">기능 설명</th>
+                  <th class="p-3">실무 꿀팁 &amp; 비유</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr v-for="(item, idx) in filteredCheatsheet" :key="idx" class="hover:bg-slate-50">
+                  <td class="p-3 font-mono font-bold text-chrome-indigo">{{ item.cmd }}</td>
+                  <td class="p-3">{{ item.desc }}</td>
+                  <td class="p-3 font-medium text-slate-600">{{ item.tip }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 5. Footer Command Slab -->
+    <footer class="carbon-slab px-4 py-3 flex items-center justify-between text-[11px] text-canvas-soft border-t-2 border-chrome-indigo">
       <div>
         © 1997–2001 DOCKER 64 SYSTEM · SKALA 4반 G124 안성민
       </div>
-      <div class="esrb-badge-pill">
+      <div class="bg-amber text-carbon font-black text-[9px] px-2 py-0.5 rounded tracking-wider uppercase">
         PRIVACY &amp; CLOUD CERTIFIED
       </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="vueToast" class="fixed bottom-6 right-6 bg-carbon border-2 border-signal text-white px-4 py-2 rounded text-xs font-bold shadow-2xl transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50">
+      <i class="fa-solid fa-check text-emerald-400 mr-1.5"></i> <span id="vueToastMsg">복사되었습니다!</span>
     </div>
 
   </div>
 
-  <!-- Sound Notification Toast -->
-  <div id="soundToast">
-    <i class="fa-solid fa-bell" style="color: var(--color-signal);"></i> <span id="toastMsg">클립보드 복사 완료!</span>
-  </div>
-
-  <!-- Audio Synthesizer & Controller Scripts -->
+  <!-- Vue Application Logic -->
   <script>
-    // Web Audio 8-bit Sound Generator
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const { createApp, ref, computed, nextTick } = Vue;
 
-    function playBeep() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
-      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.08);
-    }
+    createApp({
+      setup() {
+        const currentView = ref('home');
+        const searchQuery = ref('');
 
-    function playCoinSound() {
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
-      osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.08); // E6
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.3);
-    }
+        const mainMenus = [
+          { id: 'home', title: '홈 & 아키텍처', icon: 'fa-solid fa-house' },
+          { id: 'metaphors', title: '개념비유 8선', icon: 'fa-solid fa-lightbulb' },
+          { id: 'kernel', title: '리눅스커널심화', icon: 'fa-solid fa-microchip' },
+          { id: 'cheatsheet', title: '명령어사전', icon: 'fa-solid fa-book' }
+        ];
 
-    function copySnippet(btn) {
-      playBeep();
-      const code = btn.nextElementSibling.innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast("명령어가 클립보드에 복사되었습니다!");
-      });
-    }
+        const labs = [
+          {
+            id: 'lab1', num: '01', page: '4쪽', shortTitle: 'hello-world',
+            title: '단순 컨테이너 생성과 생명주기 (hello-world)',
+            subtitle: '도커 이미지 다운로드, 컨테이너 실행, 자동 종료(Exited 0) 관찰',
+            metaphor: '게임 속 <strong>1회성 튜토리얼 안내 몬스터</strong>와 같습니다. 소환되어 대사를 말하고 임무를 마치면 스스로 은퇴(종료)합니다.',
+            concept: '컨테이너는 백그라운드에서 영원히 도는 것만 있는 것이 아니라, 명령을 완수하면 스스로 프로세스를 끝내고 종료 상태(<code>Exited</code>)로 전환됩니다.',
+            codes: [
+              { label: '터미널 명령어', lang: 'bash', content: 'docker run hello-world\n\n# 실행 중 목록 확인 (비어 있음!)\ndocker ps\n\n# 종료된 컨테이너까지 확인\ndocker ps -a' }
+            ],
+            verification: '<code>STATUS: Exited (0)</code>에서 숫자 <strong>0</strong>은 에러 없이 정상적으로 임무를 완수하고 종료되었다는 뜻입니다.',
+            troubleshooting: '<code>docker ps</code>에 아무것도 안 나온다고 에러가 아닙니다. 이미 실행이 끝나고 쉬고 있는 것이므로 <code>docker ps -a</code>로 확인해야 합니다.'
+          },
+          {
+            id: 'lab2', num: '02', page: '5쪽', shortTitle: 'Nginx 웹서버',
+            title: 'Nginx 웹서버 실행 및 포트 포워딩 (-d, -p 8080:80)',
+            subtitle: '24시간 백그라운드 웹서버 구동 및 외부 브라우저 통신 연결',
+            metaphor: '아파트 로비의 <strong>인터폰 호수 연결</strong>과 같습니다. <code>-p 8080:80</code>은 내 Mac의 8080번 인터폰을 누르면 컨테이너 방의 80번 문으로 손님을 텔레포트시켜 줍니다.',
+            concept: '컨테이너는 기본적으로 외부와 단절된 격리 공간입니다. <code>-d</code>(백그라운드 모드)로 상시 대기시키고, <code>-p</code>(포트 매핑)로 내 컴퓨터의 특정 포트를 컨테이너 포트와 이어주어야 브라우저 접속이 가능합니다.',
+            codes: [
+              { label: 'Nginx 실행 & 로그 확인', lang: 'bash', content: 'docker run -d -p 8080:80 --name web nginx\n\n# 실시간 접속 로그 확인\ndocker logs web\n\n# 컨테이너 강제 삭제\ndocker rm -f web' }
+            ],
+            verification: '브라우저에서 <code>http://localhost:8080</code> 접속 시 <strong>Welcome to nginx!</strong> 환영 화면이 뜨면 성공입니다.',
+            troubleshooting: '<code>Bind for 0.0.0.0:8080 failed: port is already allocated</code> 에러가 발생하면 다른 프로그램이 8080을 쓰고 있는 것이므로 <code>-p 8088:80</code>처럼 다른 포트를 쓰거나 기존 컨테이너를 정리해야 합니다.'
+          },
+          {
+            id: 'lab3', num: '03', page: '6쪽', shortTitle: '나만의 이미지',
+            title: 'Dockerfile로 나만의 Node.js 이미지 빌드',
+            subtitle: 'FROM, COPY, CMD 3대 뼈대로 내 자바스크립트 코드를 이미지로 패키징',
+            metaphor: '내가 만든 게임 코드를 공장에서 <strong>새로운 롬 카트리지(Image)</strong>로 구워내는 과정입니다.',
+            concept: '<code>FROM</code>(기본 OS 바닥판), <code>COPY</code>(내 소스코드 복사), <code>CMD</code>(시동 걸기) 3단계를 통해 언제 어디서든 똑같이 실행되는 불변(Immutable) 이미지를 완성합니다.',
+            codes: [
+              { label: 'Dockerfile', lang: 'docker', content: 'FROM node:18-alpine\nCOPY app.js .\nCMD ["node", "app.js"]' },
+              { label: '빌드 및 실행', lang: 'bash', content: 'docker build -t my-node-app .\n\n# 실행 후 자동 청소 (--rm)\ndocker run --rm my-node-app' }
+            ],
+            verification: '빌드 후 <code>docker images</code>에서 <code>my-node-app</code>이 조회되고, 실행 시 <code>Hello from Docker!</code>가 찍히면 성공입니다.',
+            troubleshooting: '<code>docker build</code> 맨 뒤의 <strong>마침표(.)</strong>는 현재 폴더의 Dockerfile을 읽으라는 뜻이므로 절대로 빠뜨리면 안 됩니다.'
+          },
+          {
+            id: 'lab4', num: '04', page: '7~9쪽', shortTitle: '볼륨(Volume)',
+            title: '볼륨(Volume) - 데이터 영속화와 삭제 검증',
+            subtitle: '컨테이너를 삭제해도 DB 원본 데이터가 영구 보존되는 메커니즘',
+            metaphor: '게임 본체를 부숴도(컨테이너 삭제) <strong>외장 세이브 메모리카드(볼륨)</strong>만 있으면 내 레벨과 아이템(데이터)이 100% 부활합니다!',
+            concept: '<code>-v mariadb-data:/var/lib/mysql</code> 옵션이 핵심입니다. 컨테이너 내부의 데이터 저장 폴더를 컴퓨터 외부의 볼륨에 실시간 연결하여 영구 보존합니다.',
+            codes: [
+              { label: '볼륨 생성 및 MariaDB 실행', lang: 'bash', content: 'docker volume create mariadb-data\n\ndocker run -d --name mariadb \\\n  -e MYSQL_ROOT_PASSWORD=password123 \\\n  -e MYSQL_DATABASE=skala \\\n  -e MYSQL_USER=user \\\n  -e MYSQL_PASSWORD=password123 \\\n  -p 3306:3306 \\\n  -v mariadb-data:/var/lib/mysql \\\n  mariadb:11' },
+              { label: '회원 데이터 삽입', lang: 'sql', content: 'USE skala;\nCREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50), email VARCHAR(100));\nINSERT INTO users (username, email) VALUES (\'alice\',\'alice@example.com\'), (\'bob\',\'bob@example.com\'), (\'carol\',\'carol@example.com\');' },
+              { label: '컨테이너 삭제 후 재기동 검증', lang: 'bash', content: '# 컨테이너 완전 삭제\ndocker rm -f mariadb\n\n# 같은 볼륨으로 재실행 후 조회 -> alice, bob, carol 그대로 생존 확인!\ndocker run -d --name mariadb ... -v mariadb-data:/var/lib/mysql mariadb:11\ndocker exec mariadb mariadb -u user -ppassword123 skala -e "SELECT * FROM users;"' }
+            ],
+            verification: '컨테이너를 <code>docker rm -f</code>로 지우고 새로 띄워도 회원 3명의 데이터가 그대로 살아있음을 확인합니다.',
+            troubleshooting: '<code>docker volume rm mariadb-data</code>까지 실행하면 외장 메모리카드 자체를 파기한 것이므로 데이터가 영구 소멸됩니다.'
+          },
+          {
+            id: 'lab5', num: '05', page: '10~11쪽', shortTitle: 'Harbor 배포',
+            title: 'Harbor Registry에 올리고 내려받기 (g124 태깅)',
+            subtitle: '사내 중앙 저장소에 내 고유번호 이미지 업로드(Push) 및 재다운로드(Pull) 검증',
+            metaphor: '내가 만든 커스텀 게임 팩을 전 세계 동료들이 내려받을 수 있는 <strong>닌텐도 온라인 중앙 eShop 창고</strong>에 등록하는 것입니다.',
+            concept: '<code>docker tag</code>로 레지스트리 주소(<code>harbor.skala-gj.com/skala-gj4/...</code>)를 붙여야 도커가 목적지를 인식합니다. 내 컴퓨터에서 이미지를 지우고 순수하게 원격에서 Pull 받아 정상 동작함을 검증합니다.',
+            codes: [
+              { label: '태그 부착 및 Push', lang: 'bash', content: 'docker tag skala-webserver:1.0.0 harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0\n\ndocker push harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0' },
+              { label: '로컬 삭제 후 순수 Pull 검증', lang: 'bash', content: 'docker rmi harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0\n\ndocker pull harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0\n\ndocker run -d -p 8081:80 --name from-harbor harbor.skala-gj.com/skala-gj4/skala-webserver-g124:1.0.0' }
+            ],
+            verification: 'Harbor 웹 콘솔 메인 저장소 목록에 <code>skala-webserver-g124</code>가 뜨고, <code>http://localhost:8081</code>에서 내 이름 화면이 나오면 성공입니다.',
+            troubleshooting: 'Push 전에 <code>docker login harbor.skala-gj.com</code>으로 인증을 완료해야 <code>unauthorized</code> 권한 에러를 피할 수 있습니다.'
+          },
+          {
+            id: 'lab6', num: '06', page: '12~17쪽', shortTitle: '3-Tier 수동구성',
+            title: '3-Tier (Web-WAS-DB) 수동 네트워크 구성',
+            subtitle: '가상 사설망(3tier-net) 안에서 IP 대신 컨테이너 이름(DNS)으로 3계층 연결',
+            metaphor: '단원들만 쓰는 <strong>전용 비밀 무전기 채널</strong>을 파서, 주방(WAS)과 금고(DB)는 숨겨두고 오직 1층 문지기(Nginx)만 손님을 맞이하는 보안 요새를 구축합니다.',
+            concept: '도커 내부 사설망(Bridge)에서는 IP 주소를 몰라도 <code>host: "mariadb-3tier"</code>처럼 컨테이너 이름만 부르면 도커 내부 DNS가 알아서 연결해 줍니다.',
+            codes: [
+              { label: '3-Tier 수동 실행 명령어', lang: 'bash', content: '# 1. 전용 사설망 생성\ndocker network create 3tier-net\n\n# 2. DB 기동 (외부 포트 개방 X)\ndocker run -d --name mariadb-3tier --network 3tier-net -v $(pwd)/db:/docker-entrypoint-initdb.d mariadb:11\n\n# 3. WAS 빌드 및 실행 (외부 포트 개방 X)\ncd was && docker build -t was-app . && docker run -d --name was --network 3tier-net was-app && cd ..\n\n# 4. Web Nginx 실행 (유일하게 호스트 80 포트 개방)\ndocker run -d --name nginx --network 3tier-net -p 80:80 -v $(pwd)/web:/etc/nginx/conf.d nginx' }
+            ],
+            verification: '<code>curl -s localhost/users</code> 실행 시 <code>{"message":"3-Tier 연동 성공!","users":[...]}</code> JSON 응답이 반환되면 성공입니다.',
+            troubleshooting: '손으로 띄우면 명령어를 6~7개나 순서대로 쳐야 하고 휴먼 에러가 발생하기 쉽습니다. 다음 실습 7에서 Compose로 자동화합니다.'
+          },
+          {
+            id: 'lab7', num: '07', page: '18~23쪽', shortTitle: 'Docker Compose',
+            title: 'Docker Compose로 3-Tier 한 번에 띄우기',
+            subtitle: 'compose.yaml 한 장과 healthcheck로 지능형 순서 제어 및 일괄 가동',
+            metaphor: '계약서(<code>compose.yaml</code>) 단 한 장으로 <strong>기사(Web), 마법사(WAS), 힐러(DB) 3인 파티를 1초 만에 일괄 소환</strong>하는 마법진입니다!',
+            concept: '<code>depends_on + condition: service_healthy</code>를 설정하면 DB가 쿼리를 받을 수 있는 완벽한 상태가 될 때까지 WAS가 기다렸다가 지능적으로 부팅됩니다.',
+            codes: [
+              { label: 'compose.yaml', lang: 'yaml', content: 'services:\n  web:\n    image: nginx:alpine\n    ports: ["80:80"]\n    volumes: ["./web/default.conf:/etc/nginx/conf.d/default.conf:ro"]\n    depends_on: [was]\n  was:\n    build: ./was\n    depends_on:\n      db:\n        condition: service_healthy\n  db:\n    image: mariadb:10.11\n    volumes: ["db-data:/var/lib/mysql", "./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]\n    healthcheck:\n      test: ["CMD", "healthcheck.sh", "--connect"]\n      interval: 5s\n      retries: 10\nvolumes:\n  db-data:' },
+              { label: '실행 및 종료', lang: 'bash', content: 'docker compose up -d       # 일괄 빌드 및 실행\ndocker compose ps          # healthy 상태 확인\ndocker compose down -v     # 볼륨까지 완전 초기화' }
+            ],
+            verification: '<code>docker compose ps</code>에서 <code>db-1</code>이 <strong>healthy</strong>로 뜨고 <code>was-1</code>, <code>web-1</code>이 순차적으로 Up 상태가 되면 성공입니다.',
+            troubleshooting: '<code>docker compose down</code>은 컨테이너만 지우고 볼륨은 남기지만, <code>down -v</code>는 볼륨까지 초기화하므로 목적에 맞게 옵션을 써야 합니다.'
+          },
+          {
+            id: 'lab8', num: '08', page: '24~27쪽', shortTitle: '스케일아웃 & HA',
+            title: '서버 증설 (--scale was=3) 및 무중단 로드밸런싱',
+            subtitle: 'WAS를 3대로 수평 확장하고 1대가 죽어도 서비스가 중단되지 않는 Failover 검증',
+            metaphor: '<strong>3인 파티 레이드 전투</strong>입니다. 1명의 파티원이 기절해도 Nginx가 즉시 다른 살아있는 파티원에게 요청을 넘겨 손님은 렉을 전혀 느끼지 못합니다!',
+            concept: 'Nginx의 <code>proxy_next_upstream error timeout</code> 설정 덕분에 죽은 WAS로 간 요청이 실패하면 즉시 다른 정상 WAS로 우회하여 무중단 고가용성(HA)을 보장합니다.',
+            codes: [
+              { label: 'WAS 3대로 증설 및 1대 강제 종료 Failover 테스트', lang: 'bash', content: '# 1. WAS를 즉시 3대로 확장\ndocker compose up -d --scale was=3\ndocker compose exec web nginx -s reload\n\n# 2. 1대를 고의로 강제 종료\ndocker stop 08_scale_and_loadbalancing-was-2\n\n# 3. 15번 연속 호출 시 100% 무중단 200 OK 확인!\nfor i in $(seq 1 15); do curl -s -o /dev/null -m 5 -w "%{http_code}/%{time_total}s\\n" localhost/whoami; done' }
+            ],
+            verification: '1대가 죽어 있어도 15번의 모든 요청이 500 에러나 지연 없이 <strong>200 OK</strong>로 반환되면 무중단 Failover 성공입니다.',
+            troubleshooting: 'WAS 컨테이너에 <code>ports: ["8080:8080"]</code>이 박혀 있으면 3대로 늘릴 때 호스트 포트 충돌이 나므로, 반드시 포트 개방 없이 내부망으로만 스케일링해야 합니다.'
+          },
+          {
+            id: 'lab9', num: '09', page: '28~32쪽', shortTitle: '이미지 다이어트',
+            title: '이미지 다이어트 대회 (1.78GB → 185MB)',
+            subtitle: 'Alpine 베이스 교체, 캐시 순서 최적화, Multi-Stage Build로 10분의 1 압축',
+            metaphor: '게임 개발용 <strong>거대한 수십 GB 엔진 툴은 철거</strong>하고, 카트리지 롬팩에는 <strong>오직 185MB짜리 최종 실행 바이너리만</strong> 쏙 담는 기술입니다.',
+            concept: '<code>FROM node:18-alpine AS builder</code>에서 무거운 npm 컴파일을 마치고, 2단계 최종 컨테이너에는 빌드 찌꺼기 없이 <code>COPY --from=builder</code>로 필요한 결과물만 가져옵니다.',
+            codes: [
+              { label: '최종 4단계 Multi-Stage Dockerfile', lang: 'docker', content: '# 1단계: 빌드 전용 환경\nFROM node:18-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install --omit=dev\n\n# 2단계: 순수 실행 전용 환경 (185MB)\nFROM node:18-alpine\nWORKDIR /app\nCOPY --from=builder /app/node_modules ./node_modules\nCOPY server.js .\nCMD ["node", "server.js"]' }
+            ],
+            verification: '<code>v1 (1.78GB)</code> $\\rightarrow$ <code>v2 (399MB)</code> $\\rightarrow$ <code>v3 (321MB)</code> $\\rightarrow$ <strong>v4 (185MB / 재빌드 0.79초)</strong> 달성!',
+            troubleshooting: '소스코드(<code>COPY . .</code>)를 <code>RUN npm install</code>보다 먼저 복사하면 코드 1줄 바꿀 때마다 npm install이 다시 돌아 캐시가 깨지므로 순서가 생명입니다.'
+          }
+        ];
 
-    function showToast(msg) {
-      const toast = document.getElementById('soundToast');
-      document.getElementById('toastMsg').innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 1500);
-    }
+        const metaphors = [
+          { icon: '🎮 ↔ 📺', title: '이미지 vs 컨테이너', desc: '<strong>이미지:</strong> 게임 롬팩 (절대 안 변하는 읽기 전용 설계도).<br><strong>컨테이너:</strong> 전원을 켜서 실제 플레이 중인 게임 화면(Process).' },
+          { icon: '💾', title: '도커 볼륨 (Volume, -v)', desc: '<strong>세이브 메모리카드:</strong> 본체 전원을 끄고 게임기를 부숴도 내 레벨과 아이템은 영구 보존됩니다.' },
+          { icon: '🔌', title: '포트 포워딩 (-p)', desc: '<strong>패드 연결 단자:</strong> <code>-p 8080:80</code>은 내 Mac 8080번 인터폰으로 컨테이너 80번 문을 여는 통로입니다.' },
+          { icon: '👥', title: '스케일아웃 (--scale was=3)', desc: '<strong>3인 파티 레이드:</strong> 공격수 1명이 쓰러져도 나머지 2명이 보스를 지속 공격해 무중단 클리어!' },
+          { icon: '🕶️', title: '네임스페이스 (Namespace)', desc: '<strong>1P/2P 분할 화면:</strong> 프로세스에게 <em>"세상에 너 혼자야"</em>라고 믿게 만드는 가상화 투명 망토.' },
+          { icon: '⚖️', title: 'Cgroups (자원 통제)', desc: '<strong>식권 배급소:</strong> 1번 방은 CPU 50%, RAM 512MB까지만 쓰게 막아 서버 다운을 방지합니다.' },
+          { icon: '📻', title: '브리지 사설망 & DNS', desc: '<strong>비밀 무전기 채널:</strong> IP를 몰라도 <code>mariadb-3tier</code> 이름만 부르면 도커가 알아서 연결해 줍니다.' },
+          { icon: '🏗️', title: '멀티스테이지 빌드', desc: '<strong>공사장 크레인 철거:</strong> 무거운 빌드 도구는 버리고 완성된 아파트(185MB)만 입주하기.' }
+        ];
 
-    function submitPoll() {
-      const radios = document.getElementsByName('quiz');
-      let val = null;
-      for (let r of radios) { if (r.checked) val = r.value; }
-      if (val === '1') {
-        playCoinSound();
-        alert('🎉 정답입니다! 볼륨(Volume)은 컨테이너가 죽어도 영구 보존되는 세이브 메모리카드입니다!');
-      } else if (val) {
-        playBeep();
-        alert('❌ 아쉽습니다! 정답은 1번 [도커 볼륨(Volume) 마운트]입니다!');
-      } else {
-        alert('보기를 먼저 선택해 주세요!');
+        const cheatsheet = [
+          { cmd: 'docker ps', desc: '실행 중인 컨테이너 목록 조회', tip: '종료된 것까지 보려면 -a 옵션 필수' },
+          { cmd: 'docker run -d -p [H]:[C] [이미지]', desc: '백그라운드 포트 연결 신규 실행', tip: '-d가 없으면 터미널 화면을 독점당함' },
+          { cmd: 'docker exec -it [이름] sh', desc: '실행 중인 컨테이너 내부 셸 접속', tip: '-it 옵션이 대화형 키보드 입력을 켬' },
+          { cmd: 'docker volume create [이름]', desc: '영구 보관용 네임드 볼륨 생성', tip: 'DB 데이터 영구 보존용 필수 관문' },
+          { cmd: 'docker compose up -d', desc: 'compose.yaml 서비스 일괄 기동', tip: '3-Tier 전체를 1초 만에 자동 오케스트레이션' },
+          { cmd: 'docker compose up -d --scale was=3', desc: 'WAS 서비스 즉시 3대로 확장', tip: '무중단 고가용성 로드밸런싱 실현' },
+          { cmd: 'docker volume prune', desc: '안 쓰는 고아 볼륨 일괄 청소', tip: '디스크 용량 확보에 특효약' },
+          { cmd: 'FROM node:18-alpine AS builder', desc: '멀티스테이지 1단계 빌드 환경', tip: '최종 이미지 10분의 1 다이어트 비결' }
+        ];
+
+        const currentLab = computed(() => labs.find(l => l.id === currentView.value));
+
+        const prevLabId = computed(() => {
+          const idx = labs.findIndex(l => l.id === currentView.value);
+          return idx > 0 ? labs[idx - 1].id : null;
+        });
+
+        const nextLabId = computed(() => {
+          const idx = labs.findIndex(l => l.id === currentView.value);
+          return idx >= 0 && idx < labs.length - 1 ? labs[idx + 1].id : null;
+        });
+
+        const filteredCheatsheet = computed(() => {
+          const q = searchQuery.value.toLowerCase().trim();
+          if (!q) return cheatsheet;
+          return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
+        });
+
+        function setView(viewId) {
+          currentView.value = viewId;
+          nextTick(() => {
+            Prism.highlightAll();
+            mermaid.run();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+
+        function copyText(text) {
+          navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('vueToast');
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+              toast.classList.remove('opacity-100', 'translate-y-0');
+              toast.classList.add('opacity-0', 'translate-y-4');
+            }, 1600);
+          });
+        }
+
+        nextTick(() => {
+          Prism.highlightAll();
+          mermaid.run();
+        });
+
+        return {
+          currentView,
+          mainMenus,
+          labs,
+          metaphors,
+          cheatsheet,
+          currentLab,
+          prevLabId,
+          nextLabId,
+          searchQuery,
+          filteredCheatsheet,
+          setView,
+          copyText
+        };
       }
-    }
-
-    function scrollToSection(id) {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    }).mount('#app');
   </script>
 </body>
 </html>
