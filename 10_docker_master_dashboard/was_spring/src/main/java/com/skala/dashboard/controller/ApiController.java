@@ -179,54 +179,72 @@ public class ApiController {
         }
     }
 
-    // 7. 🍄 AI 펫 "도키 (Docky)" sLLM (qwen2.5) 실시간 상황 반응 & Q&A 엔드포인트
+    // 7. 🍄 AI 펫 "도키 (Docky)" sLLM (qwen2.5) Chat API (반복 방지 & 정밀 가이드 탑재)
     @PostMapping("/ai/pet/chat")
     public ResponseEntity<Map<String, Object>> petChat(@RequestBody Map<String, Object> payload) {
-        String question = (String) payload.getOrDefault("question", "도커가 왜 필요한지 비유로 알려줘!");
-        String contextInfo = (String) payload.getOrDefault("context", "사용자가 도커 실습을 진행 중입니다.");
+        String question = (String) payload.getOrDefault("question", "내가 뭐부터 공부해야 할까?");
+        String contextInfo = (String) payload.getOrDefault("context", "사용자가 도커 학습 로드맵을 확인 중입니다.");
         String modelName = (String) payload.getOrDefault("model", "qwen2.5:1.5b");
 
         Map<String, Object> res = new HashMap<>();
         res.put("petName", "도키 (Docky)");
         res.put("mood", "happy");
 
-        String prompt = String.format(
-            "너는 비전공자 학생(4반 G124 안성민)을 항상 따라다니며 도커와 클라우드를 친절하고 쉽게 알려주는 귀여운 닌텐도 아기 버섯 AI 펫 '도키(Docky)'야!\n" +
-            "말투는 항상 밝고 친절하게 '~해요!', '~랍니다!', '~해봐요!' 체를 써줘.\n" +
-            "어려운 IT 용어(포트, 패킷, 볼륨, 프록시)는 일상생활(아파트, 택배, 게임기, 식당 지배인) 비유를 곁들여 비전공자가 듣자마자 단번에 이해할 수 있게 2~4문장으로 핵심만 쏙쏙 답해줘.\n" +
-            "[현재 학생 상황]: %s\n" +
-            "[학생 질문]: %s",
-            contextInfo, question
-        );
+        String systemPrompt =
+            "너는 비전공자 학생(4반 G124 안성민)을 가르쳐주는 친절한 닌텐도 아기 버섯 AI 펫 '도키(Docky)'야.\n" +
+            "규칙:\n" +
+            "1. 부드럽고 자연스러운 존댓말(~해요, ~답니다, ~해봐요)로 말해.\n" +
+            "2. 똑같은 말을 반복하지 마.\n" +
+            "3. 2~3문장으로 짧고 명쾌하게 답변해.\n\n" +
+            "추천 학습 순서:\n" +
+            "1단계: STAGE 01 hello-world (생명주기, Exit 0) 및 STAGE 02 Nginx (-p 8080:80 포트포워딩)\n" +
+            "2단계: STAGE 03 Dockerfile 및 STAGE 04 볼륨 (-v 영속화)\n" +
+            "3단계: STAGE 06~07 Compose 및 STAGE 08 스케일아웃\n" +
+            "4단계: STAGE 09 멀티스테이지 다이어트\n\n" +
+            "학생이 뭐부터 공부할지 물어보면 반드시 '1단계의 STAGE 01 hello-world와 STAGE 02 Nginx 포트포워딩'부터 시작하라고 밝게 권해줘.";
 
-        // 1. 로컬 sLLM (qwen2.5:1.5b) Ollama 호출 시도
+        // 1. Ollama /api/chat 호출 (repeat_penalty, temperature, num_predict 제어)
         try {
             Map<String, Object> req = new HashMap<>();
             req.put("model", modelName);
-            req.put("prompt", prompt);
             req.put("stream", false);
+
+            List<Map<String, String>> messages = new ArrayList<>();
+            messages.add(Map.of("role", "system", "content", systemPrompt));
+            messages.add(Map.of("role", "user", "content", question));
+            req.put("messages", messages);
+
+            Map<String, Object> options = new HashMap<>();
+            options.put("temperature", 0.4);
+            options.put("top_p", 0.9);
+            options.put("repeat_penalty", 1.25);
+            options.put("num_predict", 180);
+            req.put("options", options);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(req, headers);
 
             ResponseEntity<Map> ollamaRes = restTemplate.exchange(
-                ollamaHost + "/api/generate",
+                ollamaHost + "/api/chat",
                 HttpMethod.POST,
                 entity,
                 Map.class
             );
 
             if (ollamaRes.getStatusCode().is2xxSuccessful() && ollamaRes.getBody() != null) {
-                String aiText = (String) ollamaRes.getBody().get("response");
-                if (aiText != null && !aiText.trim().isEmpty()) {
-                    res.put("reply", aiText.trim());
-                    res.put("source", "sLLM (qwen2.5 live)");
-                    return ResponseEntity.ok(res);
+                Map msg = (Map) ollamaRes.getBody().get("message");
+                if (msg != null) {
+                    String aiContent = (String) msg.get("content");
+                    if (aiContent != null && !aiContent.trim().isEmpty()) {
+                        res.put("reply", aiContent.trim());
+                        res.put("source", "sLLM (" + modelName + " live)");
+                        return ResponseEntity.ok(res);
+                    }
                 }
             }
         } catch (Exception e) {
-            // Ollama 로딩 중 시 내장 스마트 지식베이스 폴백
+            // Ollama 지연/오류 시 내장 지식베이스 Fallback
         }
 
         // 2. Fallback 내장 스마트 지식베이스
@@ -238,7 +256,9 @@ public class ApiController {
 
     private String generateSmartFallbackReply(String question, String contextInfo) {
         String q = question.toLowerCase();
-        if (q.contains("포트") || q.contains("포워딩") || q.contains("8080")) {
+        if (q.contains("뭐부터") || q.contains("어디서") || q.contains("학습 순서") || q.contains("공부해야")) {
+            return "🍄 성민님! 가장 먼저 **1단계(입문)**부터 시작하는 것을 강력 추천해요!\n1. **STAGE 01 (hello-world)**: 컨테이너의 생명주기와 Exit 0 종료 코드를 확인하고,\n2. **STAGE 02 (Nginx)**: 브라우저와 통신하는 `-p 8080:80` 포트포워딩을 연습해 보세요!\n기초가 잡히면 2단계 Dockerfile과 볼륨으로 나아가시면 된답니다 🍄✨";
+        } else if (q.contains("포트") || q.contains("포워딩") || q.contains("8080")) {
             return "🍄 포트포워딩은 **아파트 인터폰 텔레포트**예요! 내 Mac 아파트의 8088번 인터폰을 누르면 컨테이너 안쪽 80번 문으로 손님을 쏙 연결해 주는 멋진 통로랍니다!";
         } else if (q.contains("볼륨") || q.contains("volume") || q.contains("삭제")) {
             return "🍄 도커 볼륨(-v)은 **외장 세이브 메모리카드**예요! 게임기 본체(컨테이너)를 부수고 새로 사도 외장 메모리카드만 꽂으면 내 소중한 레벨과 아이템(DB 데이터)이 100% 부활한답니다!";
