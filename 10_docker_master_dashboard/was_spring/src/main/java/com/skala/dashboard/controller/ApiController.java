@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -127,5 +130,40 @@ public class ApiController {
         res.put("message", "새로운 공부 메모가 PostgreSQL에 저장되었습니다!");
         res.put("container", getHostName());
         return ResponseEntity.ok(res);
+    }
+
+    // 6. 🖥️ 진짜 실시간 도커 명령어 실행 터미널 API (Real Live Execution Engine)
+    @PostMapping("/terminal/run")
+    public ResponseEntity<Map<String, Object>> runTerminalCommand(@RequestBody Map<String, String> payload) {
+        String command = payload.getOrDefault("command", "docker ps").trim();
+        Map<String, Object> res = new HashMap<>();
+        res.put("command", command);
+        res.put("container", getHostName());
+        res.put("executedAt", LocalDateTime.now().toString());
+
+        try {
+            ProcessBuilder pb = new ProcessBuilder("sh", "-c", command);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+
+            StringBuilder output = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+            }
+
+            int exitCode = process.waitFor();
+            res.put("exitCode", exitCode);
+            res.put("output", output.toString().trim());
+            res.put("success", exitCode == 0);
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            res.put("exitCode", -1);
+            res.put("output", "명령어 실행 중 오류 발생: " + e.getMessage());
+            res.put("success", false);
+            return ResponseEntity.status(500).body(res);
+        }
     }
 }

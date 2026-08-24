@@ -6,8 +6,9 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
-# 2단계: 순수 실행 환경 (경량 Amazon Corretto JRE 17)
+# 2단계: 순수 실행 환경 (경량 Amazon Corretto JRE 17 + Docker CLI 도구)
 FROM amazoncorretto:17-alpine
+RUN apk add --no-cache docker-cli curl
 WORKDIR /app
 COPY --from=builder /app/target/dashboard-backend-*.jar app.jar
 EXPOSE 8080
