@@ -294,101 +294,82 @@
       </div>
 
       <!-- ========================================================
-           VIEW 2: CONCEPT MAP (지식 연계 지도 & 실제 동작 원리)
+           VIEW 2: CONCEPT MAP (비전공자를 위한 외계어 번역 & 8단계 여정)
            ======================================================== -->
       <div v-else-if="currentView === 'concepts'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
           <div class="space-y-2 pb-4 border-b-2 border-chrome-indigo">
-            <span class="text-xs font-black text-signal uppercase tracking-wider font-pixel">Knowledge Ecosystem</span>
+            <span class="text-xs font-black text-signal uppercase tracking-wider font-pixel">Jargon Translator &amp; Flow</span>
             <h2 class="boxart-wordmark text-2xl sm:text-3xl text-white">
-              <i class="fa-solid fa-diagram-project text-amber"></i> 필수 사전 지식 6대 기둥 &amp; 실전 연계 지도
+              <i class="fa-solid fa-language text-amber"></i> 비전공자를 위한 외계어 IT 용어 번역기
             </h2>
             <p class="text-sm sm:text-base text-slate-900 font-medium">
-              도커를 제대로 이해하기 위해 알아야 할 6가지 기초 지식과, 이들이 실제 시스템에서 톱니바퀴처럼 맞물려 돌아가는 전체 과정을 완벽하게 정리했습니다.
+              패킷, 포트포워딩, 리버스 프록시 등 전공자들만 쓰던 어려운 단어들을 <strong>식당, 아파트, 택배 일상 비유</strong>로 쉽고 직관적으로 번역해 드립니다!
             </p>
           </div>
 
-          <!-- 6 Knowledge Pillars Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-chrome-indigo">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-laptop-code text-chrome-indigo"></i> 1. 운영체제(OS) &amp; 프로세스
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>프로그램 vs 프로세스</strong>: 저장 장치에 잠자고 있는 파일(코드)이 RAM에 적재되어 CPU에 의해 실행 중인 상태가 프로세스입니다.<br>
-                • <strong>PID 1의 의미</strong>: 컨테이너 내부의 메인 프로세스(예: Spring Boot Java jar)가 <code>PID 1</code>을 차지합니다. <strong>PID 1 프로세스가 종료되는 순간 컨테이너도 즉시 소멸</strong>합니다.
-              </p>
-            </div>
-
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-amber">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-network-wired text-signal"></i> 2. 네트워크 &amp; 포트 포워딩
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>포트(Port)</strong>: 컴퓨터라는 아파트에서 특정 프로세스를 찾아가는 호수(80, 8080, 5432).<br>
-                • <strong>NAT &amp; 포트 매핑 (<code>-p 8088:80</code>)</strong>: 내 Mac(호스트)의 8088 인터폰을 누르면 컨테이너 내부 80번 문으로 패킷을 토스(포워딩)해 줍니다.<br>
-                • <strong>도커 내부 DNS (127.0.0.11)</strong>: 사설망 안에서 IP 대신 <code>http://was:8080</code>처럼 컨테이너 이름만 부르면 알아서 연결해 줍니다.
-              </p>
-            </div>
-
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-emerald-600">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-hard-drive text-emerald-700"></i> 3. 파일시스템 &amp; 볼륨 영속화
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>OverlayFS (CoW)</strong>: 절대 변하지 않는 읽기 전용 이미지 레이어(LowerDir) 위에 얇은 쓰기 레이어(UpperDir)를 얹어 변경분만 기록.<br>
-                • <strong>볼륨 마운트 (<code>-v</code>)</strong>: 컨테이너는 버려져도 데이터는 살아야 하므로 호스트의 영구 외장 메모리카드에 DB 폴더를 연결합니다.
-              </p>
-            </div>
-
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-nintendo-red">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-cubes text-nintendo-red"></i> 4. 3-Tier 웹 상용 아키텍처
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>Web (Nginx)</strong>: 문지기 역할. 유일하게 8088 포트를 열고 정적 SPA를 서빙하며 API 요청을 WAS로 중계.<br>
-                • <strong>WAS (Spring Boot 3)</strong>: 두뇌 역할. 비즈니스 로직과 API를 처리하며 외부 포트는 닫아 해킹 차단.<br>
-                • <strong>DB (PostgreSQL 16)</strong>: 금고 역할. 오직 WAS하고만 연결되며 데이터를 영구 보관.
-              </p>
-            </div>
-
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-indigo-600">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-gears text-indigo-700"></i> 5. 오케스트레이션 (Docker Compose)
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>IaC (Infrastructure as Code)</strong>: 수동 명령 10줄 대신 <code>compose.yaml</code> 한 장으로 인프라 명세.<br>
-                • <strong>헬스체크 (Healthcheck)</strong>: DB가 완전히 준비될 때까지 WAS 부팅을 지능적으로 대기(<code>condition: service_healthy</code>)시켜 기동 실패 에러를 방지.
-              </p>
-            </div>
-
-            <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-purple-600">
-              <div class="text-base font-black text-carbon flex items-center gap-2">
-                <i class="fa-solid fa-arrows-split-up-and-left text-purple-700"></i> 6. 확장성 (Scale-out) &amp; 무중단 HA
-              </div>
-              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
-                • <strong>스케일아웃 (Scale-out)</strong>: 비싼 컴퓨터 1대보다 가벼운 컨테이너 3대(<code>--scale was=3</code>)가 훨씬 저렴하고 안정적.<br>
-                • <strong>무중단 Failover</strong>: 1대의 WAS가 고장 나도 Nginx의 <code>proxy_next_upstream</code> 설정이 즉시 다른 WAS로 요청을 넘겨 500 에러를 100% 방지.
-              </p>
-            </div>
-
+          <!-- Jargon Translation Table -->
+          <div class="overflow-x-auto inset-surface p-2 rounded-xs">
+            <table class="w-full text-sm text-left border-collapse bg-white">
+              <thead>
+                <tr class="bg-carbon text-nav-gold font-black border-b-2 border-chrome-indigo">
+                  <th class="p-3.5">어려운 IT 외계어</th>
+                  <th class="p-3.5">일상생활 &amp; 식당/택배 비유</th>
+                  <th class="p-3.5">진짜 의미 (한 줄 요약)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-slate-800 text-xs sm:text-sm">
+                <tr>
+                  <td class="p-3.5 font-bold text-nintendo-red font-mono">📦 패킷 (Packet)</td>
+                  <td class="p-3.5 font-medium"><strong>우체국 택배 상자:</strong> 보내는 사람 주소와 받는 사람 주소가 적힌 작은 데이터 조각</td>
+                  <td class="p-3.5 text-slate-600">인터넷으로 주고받는 편지/데이터 상자</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-chrome-indigo font-mono">🔌 포트 (Port)</td>
+                  <td class="p-3.5 font-medium"><strong>아파트 동/호수 (인터폰 번호):</strong> 한 컴퓨터 안에 80호(웹), 8080호(주방), 5432호(금고)가 따로 있음</td>
+                  <td class="p-3.5 text-slate-600">컴퓨터 안에서 여러 프로그램을 구분하는 번호</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-signal font-mono">🔄 포트 포워딩 (-p)</td>
+                  <td class="p-3.5 font-medium"><strong>아파트 인터폰 텔레포트:</strong> 밖에서 8088 인터폰을 누르면 컨테이너 안쪽 80번 문으로 손님을 연결해 줌</td>
+                  <td class="p-3.5 text-slate-600">호스트로 온 요청을 컨테이너 안으로 넘겨주기</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-emerald-700 font-mono">🤵 리버스 프록시 (Reverse Proxy)</td>
+                  <td class="p-3.5 font-medium"><strong>고급 레스토랑의 지배인/문지기:</strong> 손님이 주방에 직접 못 들어가게 막고, 지배인(Nginx)이 주문을 받아 주방에 전달</td>
+                  <td class="p-3.5 text-slate-600">보안을 위해 Nginx가 요청을 대신 받아 WAS에 넘겨주는 것</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-indigo-700 font-mono">📖 도커 내부 DNS (127.0.0.11)</td>
+                  <td class="p-3.5 font-medium"><strong>스마트폰 연락처 (전화번호부):</strong> 외우기 힘든 숫자 IP(172.20.0.3) 대신 'was', 'db' 이름만 눌러도 통화 연결</td>
+                  <td class="p-3.5 text-slate-600">IP 대신 컨테이너 이름만 부르면 알아서 전화 걸어주는 시스템</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-purple-700 font-mono">☕ Spring Data JPA</td>
+                  <td class="p-3.5 font-medium"><strong>주방 보조 요리사 (자동 번역기):</strong> 복잡한 SQL 대신 자바 코드로 <em>"회원 목록 꺼내줘"</em>하면 알아서 DB에서 찾아옴</td>
+                  <td class="p-3.5 text-slate-600">자바 프로그램이 DB와 쉽게 대화하는 도구</td>
+                </tr>
+                <tr>
+                  <td class="p-3.5 font-bold text-amber font-mono">💾 볼륨 마운트 (-v)</td>
+                  <td class="p-3.5 font-medium"><strong>외장 세이브 메모리카드:</strong> 게임기 본체를 부숴도 세이브 팩은 내 주머니에 안전하게 보관</td>
+                  <td class="p-3.5 text-slate-600">컨테이너가 지워져도 DB 데이터는 내 PC에 영구 보존</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <!-- End-to-End Request Journey Flow -->
-          <div class="p-5 raised-panel rounded-xs space-y-3 border-2 border-chrome-indigo">
-            <h3 class="font-black text-base text-carbon flex items-center gap-2">
-              <i class="fa-solid fa-shoe-prints text-signal"></i> 실제 요청이 처리되는 8단계 여정 (End-to-End Lifecycle)
-            </h3>
-            <div class="mermaid">
-            flowchart TD
-              A["1. 사용자 브라우저 접속 (http://localhost:8088)"] --> B["2. 호스트 머신 NAT 포트포워딩 (:8088 -> 컨테이너:80)"]
-              B --> C["3. 1계층 Nginx 문지기가 요청 수신 및 정적 Vue SPA 서빙"]
-              C -->|/api/health 요청 발생| D["4. 도커 임베디드 DNS(127.0.0.11)로 'was' 사설 IP 해석"]
-              D --> E["5. 2계층 Spring Boot WAS로 리버스 프록시 토스"]
-              E --> F["6. Spring Data JPA가 사설망을 통해 PostgreSQL(db:5432) 쿼리 실행"]
-              F --> G["7. PostgreSQL이 영구 볼륨(postgres-db-data)에 데이터 기록 후 결과 반환"]
-              G --> H["8. WAS -> Nginx -> 브라우저로 1ms 만에 JSON 응답 완료!"]
+          <!-- 8-Step Lifecycle Diagram (Safe SVG Render Container) -->
+          <div class="beveled-plate bg-canvas p-5 sm:p-6 space-y-4">
+            <div class="border-b-2 border-chrome-indigo pb-2 flex items-center justify-between">
+              <h3 class="chrome-label text-sm sm:text-base font-extrabold flex items-center gap-2 text-ink">
+                <i class="fa-solid fa-shoe-prints text-signal"></i> ≡ 실제 요청이 처리되는 8단계 일상 비유 여정
+              </h3>
+              <button @click="openModal('journey', null)" class="text-xs font-black text-signal hover:underline">크게 보기 →</button>
+            </div>
+
+            <!-- Dynamic SVG Container -->
+            <div id="journeyDiagramContainer" class="p-6 inset-surface rounded-xs flex justify-center overflow-x-auto">
+              <!-- Rendered by mermaid dynamically -->
             </div>
           </div>
 
@@ -429,7 +410,6 @@
             </h2>
           </div>
 
-          <!-- Kernel Table -->
           <div class="overflow-x-auto inset-surface p-2 rounded-xs">
             <table class="w-full text-sm text-left border-collapse bg-white">
               <thead>
@@ -742,11 +722,7 @@
           <i class="fa-solid fa-magnifying-glass-plus text-signal"></i> 크게 보기 (확대 뷰)
         </h3>
 
-        <div v-if="modalType === 'diagram'" id="modalDiagramContainer" class="p-6 bg-white border-2 border-chrome-indigo rounded-xs flex justify-center overflow-x-auto">
-          <!-- Rendered dynamically -->
-        </div>
-
-        <div v-else-if="modalType === 'runtime'" id="modalRuntimeContainer" class="p-6 bg-white border-2 border-chrome-indigo rounded-xs flex justify-center overflow-x-auto">
+        <div v-if="modalType === 'journey'" id="modalJourneyContainer" class="p-6 bg-white border-2 border-chrome-indigo rounded-xs flex justify-center overflow-x-auto">
           <!-- Rendered dynamically -->
         </div>
 
@@ -825,7 +801,7 @@
 
         const mainMenus = [
           { id: 'roadmap', title: '학습 로드맵', icon: 'fa-solid fa-route' },
-          { id: 'concepts', title: '지식 연계 지도', icon: 'fa-solid fa-diagram-project' },
+          { id: 'concepts', title: '외계어 번역 & 8단계 여정', icon: 'fa-solid fa-language' },
           { id: 'metaphors', title: '개념비유 8선', icon: 'fa-solid fa-lightbulb' },
           { id: 'kernel', title: '리눅스 커널 심화', icon: 'fa-solid fa-microchip' },
           { id: 'cheatsheet', title: '명령어 사전', icon: 'fa-solid fa-book' }
@@ -1116,44 +1092,27 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
         });
 
-        const diagram3TierCode = `
-graph TD
-  Client["🌐 외부 브라우저 손님"] -->|http://localhost:8088| NginxPort["Nginx 호스트 포트 :8088"]
-  subgraph DockerNetwork["🎮 DOCKER 64 가상 사설망 (dashboard-net)"]
-    NginxPort --> Nginx["🤵 Web Nginx (포트 80)"]
-    Nginx -->|/api/ 리버스 프록시| WAS["☕ WAS Spring Boot 3 (:8080)"]
-    WAS -->|Spring Data JPA| DB["🐘 DB PostgreSQL 16 (:5432)"]
-    DB -.->|실시간 마운트| Volume[("💾 영구 볼륨 postgres-db-data")]
-  end
-`;
-
-        const runtimeDiagramCode = `
-flowchart LR
-  CLI["💻 docker CLI"] -->|REST API| Daemon["⚙️ dockerd 데몬"]
-  Daemon -->|gRPC 통신| Containerd["📦 containerd"]
-  Containerd --> Shim["🔗 containerd-shim"]
-  Shim --> Runc["🚀 runc OCI 도구"]
-  Runc --> Process["🐧 Linux Kernel PID 1 격리"]
+        // Clean & Bug-free Mermaid Diagram Code
+        const journeyDiagramCode = `
+flowchart TD
+  A["1. 손님: 브라우저 접속 (http://localhost:8088)"] --> B["2. 경비실: 호스트 8088 인터폰을 컨테이너 80번 문으로 연결"]
+  B --> C["3. 1층 문지기: Nginx가 요청을 받아 Vue SPA 화면을 먼저 보여줌"]
+  C -->|데이터 요청 발생| D["4. 전화번호부: 도커 내부 DNS(127.0.0.11)가 'was' 전화번호를 조회"]
+  D --> E["5. 2층 주방: Spring Boot WAS로 주문서(API 요청)를 전달"]
+  E --> F["6. 주방 보조: Spring Data JPA가 3층 금고(PostgreSQL)에서 데이터 조회"]
+  F --> G["7. 세이브 팩: PostgreSQL이 영구 볼륨 외장하드에서 안전하게 데이터 꺼냄"]
+  G --> H["8. 완료: 1ms 초고속으로 손님 화면에 최종 결과 반환!"]
 `;
 
         async function renderCleanDiagrams() {
           await nextTick();
-          const homeEl = document.getElementById('homeDiagramContainer');
-          if (homeEl) {
+          const journeyEl = document.getElementById('journeyDiagramContainer');
+          if (journeyEl) {
             try {
-              const { svg } = await mermaid.render('homeDiagramSvg_' + Date.now(), diagram3TierCode);
-              homeEl.innerHTML = svg;
+              const { svg } = await mermaid.render('journeyDiagramSvg_' + Date.now(), journeyDiagramCode);
+              journeyEl.innerHTML = svg;
             } catch (err) {
-              console.error('Home diagram render error:', err);
-            }
-          }
-          const runtimeEl = document.getElementById('runtimeDiagramContainer');
-          if (runtimeEl) {
-            try {
-              const { svg } = await mermaid.render('runtimeDiagramSvg_' + Date.now(), runtimeDiagramCode);
-              runtimeEl.innerHTML = svg;
-            } catch (err) {
-              console.error('Runtime diagram render error:', err);
+              console.error('Journey diagram render error:', err);
             }
           }
           Prism.highlightAll();
@@ -1251,16 +1210,10 @@ flowchart LR
           modalData.value = data;
           modalActive.value = true;
           await nextTick();
-          if (type === 'diagram') {
-            const el = document.getElementById('modalDiagramContainer');
+          if (type === 'journey') {
+            const el = document.getElementById('modalJourneyContainer');
             if (el) {
-              const { svg } = await mermaid.render('modalDiagramSvg_' + Date.now(), diagram3TierCode);
-              el.innerHTML = svg;
-            }
-          } else if (type === 'runtime') {
-            const el = document.getElementById('modalRuntimeContainer');
-            if (el) {
-              const { svg } = await mermaid.render('modalRuntimeSvg_' + Date.now(), runtimeDiagramCode);
+              const { svg } = await mermaid.render('modalJourneySvg_' + Date.now(), journeyDiagramCode);
               el.innerHTML = svg;
             }
           }
