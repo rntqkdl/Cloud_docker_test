@@ -12,12 +12,12 @@ services:
     restart: unless-stopped
 
   was:
-    build: ./was
-    container_name: dashboard-was
+    build: ./was_spring
+    container_name: dashboard-was-spring
     environment:
       DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: root
+      DB_PORT: 5432
+      DB_USER: postgres
       DB_PASSWORD: password123
       DB_NAME: dashboard_db
     depends_on:
@@ -26,20 +26,21 @@ services:
     restart: unless-stopped
 
   db:
-    image: mariadb:11
-    container_name: dashboard-db
+    image: postgres:16-alpine
+    container_name: dashboard-db-postgres
     environment:
-      MYSQL_ROOT_PASSWORD: password123
-      MYSQL_DATABASE: dashboard_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: dashboard_db
     volumes:
-      - dashboard-db-data:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres-db-data:/var/lib/postgresql/data
+      - ./db_postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dashboard_db"]
       interval: 3s
       timeout: 3s
       retries: 10
     restart: unless-stopped
 
 volumes:
-  dashboard-db-data:
+  postgres-db-data:

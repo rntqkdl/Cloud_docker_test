@@ -18,18 +18,14 @@
             canvas: '#7a8aba',             /* Periwinkle Metallic Chassis */
             periwinkle: '#8ba1d4',         /* Raised Light Periwinkle */
             'canvas-soft': '#9fbee7',      /* Pale Sky Subnav Strip */
-            lavender: '#acace7',           /* Pale Lavender */
-            ice: '#c0d5e6',                /* Pale Ice */
             'chrome-indigo': '#3d4f97',    /* Beveled Shadow Line */
-            'muted-indigo': '#60619c',     /* Recessed Dotted Rule */
             platinum: '#dedede',           /* Inset Content Surface */
             carbon: '#21242e',             /* Carbon Navy Command Layer */
             'nintendo-red': '#e60012',     /* Nintendo Red Logo Pill */
             signal: '#f68d1f',             /* Signal Orange Forward/Action */
             amber: '#ecab37',              /* Amber Utility Chips & Badges */
             'nav-gold': '#e48600',         /* Nav Gold Primary Menu Words */
-            ink: '#21242e',                /* Primary Text */
-            'ink-soft': '#3d4f97'          /* Small-caps Chrome Labels */
+            ink: '#21242e'                 /* Primary Text */
           },
           fontFamily: {
             sans: ['Pretendard', 'Arial', 'Helvetica', 'sans-serif'],
@@ -51,8 +47,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 
@@ -130,23 +125,21 @@
   <!-- Main Chassis Container -->
   <div id="app" class="w-full max-w-5xl beveled-plate shadow-2xl flex flex-col overflow-hidden">
 
-    <!-- 1. Masthead Row (Player Info & Real-Time Backend Status) -->
+    <!-- 1. Header (Identity & Live Backend Status) -->
     <header class="bg-canvas px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between border-b-2 border-chrome-indigo gap-3">
       <div class="flex items-center gap-3">
-        <div class="text-3xl filter drop-shadow">🎮</div>
+        <div class="text-3xl filter drop-shadow">🍄</div>
         <div class="space-y-0.5">
           <div class="flex items-center gap-2">
-            <span class="bg-nintendo-red text-white text-xs font-black px-2 py-0.5 rounded-xs font-pixel">PLAYER</span>
+            <span class="bg-nintendo-red text-white text-xs font-black px-2 py-0.5 rounded-xs font-pixel">STUDENT</span>
             <strong class="text-xs sm:text-sm font-black text-carbon">4반 G124 안성민</strong>
           </div>
           <div class="flex items-center gap-2 text-xs font-bold text-chrome-indigo">
-            <span>LEVEL {{ playerLevel }}</span>
-            <span class="text-slate-400">|</span>
-            <span>진척도: {{ completedStagesCount }} / {{ labs.length }} 완료</span>
+            <span>SPRING BOOT 3 + POSTGRESQL 16</span>
             <span class="text-slate-400">|</span>
             <span :class="backendHealthy ? 'text-emerald-700 font-extrabold' : 'text-amber-800'">
               <i class="fa-solid fa-circle text-[8px] mr-1" :class="backendHealthy ? 'text-emerald-500' : 'text-amber-500'"></i>
-              DB: {{ dbLatency }}ms ({{ wasContainer }})
+              DB Ping: {{ dbLatency }}ms ({{ wasContainer }})
             </span>
           </div>
         </div>
@@ -156,16 +149,13 @@
         <button @click="checkLiveHealth" class="bg-white hover:bg-slate-100 text-chrome-indigo px-3 py-1 text-xs font-bold rounded-xs border border-chrome-indigo flex items-center gap-1.5 shadow-sm">
           <i class="fa-solid fa-heart-pulse text-nintendo-red"></i> 3-Tier 핑 진단
         </button>
-        <button @click="saveProgressToDb" class="bg-amber hover:bg-yellow-400 text-carbon px-3 py-1 text-xs font-black rounded-xs border border-amber-800 flex items-center gap-1.5 shadow-sm">
-          <i class="fa-solid fa-cloud-arrow-up"></i> DB 진척도 저장
-        </button>
       </div>
     </header>
 
     <!-- 2. Carbon Primary Navigation Bar -->
     <nav class="carbon-command-slab px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
       <!-- Logo Pill -->
-      <div class="bg-white px-3.5 py-1 rounded-full border-2 border-nintendo-red flex items-center gap-2 shadow-[2px_2px_0px_black] cursor-pointer" @click="setView('home')">
+      <div class="bg-white px-3.5 py-1 rounded-full border-2 border-nintendo-red flex items-center gap-2 shadow-[2px_2px_0px_black] cursor-pointer" @click="setView('roadmap')">
         <i class="fa-brands fa-docker text-nintendo-red text-base"></i>
         <span class="font-black italic text-sm tracking-tight text-nintendo-red">DOCKER 64</span>
       </div>
@@ -183,16 +173,16 @@
 
       <!-- Live Service Badge -->
       <div class="flex items-center gap-2">
-        <button @click="setView('guestbook')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 text-xs sm:text-sm font-black rounded-xs uppercase flex items-center gap-1.5">
-          <i class="fa-solid fa-comments"></i> 실시간 Q&A DB
+        <button @click="setView('notes')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 text-xs sm:text-sm font-black rounded-xs uppercase flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-to-square"></i> 공부 메모장 (DB)
         </button>
       </div>
     </nav>
 
-    <!-- 3. Pale Sky Secondary Navigation Strip (Stage Tabs) -->
+    <!-- 3. Pale Sky Secondary Navigation Strip (Stage Quick Jump) -->
     <div class="bg-canvas-soft px-4 sm:px-6 py-2 flex items-center justify-between border-b-2 border-chrome-indigo overflow-x-auto gap-2">
       <div class="flex items-center gap-2 text-xs sm:text-sm font-black text-ink shrink-0">
-        <span class="bg-amber text-carbon font-pixel text-[10px] px-2 py-0.5 rounded-xs">SELECT STAGE</span>
+        <span class="bg-amber text-carbon font-pixel text-[10px] px-2 py-0.5 rounded-xs">STAGE JUMP</span>
       </div>
       <div class="flex items-center gap-1.5 overflow-x-auto py-1">
         <button v-for="lab in labs" :key="lab.id"
@@ -206,104 +196,119 @@
       </div>
     </div>
 
-    <!-- 4. Dynamic Component View Area -->
+    <!-- 4. Main Dynamic Component View Area -->
     <main class="p-4 sm:p-6 bg-canvas flex-1 space-y-6">
 
       <!-- ========================================================
-           VIEW 1: HOME (Hero & 3-Tier Live Architecture)
+           VIEW 1: ROADMAP (어디서부터 봐야 할지 명쾌한 학습 가이드라인)
            ======================================================== -->
-      <div v-if="currentView === 'home'" class="space-y-6">
+      <div v-if="currentView === 'roadmap'" class="space-y-6">
         
         <!-- Hero Boxart Panel -->
         <div class="hero-panel beveled-plate p-6 sm:p-10 text-white relative overflow-hidden bg-gradient-to-br from-carbon via-slate-900 to-chrome-indigo">
           <div class="relative z-10 space-y-4">
             <div class="flex gap-2.5 flex-wrap">
-              <span class="bg-signal text-white text-xs font-black px-3 py-1 rounded-xs">LIVE 3-TIER SERVICE</span>
+              <span class="bg-signal text-white text-xs font-black px-3 py-1 rounded-xs">STUDY GUIDELINE</span>
               <span class="bg-carbon border border-white/40 text-amber text-xs font-black px-3 py-1 rounded-xs">4반 G124 안성민</span>
-              <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">MARIADB &amp; WAS LIVE</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">SPRING BOOT + POSTGRESQL</span>
             </div>
-            <h1 class="boxart-wordmark text-3xl sm:text-5xl text-white">DOCKER CLOUD MASTER</h1>
+            <h1 class="boxart-wordmark text-3xl sm:text-5xl text-white">비전공자 도커 마스터 로드맵</h1>
             <p class="text-base sm:text-lg text-slate-200 max-w-3xl leading-relaxed font-medium">
-              SKALA 클라우드 컨테이너 실무 강의 197쪽과 리눅스 컨테이너 핵심 교재를 비전공자의 시선에서 <strong>실시간 백엔드·DB 연동 및 실제 코드</strong>로 완전 정복합니다!
+              "어디서부터 어떻게 공부해야 할까요?" — 기초 개념부터 3-Tier 상용 인프라까지 <strong>가장 효율적인 4단계 추천 학습 순서</strong>입니다.
             </p>
           </div>
-          <div class="mt-6 pt-5 border-t border-white/20 flex flex-wrap gap-6 text-sm font-bold text-slate-300">
-            <div><i class="fa-solid fa-server text-amber mr-1.5"></i> 사내 레지스트리: <code class="text-white bg-black/40 px-2 py-0.5 rounded-xs">harbor.skala-gj.com/skala-gj4/skala-webserver-g124</code></div>
-            <div><i class="fa-brands fa-github text-amber mr-1.5"></i> GitHub 원본 코드: <a href="https://github.com/rntqkdl/Cloud_docker_test" target="_blank" class="text-amber underline">rntqkdl/Cloud_docker_test</a></div>
+        </div>
+
+        <!-- 4-Phase Roadmap Timeline -->
+        <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
+          <div class="border-b-2 border-chrome-indigo pb-3">
+            <h2 class="chrome-label text-base sm:text-lg font-black flex items-center gap-2 text-ink">
+              <i class="fa-solid fa-route text-signal"></i> ≡ 4단계 추천 학습 순서 &amp; 핵심 목표
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Phase 1 -->
+            <div class="p-5 raised-panel rounded-xs space-y-2.5 shadow-sm border-l-4 border-chrome-indigo">
+              <div class="flex items-center justify-between">
+                <span class="bg-chrome-indigo text-white font-pixel text-xs px-2.5 py-0.5 rounded-xs">PHASE 1</span>
+                <span class="text-xs font-bold text-slate-700">입문: 컨테이너의 본질</span>
+              </div>
+              <h3 class="font-black text-base text-carbon">1단계. 프로세스 격리와 포트 포워딩</h3>
+              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                • <strong>STAGE 01 (hello-world)</strong>: 컨테이너가 영원히 도는 게 아니라 작업 후 스스로 종료(Exited 0)되는 생명주기 이해.<br>
+                • <strong>STAGE 02 (Nginx)</strong>: 외부 브라우저가 격리된 컨테이너에 들어오기 위한 <code>-p 8080:80</code> 포트 매핑 이해.
+              </p>
+              <button @click="setView('lab1')" class="text-xs font-black text-white bg-signal hover:bg-amber px-3 py-1 rounded-xs flex items-center gap-1 mt-2">
+                1단계 실습 바로가기 →
+              </button>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="p-5 raised-panel rounded-xs space-y-2.5 shadow-sm border-l-4 border-amber">
+              <div class="flex items-center justify-between">
+                <span class="bg-amber text-carbon font-pixel text-xs px-2.5 py-0.5 rounded-xs">PHASE 2</span>
+                <span class="text-xs font-bold text-slate-700">핵심: 빌드와 영속화</span>
+              </div>
+              <h3 class="font-black text-base text-carbon">2단계. 이미지 빌드 &amp; 데이터 보존</h3>
+              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                • <strong>STAGE 03 (Dockerfile)</strong>: <code>FROM, COPY, CMD</code> 3대 키워드로 내 코드를 이미지로 박제.<br>
+                • <strong>STAGE 04 (도커 볼륨)</strong>: 컨테이너가 삭제되어도 DB 데이터가 살아남는 <code>-v</code> 외장 메모리카드 원리.<br>
+                • <strong>STAGE 05 (Harbor)</strong>: 사내 저장소에 내 고유 태그(g124)로 푸시하고 다운로드.
+              </p>
+              <button @click="setView('lab3')" class="text-xs font-black text-white bg-signal hover:bg-amber px-3 py-1 rounded-xs flex items-center gap-1 mt-2">
+                2단계 실습 바로가기 →
+              </button>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="p-5 raised-panel rounded-xs space-y-2.5 shadow-sm border-l-4 border-emerald-600">
+              <div class="flex items-center justify-between">
+                <span class="bg-emerald-600 text-white font-pixel text-xs px-2.5 py-0.5 rounded-xs">PHASE 3</span>
+                <span class="text-xs font-bold text-slate-700">상용: 3-Tier &amp; 자동화</span>
+              </div>
+              <h3 class="font-black text-base text-carbon">3단계. 3-Tier 사설망과 Compose</h3>
+              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                • <strong>STAGE 06 (수동 3-Tier)</strong>: DB/WAS 포트는 닫고 Nginx만 80을 열어 내부 DNS로 통신.<br>
+                • <strong>STAGE 07 (Docker Compose)</strong>: <code>compose.yaml + healthcheck</code>로 1초 만에 전체 파티 자동 기동.<br>
+                • <strong>STAGE 08 (스케일아웃)</strong>: <code>--scale was=3</code>으로 서버를 늘리고 1대가 죽어도 무중단 서비스.
+              </p>
+              <button @click="setView('lab6')" class="text-xs font-black text-white bg-signal hover:bg-amber px-3 py-1 rounded-xs flex items-center gap-1 mt-2">
+                3단계 실습 바로가기 →
+              </button>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="p-5 raised-panel rounded-xs space-y-2.5 shadow-sm border-l-4 border-nintendo-red">
+              <div class="flex items-center justify-between">
+                <span class="bg-nintendo-red text-white font-pixel text-xs px-2.5 py-0.5 rounded-xs">PHASE 4</span>
+                <span class="text-xs font-bold text-slate-700">심화: 최적화 &amp; 커널</span>
+              </div>
+              <h3 class="font-black text-base text-carbon">4단계. 이미지 다이어트 &amp; 커널 심화</h3>
+              <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+                • <strong>STAGE 09 (멀티스테이지)</strong>: 1.78GB짜리 거대 이미지를 185MB로 10분의 1 압축.<br>
+                • <strong>리눅스 커널 심화</strong>: Namespace(시야 격리), cgroups(자원 통제), OverlayFS(CoW) 원리 완성.
+              </p>
+              <button @click="setView('lab9')" class="text-xs font-black text-white bg-signal hover:bg-amber px-3 py-1 rounded-xs flex items-center gap-1 mt-2">
+                4단계 실습 바로가기 →
+              </button>
+            </div>
+
           </div>
         </div>
 
-        <!-- 3-Tier Interactive Diagram Module with Live Status -->
-        <div class="beveled-plate bg-canvas p-4 sm:p-6 space-y-4">
-          <div class="border-b-2 border-chrome-indigo pb-2 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 class="chrome-label text-sm sm:text-base font-extrabold flex items-center gap-2 text-ink">
-                <i class="fa-solid fa-sitemap text-nintendo-red"></i> ≡ 현재 동작 중인 실시간 3-TIER 아키텍처
-              </h2>
-            </div>
-            <button @click="openModal('diagram', null)"
-                    class="px-3.5 py-1.5 bg-signal hover:bg-amber text-white text-xs sm:text-sm font-black rounded-xs border-t border-white/80 border-b-2 border-amber-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-magnifying-glass-plus"></i> 다이어그램 크게 보기 (Zoom)
-            </button>
-          </div>
-
-          <!-- Safe Rendered SVG Container -->
-          <div id="homeDiagramContainer" class="p-6 inset-surface rounded-xs flex justify-center overflow-x-auto cursor-pointer hover:border-chrome-indigo transition"
-               @click="openModal('diagram', null)">
-            <!-- Rendered by mermaid dynamically -->
-          </div>
-
-          <!-- 3-Tier Principles Inside Raised Panels -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-            <div class="p-4 raised-panel rounded-xs text-sm space-y-1.5">
-              <strong class="text-carbon font-black text-base flex items-center gap-1.5">
-                <i class="fa-solid fa-door-open text-signal"></i> 1. Web (Nginx:80)
-              </strong>
-              <p class="text-slate-800 text-xs sm:text-sm leading-relaxed">
-                <strong>유일하게 외부 포트(8088:80) 개방</strong>. Vue SPA 정적 화면을 서빙하며, <code>/api/</code> 요청은 내부 사설망의 Node.js WAS로 안전하게 리버스 프록시합니다.
-              </p>
-            </div>
-            <div class="p-4 raised-panel rounded-xs text-sm space-y-1.5">
-              <strong class="text-carbon font-black text-base flex items-center gap-1.5">
-                <i class="fa-solid fa-code text-signal"></i> 2. WAS (Node.js:8080)
-              </strong>
-              <p class="text-slate-800 text-xs sm:text-sm leading-relaxed">
-                <strong>외부 포트 미개방 (보안 격리)</strong>. 퀘스트 진척도 저장, 방명록 CRUD, MariaDB 핑 연산을 수행하며 현재 컨테이너 호스트명(<code>{{ wasContainer }}</code>)을 반환합니다.
-              </p>
-            </div>
-            <div class="p-4 raised-panel rounded-xs text-sm space-y-1.5">
-              <strong class="text-carbon font-black text-base flex items-center gap-1.5">
-                <i class="fa-solid fa-database text-signal"></i> 3. DB (MariaDB 11)
-              </strong>
-              <p class="text-slate-800 text-xs sm:text-sm leading-relaxed">
-                <strong>영구 볼륨(dashboard-db-data) 마운트</strong>. 컨테이너가 폭파되어도 내가 완료한 퀘스트 별점과 작성한 공부 메모가 영구 보존됩니다.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 9 Stages Quick Navigation Grid -->
-        <div class="beveled-plate bg-canvas p-4 sm:p-6 space-y-4">
+        <!-- 3-Tier Live Architecture Diagram -->
+        <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-4">
           <div class="border-b-2 border-chrome-indigo pb-2 flex items-center justify-between">
             <h2 class="chrome-label text-sm sm:text-base font-extrabold flex items-center gap-2 text-ink">
-              <i class="fa-solid fa-table-cells text-signal"></i> ≡ 9대 실습 스테이지 맵 (클릭하여 전용 뷰로 이동)
+              <i class="fa-solid fa-sitemap text-nintendo-red"></i> ≡ 현재 동작 중인 Spring Boot 3 + PostgreSQL 16 아키텍처
             </h2>
-            <span class="text-xs font-black text-carbon">완료율: {{ completedStagesCount }} / {{ labs.length }}</span>
+            <button @click="openModal('diagram', null)" class="text-xs font-black text-signal hover:underline">크게 보기 →</button>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div v-for="lab in labs" :key="lab.id"
-                 @click="setView(lab.id)"
-                 :class="lab.completed ? 'bg-emerald-50 border-2 border-emerald-500' : 'inset-surface'"
-                 class="p-4 rounded-xs cursor-pointer hover:bg-white transition space-y-2 group shadow-sm">
-              <div class="flex items-center justify-between">
-                <span class="font-mono text-xs font-black text-nintendo-red">STAGE {{ lab.num }}</span>
-                <span v-if="lab.completed" class="text-xs font-black text-emerald-700">완료 ⭐</span>
-                <span v-else class="text-xs text-chrome-indigo font-bold">공부하기 →</span>
-              </div>
-              <div class="font-black text-sm text-ink">{{ lab.title }}</div>
-              <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">{{ lab.subtitle }}</p>
-            </div>
+          <div id="homeDiagramContainer" class="p-6 inset-surface rounded-xs flex justify-center overflow-x-auto">
+            <!-- Mermaid Rendered SVG -->
           </div>
         </div>
 
@@ -315,13 +320,10 @@
       <div v-else-if="currentView === 'metaphors'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
           <div class="space-y-2 pb-4 border-b-2 border-chrome-indigo">
-            <span class="text-xs font-black text-signal uppercase tracking-wider">Intuitive Learning</span>
+            <span class="text-xs font-black text-signal uppercase tracking-wider font-pixel">Intuitive Concepts</span>
             <h2 class="boxart-wordmark text-2xl sm:text-3xl text-white">
-              <i class="fa-solid fa-lightbulb text-amber"></i> 비전공자를 위한 도커 &amp; 클라우드 핵심 비유 8선
+              <i class="fa-solid fa-lightbulb text-amber"></i> 비전공자를 위한 핵심 비유 8선
             </h2>
-            <p class="text-sm sm:text-base text-slate-900 font-medium">
-              어려운 컴퓨터 공학 용어를 친숙한 게임과 일상생활의 비유로 완벽하게 체득합니다.
-            </p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -340,13 +342,10 @@
       <div v-else-if="currentView === 'kernel'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
           <div class="space-y-2 pb-4 border-b-2 border-chrome-indigo">
-            <span class="text-xs font-black text-carbon uppercase tracking-wider font-pixel">CS Engine Architecture</span>
+            <span class="text-xs font-black text-carbon uppercase tracking-wider font-pixel">Kernel Architecture</span>
             <h2 class="boxart-wordmark text-2xl sm:text-3xl text-white">
-              <i class="fa-solid fa-microchip text-amber"></i> 리눅스 커널 가상화 격리 &amp; 런타임 스택
+              <i class="fa-solid fa-microchip text-amber"></i> 리눅스 커널 가상화 격리 메커니즘
             </h2>
-            <p class="text-sm sm:text-base text-slate-900 font-medium leading-relaxed">
-              도커 컨테이너가 어떻게 무거운 OS 부팅 없이 0.1초 만에 안전하게 격리된 방을 만드는지 원리를 파헤칩니다.
-            </p>
           </div>
 
           <!-- Kernel Table -->
@@ -386,7 +385,7 @@
           <!-- Runtime Layer Diagram Container -->
           <div class="p-5 inset-surface rounded-xs space-y-3">
             <div class="flex items-center justify-between">
-              <span class="text-sm font-black text-carbon">⚙️ 도커 저수준 런타임 호출 스택 (Low-level Call Stack)</span>
+              <span class="text-sm font-black text-carbon">⚙️ 도커 저수준 런타임 호출 스택</span>
               <button @click="openModal('runtime', null)" class="text-xs font-bold text-signal hover:underline">크게 보기 →</button>
             </div>
             <div id="runtimeDiagramContainer" class="flex justify-center overflow-x-auto bg-white p-4 rounded-xs border border-chrome-indigo">
@@ -397,11 +396,10 @@
       </div>
 
       <!-- ========================================================
-           VIEW 4: LABS 1 ~ 9 (Real Code & Step Navigation Layout FIXED)
+           VIEW 4: LABS 1 ~ 9 (Real Code & Step Navigation)
            ======================================================== -->
       <div v-else-if="currentLab" class="space-y-6">
         
-        <!-- Lab Header Plate with Clear Layout -->
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
           <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 border-chrome-indigo">
             <div class="flex items-center gap-3">
@@ -413,25 +411,19 @@
                 <p class="text-sm text-ink font-bold">{{ currentLab.subtitle }}</p>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span v-if="currentLab.completed" class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">
-                ⭐ COMPLETED
-              </span>
-              <span class="text-xs sm:text-sm font-black px-3 py-1 bg-amber text-carbon rounded-xs">교재 {{ currentLab.page }}</span>
-            </div>
+            <span class="text-xs sm:text-sm font-black px-3 py-1 bg-amber text-carbon rounded-xs">교재 {{ currentLab.page }}</span>
           </div>
 
-          <!-- FIXED Step Navigation Bar (Dedicated Header + 5 Buttons Grid) -->
+          <!-- FIXED Step Navigation Bar -->
           <div class="carbon-command-slab p-4 rounded-xs space-y-3">
-            <!-- Top Progress Header -->
             <div class="flex items-center justify-between text-xs font-black text-amber">
-              <span class="uppercase tracking-wider font-pixel"><i class="fa-solid fa-bars-progress mr-1.5"></i> QUEST PROGRESSION</span>
+              <span class="uppercase tracking-wider font-pixel"><i class="fa-solid fa-bars-progress mr-1.5"></i> STUDY PROGRESSION</span>
               <span class="bg-signal text-white px-2.5 py-0.5 rounded-xs font-mono font-bold">
                 STEP {{ activeStep }} / 5 ({{ stepTitles[activeStep - 1] }})
               </span>
             </div>
 
-            <!-- 5 Buttons Grid (No overlapping guaranteed!) -->
+            <!-- 5 Buttons Grid -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
               <button v-for="(stepName, sIdx) in stepTitles" :key="sIdx"
                       @click="setLabStep(sIdx + 1)"
@@ -443,7 +435,7 @@
             </div>
           </div>
 
-          <!-- Step 1: Quest Briefing & Why -->
+          <!-- Step 1: Why & Analogy -->
           <div v-if="activeStep === 1" class="space-y-4">
             <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-amber">
               <div class="text-base font-black text-carbon flex items-center gap-2">
@@ -460,7 +452,7 @@
             </div>
           </div>
 
-          <!-- Step 2: Key Observables & Connected Concepts -->
+          <!-- Step 2: Observables -->
           <div v-else-if="activeStep === 2" class="space-y-4">
             <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-chrome-indigo">
               <div class="text-base font-black text-carbon flex items-center gap-2">
@@ -470,13 +462,13 @@
             </div>
           </div>
 
-          <!-- Step 3: Real Source Code & Line-by-Line Breakdown -->
+          <!-- Step 3: Source Code -->
           <div v-else-if="activeStep === 3" class="space-y-6">
             <div class="flex items-center justify-between pb-2 border-b border-chrome-indigo">
               <h3 class="font-black text-carbon text-base sm:text-lg flex items-center gap-2">
                 <i class="fa-solid fa-code text-chrome-indigo"></i> 3단계: 실제 소스코드 &amp; 라인별 상세 해설
               </h3>
-              <span class="text-xs text-slate-800 font-bold">프로젝트 실제 파일 소스</span>
+              <span class="text-xs text-slate-800 font-bold">프로젝트 실제 파일</span>
             </div>
 
             <div v-for="(code, cIdx) in currentLab.codes" :key="cIdx" class="space-y-2">
@@ -493,7 +485,6 @@
                 <pre><code :class="'language-' + (code.lang || 'bash')">{{ code.content }}</code></pre>
               </div>
 
-              <!-- Line by line explanation box -->
               <div v-if="code.lineExplanation" class="p-4 inset-surface text-xs sm:text-sm space-y-1.5 border-l-4 border-amber">
                 <strong class="text-carbon font-black block mb-1">🔍 라인별 낱낱이 해설:</strong>
                 <div v-html="code.lineExplanation" class="text-slate-800 leading-relaxed space-y-1"></div>
@@ -501,7 +492,7 @@
             </div>
           </div>
 
-          <!-- Step 4: Actual Raw Test Verification -->
+          <!-- Step 4: Test Output -->
           <div v-else-if="activeStep === 4" class="space-y-4">
             <div class="flex items-center justify-between">
               <h3 class="font-black text-carbon text-base sm:text-lg flex items-center gap-2">
@@ -515,7 +506,7 @@
             </div>
           </div>
 
-          <!-- Step 5: Boss Strategy & Troubleshooting -->
+          <!-- Step 5: Troubleshooting -->
           <div v-else-if="activeStep === 5" class="space-y-4">
             <div class="p-5 inset-surface rounded-xs space-y-2 border-l-4 border-nintendo-red">
               <div class="text-base font-black text-nintendo-red flex items-center gap-2">
@@ -524,18 +515,18 @@
               <p class="text-sm sm:text-base text-slate-800 leading-relaxed font-medium" v-html="currentLab.troubleshooting"></p>
             </div>
 
-            <!-- Stage Complete Action (Saves to DB!) -->
+            <!-- Complete Button -->
             <div class="p-6 raised-panel rounded-xs text-center space-y-3 border-2 border-chrome-indigo">
               <div class="text-3xl">⭐</div>
-              <h4 class="text-lg font-black text-carbon">STAGE {{ currentLab.num }} 퀘스트를 완료하셨나요?</h4>
+              <h4 class="text-lg font-black text-carbon">STAGE {{ currentLab.num }} 학습을 완료하셨나요?</h4>
               <button @click="completeStage(currentLab)"
                       class="px-6 py-2.5 bg-signal hover:bg-amber text-white text-sm font-black rounded-xs border-t border-white/80 border-b-2 border-amber-900 shadow">
-                <i class="fa-solid fa-star text-amber mr-1.5"></i> 이 스테이지 클리어 &amp; DB 저장!
+                <i class="fa-solid fa-star text-amber mr-1.5"></i> 이 스테이지 학습 완료 &amp; PostgreSQL 저장!
               </button>
             </div>
           </div>
 
-          <!-- Step Navigation Control Buttons -->
+          <!-- Bottom Nav -->
           <div class="flex justify-between items-center pt-6 border-t-2 border-chrome-indigo">
             <button v-if="activeStep > 1" @click="setLabStep(activeStep - 1)"
                     class="px-4 py-2 bg-platinum hover:bg-white text-carbon text-sm font-bold rounded-xs border border-chrome-indigo flex items-center gap-2">
@@ -558,33 +549,33 @@
       </div>
 
       <!-- ========================================================
-           VIEW 5: GUESTBOOK & Q&A (Real-time Live DB CRUD)
+           VIEW 5: STUDY NOTES (Spring Boot + PostgreSQL 16)
            ======================================================== -->
-      <div v-else-if="currentView === 'guestbook'" class="space-y-6">
+      <div v-else-if="currentView === 'notes'" class="space-y-6">
         <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
           <div class="space-y-2 pb-4 border-b-2 border-chrome-indigo">
-            <span class="text-xs font-black text-signal uppercase tracking-wider font-pixel">Real-Time MariaDB Live System</span>
+            <span class="text-xs font-black text-signal uppercase tracking-wider font-pixel">PostgreSQL Relational DB</span>
             <h2 class="boxart-wordmark text-2xl sm:text-3xl text-white">
-              <i class="fa-solid fa-comments text-amber"></i> 실시간 도커 공부 메모 &amp; Q&A 방명록
+              <i class="fa-solid fa-pen-to-square text-amber"></i> 실시간 공부 메모장 (Spring Data JPA)
             </h2>
             <p class="text-sm sm:text-base text-slate-900 font-medium">
-              아래에 글을 남기면 Node.js WAS를 거쳐 실제 MariaDB 데이터베이스에 실시간으로 영구 저장됩니다!
+              Spring Boot 3 REST API를 통해 실제 PostgreSQL 데이터베이스에 실시간으로 기록되는 메모장입니다.
             </p>
           </div>
 
-          <!-- Note Submission Form -->
+          <!-- Note Form -->
           <div class="inset-surface p-5 rounded-xs space-y-3">
             <h3 class="font-black text-sm text-carbon flex items-center gap-2">
-              <i class="fa-solid fa-pen-nib text-signal"></i> 새로운 공부 팁 / 질문 등록
+              <i class="fa-solid fa-pen-nib text-signal"></i> 새로운 공부 메모 남기기
             </h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input type="text" v-model="newNote.author" placeholder="작성자 (예: 4반 G124 안성민)"
                      class="p-2 text-xs bg-white border border-chrome-indigo rounded-xs text-ink font-bold">
               <select v-model="newNote.category" class="p-2 text-xs bg-white border border-chrome-indigo rounded-xs text-ink font-bold">
                 <option value="실습 팁">💡 실습 팁</option>
-                <option value="커널/이론 질문">🔬 커널/이론 질문</option>
+                <option value="커널/이론">🔬 커널/이론 질문</option>
                 <option value="트러블슈팅">⚠️ 트러블슈팅 해결기</option>
-                <option value="자격증/면접">🎓 자격증/면접 팁</option>
+                <option value="Spring Boot/DB">🌱 Spring Boot / PostgreSQL 연동</option>
               </select>
             </div>
             <textarea v-model="newNote.content" rows="3" placeholder="공부하면서 깨달은 점이나 질문을 남겨보세요..."
@@ -592,20 +583,16 @@
             <div class="flex justify-end">
               <button @click="submitNote"
                       class="px-5 py-2 bg-signal hover:bg-amber text-white text-xs font-black rounded-xs border-t border-white/80 border-b-2 border-amber-900 shadow flex items-center gap-1.5">
-                <i class="fa-solid fa-paper-plane"></i> MariaDB에 실시간 등록
+                <i class="fa-solid fa-paper-plane"></i> PostgreSQL에 실시간 저장
               </button>
             </div>
           </div>
 
-          <!-- Live Notes List -->
+          <!-- Notes List -->
           <div class="space-y-3">
             <div class="flex items-center justify-between text-xs font-black text-carbon">
-              <span>📋 DB에 저장된 공부 메모 목록 (총 {{ notesList.length }}개)</span>
+              <span>📋 PostgreSQL에 저장된 메모 목록 (총 {{ notesList.length }}개)</span>
               <button @click="loadNotes" class="text-chrome-indigo hover:underline"><i class="fa-solid fa-rotate mr-1"></i> 새로고침</button>
-            </div>
-
-            <div v-if="notesList.length === 0" class="p-6 text-center text-xs text-slate-600 inset-surface">
-              아직 등록된 메모가 없습니다. 첫 번째 글을 등록해보세요!
             </div>
 
             <div v-for="note in notesList" :key="note.id" class="p-4 inset-surface rounded-xs space-y-1.5 shadow-sm">
@@ -614,7 +601,7 @@
                   <span class="bg-chrome-indigo text-white text-[10px] px-2 py-0.5 rounded-xs">{{ note.category }}</span>
                   <span>{{ note.author }}</span>
                 </span>
-                <span class="text-slate-500 text-[10px]">{{ note.created_at ? new Date(note.created_at).toLocaleString() : '방금 전' }}</span>
+                <span class="text-slate-500 text-[10px]">{{ note.createdAt ? new Date(note.createdAt).toLocaleString() : '방금 전' }}</span>
               </div>
               <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{{ note.content }}</p>
             </div>
@@ -633,9 +620,6 @@
             <h2 class="boxart-wordmark text-2xl sm:text-3xl text-white">
               <i class="fa-solid fa-book-bookmark text-amber"></i> 도커 명령어 &amp; Dockerfile 마스터 사전
             </h2>
-            <p class="text-sm sm:text-base text-slate-900 font-medium leading-relaxed">
-              실무와 자격증 시험에서 가장 자주 쓰이는 필수 도커 명령어와 키워드 모음집입니다.
-            </p>
           </div>
 
           <div class="relative">
@@ -672,8 +656,8 @@
       <div>
         © 1997–2001 DOCKER 64 SYSTEM · SKALA 4반 G124 안성민
       </div>
-      <div class="bg-amber text-carbon font-black text-[10px] px-2.5 py-0.5 rounded-xs tracking-wider uppercase">
-        PRIVACY &amp; CLOUD CERTIFIED
+      <div class="bg-emerald-600 text-white font-black text-[10px] px-2.5 py-0.5 rounded-xs tracking-wider uppercase">
+        SPRING BOOT 3 &amp; POSTGRESQL 16 READY
       </div>
     </footer>
 
@@ -704,7 +688,7 @@
 
     <!-- Toast Notification -->
     <div id="vueToast" class="fixed bottom-6 right-6 carbon-command-slab border-2 border-signal text-white px-5 py-2.5 rounded-xs text-sm font-black shadow-2xl transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50 flex items-center gap-2">
-      <i class="fa-solid fa-check text-signal"></i> <span id="vueToastMsg">클립보드에 복사되었습니다!</span>
+      <i class="fa-solid fa-check text-signal"></i> <span id="vueToastMsg">완료되었습니다!</span>
     </div>
 
   </div>
@@ -747,17 +731,17 @@
 
     createApp({
       setup() {
-        const currentView = ref('home');
+        const currentView = ref('roadmap');
         const activeStep = ref(1);
         const searchQuery = ref('');
         const modalActive = ref(false);
         const modalType = ref('');
         const modalData = ref('');
         
-        // Real-time backend live states
+        // Spring Boot & PostgreSQL Live States
         const backendHealthy = ref(false);
         const dbLatency = ref(0);
-        const wasContainer = ref('was-live');
+        const wasContainer = ref('spring-was');
         const notesList = ref([]);
         const newNote = ref({ author: '4반 G124 안성민', category: '실습 팁', content: '' });
 
@@ -770,7 +754,7 @@
         ];
 
         const mainMenus = [
-          { id: 'home', title: '홈 & 3-Tier 아키텍처', icon: 'fa-solid fa-house' },
+          { id: 'roadmap', title: '추천 학습 로드맵', icon: 'fa-solid fa-route' },
           { id: 'metaphors', title: '개념비유 8선', icon: 'fa-solid fa-lightbulb' },
           { id: 'kernel', title: '리눅스 커널 심화', icon: 'fa-solid fa-microchip' },
           { id: 'cheatsheet', title: '명령어 사전', icon: 'fa-solid fa-book' }
@@ -1044,16 +1028,15 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
 
         const currentLab = computed(() => labs.value.find(l => l.id === currentView.value));
         const completedStagesCount = computed(() => labs.value.filter(l => l.completed).length);
-        const playerLevel = computed(() => Math.min(9, Math.max(1, completedStagesCount.value)));
 
         const prevLabId = computed(() => {
           const idx = labs.value.findIndex(l => l.id === currentView.value);
-          return idx > 0 ? labs.value[idx - 1].id : null;
+          return idx > 0 ? labs[idx - 1].id : null;
         });
 
         const nextLabId = computed(() => {
           const idx = labs.value.findIndex(l => l.id === currentView.value);
-          return idx >= 0 && idx < labs.value.length - 1 ? labs.value[idx + 1].id : null;
+          return idx >= 0 && idx < labs.value.length - 1 ? labs[idx + 1].id : null;
         });
 
         const filteredCheatsheet = computed(() => {
@@ -1067,9 +1050,9 @@ graph TD
   Client["🌐 외부 브라우저 손님"] -->|http://localhost:8088| NginxPort["Nginx 호스트 포트 :8088"]
   subgraph DockerNetwork["🎮 DOCKER 64 가상 사설망 (dashboard-net)"]
     NginxPort --> Nginx["🤵 Web Nginx (포트 80)"]
-    Nginx -->|/api/ 리버스 프록시| WAS["👨‍🍳 WAS Node.js Express (:8080)"]
-    WAS -->|mysql2 pool 쿼리 통신| DB["🔒 DB MariaDB 11 (:3306)"]
-    DB -.->|실시간 마운트| Volume[("💾 영구 볼륨 dashboard-db-data")]
+    Nginx -->|/api/ 리버스 프록시| WAS["☕ WAS Spring Boot 3 (:8080)"]
+    WAS -->|Spring Data JPA| DB["🐘 DB PostgreSQL 16 (:5432)"]
+    DB -.->|실시간 마운트| Volume[("💾 영구 볼륨 postgres-db-data")]
   end
 `;
 
@@ -1112,8 +1095,8 @@ flowchart LR
             const data = await res.json();
             backendHealthy.value = data.status === 'healthy';
             dbLatency.value = data.database?.latency_ms || 1;
-            wasContainer.value = data.container || 'was-live';
-            showToast(`✅ 3-Tier 정상 연동! (지연: ${dbLatency.value}ms / ${wasContainer.value})`);
+            wasContainer.value = data.container || 'spring-was';
+            showToast(`✅ Spring Boot & PostgreSQL 정상 연동! (지연: ${dbLatency.value}ms / ${wasContainer.value})`);
           } catch (e) {
             backendHealthy.value = false;
             showToast('⚠️ 백엔드 연결 확인 중...');
@@ -1130,11 +1113,11 @@ flowchart LR
               body: JSON.stringify({
                 userId: 'skala-g124',
                 userName: '4반 G124 안성민',
-                level: playerLevel.value,
-                completedLabs: completed
+                level: 9,
+                completedLabs: JSON.stringify(completed)
               })
             });
-            showToast('💾 퀘스트 진척도가 MariaDB에 영구 저장되었습니다!');
+            showToast('💾 퀘스트 진척도가 PostgreSQL에 저장되었습니다!');
           } catch (e) {
             showToast('진척도 로컬 저장 완료!');
           }
@@ -1160,10 +1143,10 @@ flowchart LR
               body: JSON.stringify(newNote.value)
             });
             newNote.value.content = '';
-            showToast('🎉 새로운 공부 메모가 MariaDB에 기록되었습니다!');
+            showToast('🎉 새로운 공부 메모가 PostgreSQL에 저장되었습니다!');
             loadNotes();
           } catch (e) {
-            showToast('메모 등록 실패');
+            showToast('메모 저장 실패');
           }
         }
 
@@ -1172,7 +1155,7 @@ flowchart LR
           currentView.value = viewId;
           activeStep.value = 1;
           renderCleanDiagrams();
-          if (viewId === 'guestbook') loadNotes();
+          if (viewId === 'notes') loadNotes();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1188,7 +1171,7 @@ flowchart LR
           playCoinSound();
           lab.completed = true;
           saveProgressToDb();
-          showToast(`🎉 STAGE ${lab.num} 클리어 완료!`);
+          showToast(`🎉 STAGE ${lab.num} 학습 완료!`);
         }
 
         async function openModal(type, data) {
@@ -1253,7 +1236,6 @@ flowchart LR
           prevLabId,
           nextLabId,
           completedStagesCount,
-          playerLevel,
           searchQuery,
           filteredCheatsheet,
           modalActive,
