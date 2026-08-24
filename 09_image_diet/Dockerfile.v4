@@ -1,0 +1,12 @@
+# 1단계: 빌드 전용 컨테이너 (컴파일/npm 설치 수행)
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --omit=dev
+
+# 2단계: 순수 실행 전용 컨테이너 (빌드 찌꺼기 없이 185MB 경량화)
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY server.js .
+CMD ["node", "server.js"]
