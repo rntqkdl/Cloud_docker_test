@@ -1150,66 +1150,66 @@
         const selectedTypingIdx = ref(0);
         const userTypingInput = ref('');
 
-                const typingExercises = [
+                        const typingExercises = [
           {
             title: '0. FastAPI 컨테이너 3단계 진화 & PID 1',
             desc: 'CMD 명령어로 FastAPI 웹서버를 PID 1으로 등록하여 재시작 시 자동 복구되도록 빌드합니다.',
-            code: 'FROM python:3.11-alpine
+            code: `FROM python:3.11-alpine
 COPY webserver.py /mycode/
-CMD ["python", "/mycode/webserver.py"]'
+CMD ["python", "/mycode/webserver.py"]`
           },
           {
             title: '1. hello-world 컨테이너 실행',
             desc: '도커의 가장 기초적인 1회성 컨테이너 실행 및 전체 목록 확인 명령어입니다.',
-            code: 'docker run hello-world
-docker ps -a'
+            code: `docker run hello-world
+docker ps -a`
           },
           {
             title: '2. Nginx 백그라운드 & 포트 포워딩',
             desc: '24시간 백그라운드로 띄우고 호스트 8080과 컨테이너 80을 연결하는 핵심 명령어입니다.',
-            code: 'docker run -d -p 8080:80 --name web nginx'
+            code: `docker run -d -p 8080:80 --name web nginx`
           },
           {
             title: '3. Dockerfile 3대 뼈대 작성',
             desc: 'FROM, COPY, CMD 3줄로 나만의 Node.js 웹서버 이미지를 굽는 코드입니다.',
-            code: 'FROM node:18-alpine
+            code: `FROM node:18-alpine
 COPY app.js .
-CMD ["node", "app.js"]'
+CMD ["node", "app.js"]`
           },
           {
             title: '4. MariaDB 볼륨 마운트 영속화',
             desc: '컨테이너가 폭파되어도 DB 데이터가 안전하게 보존되는 -v 외장하드 연결 명령어입니다.',
-            code: 'docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=password123 -v mariadb-data:/var/lib/mysql mariadb:11'
+            code: `docker run -d --name mariadb -e MYSQL_ROOT_PASSWORD=password123 -v mariadb-data:/var/lib/mysql mariadb:11`
           },
           {
             title: '5. Harbor 태깅 & 레이어 캐시 푸시',
             desc: '원격 사내 레지스트리에 태깅하고 OCI 레이어 캐시를 재사용하여 초고속 푸시합니다.',
-            code: 'docker tag skala-webserver:1.0.0 harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0
-docker push harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0'
+            code: `docker tag skala-webserver:1.0.0 harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0
+docker push harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0`
           },
           {
             title: '6. Docker Compose 헬스체크 명세',
-            desc: 'DB가 완벽히켜진 후에만 WAS를 띄우도록 보장하는 Compose 의존성 설정입니다.',
-            code: 'depends_on:
+            desc: 'DB가 완벽히 켜진 후에만 WAS를 띄우도록 보장하는 Compose 의존성 설정입니다.',
+            code: `depends_on:
   db:
-    condition: service_healthy'
+    condition: service_healthy`
           },
           {
             title: '7. 무중단 WAS 3대 스케일아웃',
             desc: '단 한 줄의 명령어로 서버 인스턴스를 3대로 수평 확장하는 고가용성 명령어입니다.',
-            code: 'docker compose up -d --scale was=3'
+            code: `docker compose up -d --scale was=3`
           },
           {
             title: '8. 멀티스테이지 빌드 (10분의 1 다이어트)',
             desc: '빌드 찌꺼기는 버리고 순수 실행 산출물만 복사해 오는 최강 다이어트 문법입니다.',
-            code: 'FROM node:18-alpine AS builder
+            code: `FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 
 FROM node:18-alpine
 WORKDIR /app
-COPY --from=builder /app/node_modules ./node_modules'
+COPY --from=builder /app/node_modules ./node_modules`
           }
         ];
 
@@ -1376,10 +1376,10 @@ Hello from Docker! Node.js version: v18.20.4`,
               {
                 label: 'Harbor 태그 & 푸시 원클릭 (push.sh)',
                 lang: 'bash',
-                content: './push.sh skala-gj4 1.0.0
+                content: `./push.sh skala-gj4 1.0.0
 # 또는 수동 실행:
 docker tag skala-webserver:1.0.0 harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0
-docker push harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0',
+docker push harbor.skala-gj.com/skala-gj4/skala-webserver:1.0.0`,
                 lineExplanation: '• `docker tag`로 앞에 원격 저장소 도메인(`harbor.skala-gj.com/skala-gj4/`)을 붙여주어야 도커가 업로드할 목적지를 올바르게 인식합니다.<br>• 미지정 시 `docker.io/library/`로 전송되어 `push access denied` 에러가 발생합니다.'
               },
               {
