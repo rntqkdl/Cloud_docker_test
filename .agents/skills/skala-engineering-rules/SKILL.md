@@ -20,7 +20,7 @@ description: >-
 ---
 
 ## 2. 🔒 Git 제로-누출 보안 격리 원칙 (Zero-Leak Git Policy)
-* **금지**: 사내 수강생 인증 정보(학번 `G124`, 수강생 코드, 세션 쿠키), 비공개 교육 포털 도메인(`tech-learning-hub.pages.dev`), 로컬 RAG 데이터베이스(`*.db`, `*.sqlite`), 원본 강의자료(`*.pdf`, `*.pptx`)를 Git에 커밋/푸시하는 행위.
+* **금지**: 사내 수강생 인증 정보(수강생 인증코드, 세션 쿠키), 비공개 교육 포털 도메인(사내 비공개 웹 포털), 로컬 RAG 데이터베이스(`*.db`, `*.sqlite`), 원본 강의자료(`*.pdf`, `*.pptx`)를 Git에 커밋/푸시하는 행위.
 * **철칙**:
   1. 모든 인증 정보는 `os.getenv()` 환경변수로 격리합니다.
   2. 커밋 전 `git status` 및 `.gitignore`를 통해 `*.db`, `ebooks/`, `materials/`, `*.plist`, `.env*`가 철저히 제외되었는지 교차 검증합니다.
