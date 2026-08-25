@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Auto--Sync-Dual%20Web%20Diff%20%26%20n8n-teal?style=for-the-badge&logo=n8n" alt="Auto Sync">
 </p>
 
-> **SKALA 4반 G124 안성민 전용** — 비전공자도 3-Tier 상용 인프라와 컨테이너 오케스트레이션을 직관적으로 마스터할 수 있도록, 9대 핵심 실습 환경과 SKALA 6대 모듈 전체 교재 + 16대 전 과목 전자책(6,113개 챕터/슬라이드, 13,544개 세부 지식)을 0.002초 만에 검색·인용하는 **Apple M5 Metal GPU 가속 지능형 AI 튜터 '도키(Docky)'** 올인원 엔터프라이즈 엔지니어링 플랫폼입니다.
+> **SKALA 4반 G124 안성민 전용** — 비전공자도 3-Tier 상용 인프라와 컨테이너 오케스트레이션을 직관적으로 마스터할 수 있도록, 10대 핵심 실습 환경(00~09)과 SKALA 6대 모듈 전체 교재 + 16대 전 과목 전자책(6,113개 챕터/슬라이드, 13,544개 세부 지식)을 0.002초 만에 검색·인용하는 **Apple M5 Metal GPU 가속 지능형 AI 튜터 '도키(Docky)'** 올인원 엔터프라이즈 엔지니어링 플랫폼입니다.
 
 ---
 
@@ -196,19 +196,21 @@ python3 /Users/seongminan/workspace/skala_knowledge_rag_db/sync_all_sources.py 3
 
 ---
 
-## 🗺️ 9대 실습 완전 공략집 (Hands-on Labs 01 ~ 09)
+## 🗺️ 10대 실습 완전 공략집 (Hands-on Labs 00 ~ 09)
 
-| STAGE | 실습 주제 | 핵심 개념 | 주요 명령어 |
-| :---: | :--- | :--- | :--- |
-| **01** | **hello-world 생명주기** | 컨테이너 생성, 실행, 정상 종료(`Exit 0`) | `docker run hello-world`, `docker ps -a` |
-| **02** | **Nginx 포트 포워딩** | 24시간 데몬(`-d`), 포트 매핑(`-p 8080:80`) | `docker run -d -p 8080:80 --name web nginx` |
-| **03** | **Dockerfile 이미지 빌드** | `FROM`, `COPY`, `CMD` 3대 뼈대 | `docker build -t my-node-app .` |
-| **04** | **볼륨(Volume) 영속화** | 컨테이너 삭제 후에도 DB 데이터 보존 | `docker run -v mariadb-data:/var/lib/mysql` |
-| **05** | **Harbor 레지스트리 배포** | 사내 레지스트리 태깅 및 Push/Pull | `docker tag web harbor.skala-gj.com/...` |
-| **06** | **3-Tier 수동 네트워크** | 가상 사설망(`3tier-net`) & 임베디드 DNS | `docker network create 3tier-net` |
-| **07** | **Docker Compose 자동화** | `compose.yaml`, `healthcheck` 순서 제어 | `docker compose up -d` |
-| **08** | **무중단 수평 확장** | Scale-out 및 Nginx 로드밸런싱 | `docker compose up -d --scale was=3` |
-| **09** | **멀티스테이지 다이어트** | 이미지 용량 **1.78GB ➔ 185MB (90% 감축)** | `COPY --from=builder /app/dist ./` |
+| STAGE | 실습 주제 | 교재 출처 | 핵심 개념 및 검증 포인트 | 주요 실행 스크립트 & 명령어 |
+| :---: | :--- | :---: | :--- | :--- |
+| **00** | **컨테이너 리눅스 & PID 1** | 슬라이드 34~65쪽 | FastAPI v1.0~v1.2 진화, PID 1 Init 프로세스, OCI 레이어 분석 (`inspect-image.sh`) | `./run.sh`, `./inspect-image.sh` |
+| **01** | **hello-world 생명주기** | 실습교재 4쪽 | 컨테이너 생성, 실행, 정상 종료(`Exit 0`) 확인 | `docker run hello-world`, `docker ps -a` |
+| **02** | **Nginx 포트 포워딩** | 실습교재 5쪽 | 24시간 데몬(`-d`), 포트 매핑(`-p 8080:80`) | `docker run -d -p 8080:80 --name web nginx` |
+| **03** | **Dockerfile 이미지 빌드** | 실습교재 6쪽 | `FROM`, `COPY`, `CMD` 3대 뼈대로 이미지 패키징 | `docker build -t my-node-app .` |
+| **04** | **볼륨(Volume) 영속화** | 실습교재 7~9쪽 | 컨테이너 삭제 후에도 DB 데이터 보존 (`-v`) | `docker run -v mariadb-data:/var/lib/mysql` |
+| **05** | **Harbor & 로컬 OCI 예행연습** | 슬라이드 148~158쪽<br>(실습 10~11쪽) | Harbor 푸시, 로컬 5005 registry:2 예행연습, 레이어 캐시 재사용(`Layer already exists`) | `./push.sh skala-gj4 1.0.0`, `./rehearsal-local.sh` |
+| **06** | **3-Tier 수동 네트워크** | 실습교재 12~17쪽 | 가상 사설망(`3tier-net`) & 임베디드 DNS (Web-WAS-DB) | `docker network create 3tier-net` |
+| **07** | **Docker Compose 자동화** | 실습교재 18~23쪽 | `compose.yaml`, `condition: service_healthy` 순서 제어 | `docker compose up -d` |
+| **08** | **무중단 수평 확장** | 실습교재 24~27쪽 | WAS 수평 확장(`--scale was=3`) 및 Nginx 페일오버 | `docker compose up -d --scale was=3` |
+| **09** | **멀티스테이지 다이어트** | 실습교재 28~32쪽 | 이미지 용량 **1.78GB ➔ 185MB (90% 감축)** 최적화 | `docker build -f Dockerfile.v4 -t diet:v4 .` |
+| **10** | **통합 마스터 대시보드** | 웹 포털 (8088) | 4-Tier Vue 3 SPA + Spring Boot 3 + PostgreSQL 16 + RAG AI '도키' | `open http://localhost:8088` |
 
 ---
 
@@ -252,7 +254,24 @@ cloud-docker-intensive-labs/
 ├── .agents/skills/                   # Antigravity 에이전트 커스텀 스킬
 │   ├── im-not-ai-style/SKILL.md      # epoko77-ai/im-not-ai 기술 문서화 표준 스킬
 │   └── skala-engineering-rules/SKILL.md # M5 가속, Git 보안, 교재 필터링 6대 철칙 스킬
-├── 10_docker_master_dashboard/       # 통합 4-Tier 마스터 대시보드
+├── 00_container_linux/               # [STAGE 00] FastAPI v1.0~v1.2 진화 & PID 1 & OCI 분석
+│   ├── v1.0 / v1.1 / v1.2            # 단계별 Dockerfile
+│   ├── webserver.py / mycode.py      # FastAPI 웹서버 & 검증 코드
+│   ├── run.sh                        # 3단계 진화 시연 자동화 스크립트
+│   └── inspect-image.sh              # OCI 레이어 심층 분석 스크립트
+├── 01_simple_container/              # [STAGE 01] hello-world 생명주기
+├── 02_nginx_webserver/               # [STAGE 02] Nginx 데몬 & 포트 포워딩
+├── 03_custom_image/                  # [STAGE 03] Node.js Dockerfile 이미지 빌드
+├── 04_volume_database/               # [STAGE 04] MariaDB 볼륨 영속화 & 무상태 검증
+├── 05_harbor_registry/               # [STAGE 05] Harbor 푸시 & 로컬 5005 OCI Registry 예행연습
+│   ├── Dockerfile / index.html       # 4반 G124 안성민 전용 수료 페이지
+│   ├── push.sh                       # Harbor 원클릭 빌드/태그/푸시 스크립트
+│   └── rehearsal-local.sh            # 로컬 5005 registry:2 레이어 캐시 재사용 예행연습
+├── 06_3tier_manual/                  # [STAGE 06] 수동 3-Tier 가상망 & DNS 라우팅
+├── 07_3tier_compose/                 # [STAGE 07] Compose 선언적 IaC & 헬스체크
+├── 08_scale_and_loadbalancing/       # [STAGE 08] WAS 3대 수평확장 & Nginx 로드밸런싱
+├── 09_image_diet/                    # [STAGE 09] 멀티스테이지 빌드 (1.78GB -> 185MB)
+├── 10_docker_master_dashboard/       # [STAGE 10] 통합 4-Tier 마스터 대시보드
 │   ├── compose.yaml                  # 4-Tier 오케스트레이션 (Nginx + WAS + DB)
 │   ├── web/                          # Nginx & Vue 3 SPA (전자책 도서관 & 실시간 터미널 & AI 펫)
 │   │   ├── index.html                # 0.15s 토큰 스트리밍 UI + 16권 전자책 도서관
