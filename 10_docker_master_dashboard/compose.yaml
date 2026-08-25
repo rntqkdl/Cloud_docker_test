@@ -20,14 +20,16 @@ services:
       DB_USER: postgres
       DB_PASSWORD: password123
       DB_NAME: dashboard_db
-      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_HOST: http://host.docker.internal:11434
+      RAG_DB_PATH: /app/rag_db/skala_rag.db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /Users/seongminan/workspace/skala_knowledge_rag_db:/app/rag_db:ro
     depends_on:
       db:
         condition: service_healthy
-      ollama:
-        condition: service_started
     restart: unless-stopped
 
   db:

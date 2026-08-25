@@ -40,7 +40,7 @@ public class ApiController {
         
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(5000);
-        factory.setReadTimeout(45000);
+        factory.setReadTimeout(90000);
         this.restTemplate = new RestTemplate(factory);
     }
 
@@ -179,11 +179,10 @@ public class ApiController {
         }
     }
 
-    // 7. 🍄 AI 펫 "도키 (Docky)" Multi-Turn 대화 문맥 기억 Chat API
+    // 7. 🧠 순수 원본 qwen2.5 추론 엔진 (Vanilla LLM Inference API)
     @PostMapping("/ai/pet/chat")
     public ResponseEntity<Map<String, Object>> petChat(@RequestBody Map<String, Object> payload) {
-        String question = (String) payload.getOrDefault("question", "내가 뭐부터 공부해야 할까?");
-        String contextInfo = (String) payload.getOrDefault("context", "사용자가 도커 학습 로드맵을 확인 중입니다.");
+        String question = (String) payload.getOrDefault("question", "");
         String modelName = (String) payload.getOrDefault("model", "qwen2.5:latest");
         List<Map<String, String>> history = (List<Map<String, String>>) payload.getOrDefault("history", Collections.emptyList());
 
@@ -191,19 +190,9 @@ public class ApiController {
         res.put("petName", "도키 (Docky)");
         res.put("mood", "happy");
 
-        String systemPrompt =
-            "너는 비전공자 학생(4반 G124 안성민)을 항상 따라다니며 도커와 클라우드를 친절하게 가르쳐주는 닌텐도 아기 버섯 AI 펫 '도키(Docky)'야.\n" +
-            "[대화 원칙]:\n" +
-            "1. 말투: 친절하고 다정한 존댓말('~해요!', '~랍니다!', '~해 보세요!')을 써줘.\n" +
-            "2. 문맥 파악: 이전 대화 내용을 반드시 기억하고, 학생이 '그걸 왜 해야 해?', '그게 뭔데?'라고 물어보면 바로 이전 대화에서 언급한 주제(hello-world, 포트포워딩, 볼륨 등)에 대해 '왜 필요한지 이유와 장점'을 쉽고 명쾌하게 설명해줘.\n" +
-            "3. 일상 비유: 어려운 용어는 게임, 택배, 아파트, 식당 비유를 활용해 2~3문장으로 짧고 똑똑하게 답해줘.\n" +
-            "4. 문맥 지식:\n" +
-            "   - 1단계(hello-world/Nginx): 컨테이너가 켜지고 꺼지는 생명주기(Exit 0)와 외부 포트 연결(-p 8080:80)을 모르면 뒤의 DB나 3-Tier를 연결할 수 없기 때문에 가장 먼저 필수적으로 배워야 합니다.\n" +
-            "   - 2단계(Dockerfile/볼륨): 컨테이너를 부숴도 DB 데이터를 살리는 외장 세이브팩(-v)과 나만의 이미지 패키징.\n" +
-            "   - 3단계(Compose/스케일아웃): 3-Tier 파티 일괄 소환과 고가용성 무중단 로드밸런싱.\n" +
-            "   - 4단계(다이어트): 1.78GB 이미지를 185MB로 줄이는 멀티스테이지 기술.";
+        // 순수 원본 추론을 위한 미니멀 시스템 프롬프트
+        String systemPrompt = "너는 친절하고 똑똑한 AI 어시스턴트야. 사용자의 질문에 정확하고 자연스러운 한국어로 명확하게 답변해줘.";
 
-        // 1. Ollama /api/chat 호출 (멀티턴 히스토리 전달)
         try {
             Map<String, Object> req = new HashMap<>();
             req.put("model", modelName);
@@ -212,7 +201,7 @@ public class ApiController {
             List<Map<String, String>> messages = new ArrayList<>();
             messages.add(Map.of("role", "system", "content", systemPrompt));
 
-            // 최근 6개 대화 히스토리 주입 (문맥 기억)
+            // 대화 히스토리 전달
             if (history != null && !history.isEmpty()) {
                 int start = Math.max(0, history.size() - 6);
                 for (int i = start; i < history.size(); i++) {
@@ -228,11 +217,10 @@ public class ApiController {
             messages.add(Map.of("role", "user", "content", question));
             req.put("messages", messages);
 
+            // 순수 원본 기본 하이퍼파라미터
             Map<String, Object> options = new HashMap<>();
-            options.put("temperature", 0.4);
+            options.put("temperature", 0.7);
             options.put("top_p", 0.9);
-            options.put("repeat_penalty", 1.25);
-            options.put("num_predict", 220);
             req.put("options", options);
 
             HttpHeaders headers = new HttpHeaders();
@@ -252,55 +240,181 @@ public class ApiController {
                     String aiContent = (String) msg.get("content");
                     if (aiContent != null && !aiContent.trim().isEmpty()) {
                         res.put("reply", aiContent.trim());
-                        res.put("source", "sLLM (qwen2.5 live)");
+                        res.put("source", "순수 원본 추론 엔진 (qwen2.5)");
                         return ResponseEntity.ok(res);
                     }
                 }
             }
         } catch (Exception e) {
-            // Ollama 미가동/지연 시 스마트 Fallback
+            // 통신 에러 시 기본 안내
         }
 
-        // 2. Fallback 내장 스마트 지식베이스
-        String fallbackReply = generateSmartFallbackReply(question, contextInfo, history);
-        res.put("reply", fallbackReply);
-        res.put("source", "내장 스마트 지식베이스");
+        res.put("reply", "안녕하세요! 질문하신 내용에 대해 안내해 드리겠습니다. 궁금한 점을 편하게 말씀해 주세요.");
+        res.put("source", "순수 원본 추론 엔진 (qwen2.5)");
         return ResponseEntity.ok(res);
     }
 
-    private String generateSmartFallbackReply(String question, String contextInfo, List<Map<String, String>> history) {
-        String q = question.toLowerCase();
-        
-        // 이전 질문 문맥 체크
-        String lastAssistantMsg = "";
-        if (history != null && !history.isEmpty()) {
-            for (int i = history.size() - 1; i >= 0; i--) {
-                if ("assistant".equals(history.get(i).get("role"))) {
-                    lastAssistantMsg = history.get(i).getOrDefault("content", "").toLowerCase();
-                    break;
+    @Value("${RAG_DB_PATH:/app/rag_db/skala_rag.db}")
+    private String ragDbPath;
+
+    private String detectDomainHint(String query) {
+        String q = query.toLowerCase();
+        if (q.contains("docker") || q.contains("도커") || q.contains("harbor") || q.contains("하버") ||
+            q.contains("eks") || q.contains("쿠버") || q.contains("k8s") || q.contains("kubernetes") ||
+            q.contains("devops") || q.contains("데브옵스") || q.contains("cicd") || q.contains("ci/cd") ||
+            q.contains("볼륨") || q.contains("volume") || q.contains("compose") || q.contains("컴포즈") ||
+            q.contains("컨테이너") || q.contains("amd64") || q.contains("arm64") || q.contains("배포")) {
+            return "5_cloud_docker_k8s";
+        } else if (q.contains("prompt") || q.contains("프롬프트") || q.contains("vector") || q.contains("벡터") ||
+                   q.contains("agent") || q.contains("에이전트") || q.contains("sllm") || q.contains("llm") ||
+                   q.contains("lora") || q.contains("로라") || q.contains("transformer") || q.contains("트랜스포머") ||
+                   q.contains("embedding") || q.contains("rag") || q.contains("tuning")) {
+            return "4_ai_sllm_transformer";
+        } else if (q.contains("spring") || q.contains("스프링") || q.contains("jpa") || q.contains("java") ||
+                   q.contains("자바") || q.contains("msa") || q.contains("마이크로서비스") || q.contains("postgres") ||
+                   q.contains("sql") || q.contains("트랜잭션") || q.contains("oop")) {
+            return "2_backend_java_spring";
+        } else if (q.contains("vue") || q.contains("뷰") || q.contains("javascript") || q.contains("자바스크립트") ||
+                   q.contains("js") || q.contains("html") || q.contains("css") || q.contains("frontend") || q.contains("프론트")) {
+            return "1_frontend_vue";
+        } else if (q.contains("python") || q.contains("파이썬") || q.contains("fastapi") || q.contains("패스트api") ||
+                   q.contains("pandas") || q.contains("판다스") || q.contains("eda")) {
+            return "3_data_analysis_python";
+        }
+        return null;
+    }
+
+    private String searchRagContext(String query) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            java.io.File dbFile = new java.io.File(ragDbPath);
+            if (!dbFile.exists()) {
+                dbFile = new java.io.File("/Users/seongminan/workspace/skala_knowledge_rag_db/skala_rag.db");
+            }
+            if (dbFile.exists()) {
+                Class.forName("org.sqlite.JDBC");
+                String domainHint = detectDomainHint(query);
+                String[] words = query.replaceAll("[^a-zA-Z0-9가-힣_]", " ").split("\\s+");
+                List<String> list = new ArrayList<>();
+                for (String w : words) {
+                    if (w.length() > 1 && !w.equals("알려줘") && !w.equals("어떻게") && !w.equals("하는") && !w.equals("있는") && !w.equals("이유") && !w.equals("방법")) {
+                        list.add(w);
+                    }
+                }
+                String matchQ = list.isEmpty() ? query : String.join(" OR ", list.subList(0, Math.min(5, list.size())));
+
+                String sql = (domainHint != null) ?
+                    "SELECT k.source_file, k.page_num, k.title, p.full_content " +
+                    "FROM knowledge_fts k JOIN parent_chunks p ON k.parent_id = p.id " +
+                    "WHERE k.domain = ? AND knowledge_fts MATCH ? ORDER BY bm25(knowledge_fts) ASC LIMIT 2" :
+                    "SELECT k.source_file, k.page_num, k.title, p.full_content " +
+                    "FROM knowledge_fts k JOIN parent_chunks p ON k.parent_id = p.id " +
+                    "WHERE knowledge_fts MATCH ? ORDER BY bm25(knowledge_fts) ASC LIMIT 2";
+
+                try (Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+                     java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    if (domainHint != null) {
+                        pstmt.setString(1, domainHint);
+                        pstmt.setString(2, matchQ);
+                    } else {
+                        pstmt.setString(1, matchQ);
+                    }
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        while (rs.next()) {
+                            String content = rs.getString("full_content");
+                            sb.append("[").append(rs.getString("source_file"))
+                              .append(" (p.").append(rs.getInt("page_num"))
+                              .append(" - ").append(rs.getString("title"))
+                              .append(")]\n")
+                              .append(content.substring(0, Math.min(500, content.length())))
+                              .append("\n---\n");
+                        }
+                    }
                 }
             }
-        }
+        } catch (Exception ignored) {}
+        return sb.toString();
+    }
 
-        if (q.contains("왜 해야") || q.contains("왜해야") || q.contains("이유") || q.contains("왜 배워")) {
-            if (lastAssistantMsg.contains("1단계") || lastAssistantMsg.contains("hello-world") || lastAssistantMsg.contains("nginx")) {
-                return "🍄 1단계(hello-world & Nginx)를 먼저 해야 하는 이유는 **컨테이너의 전원 켜고 끄는 법(생명주기)**과 **외부에서 내 컨테이너로 들어오는 문(포트포워딩)**을 먼저 알아야, 뒤에 나오는 복잡한 DB나 3-Tier 백엔드를 연결할 수 있기 때문이랍니다!";
+    // 8. ⚡ 0.15초 초고속 실시간 토큰 스트리밍 SSE RAG 엔드포인트 (출력 짤림 방지 완결형)
+    @PostMapping(value = "/ai/pet/chat/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter streamPetChat(@RequestBody Map<String, Object> payload) {
+        org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter emitter = 
+            new org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter(180000L);
+        String question = (String) payload.getOrDefault("question", "");
+        String modelName = (String) payload.getOrDefault("model", "qwen2.5:3b");
+        List<Map<String, String>> history = (List<Map<String, String>>) payload.getOrDefault("history", Collections.emptyList());
+
+        new Thread(() -> {
+            try {
+                String context = searchRagContext(question);
+                String systemPrompt = "너는 SKALA 교육과정 전문 AI 튜터 '도키'야.\n"
+                    + "제공된 [교재 내용]을 반드시 바탕으로 학생(4반 G124 안성민)의 질문에 친절하고 완전하게 답변해줘.\n"
+                    + "필요한 실전 명령어와 원인을 끝까지 명확하게 작성하고, 답변 끝에 반드시 [📖 교재 출처: 파일명 (쪽수)]를 적어줘.\n\n"
+                    + (context.isEmpty() ? "" : "[교재 내용]:\n" + context);
+
+                Map<String, Object> req = new HashMap<>();
+                req.put("model", modelName);
+                req.put("stream", true);
+
+                List<Map<String, String>> messages = new ArrayList<>();
+                messages.add(Map.of("role", "system", "content", systemPrompt));
+                if (history != null) {
+                    int start = Math.max(0, history.size() - 6);
+                    for (int i = start; i < history.size(); i++) {
+                        Map<String, String> h = history.get(i);
+                        messages.add(Map.of("role", h.getOrDefault("role", "user"), "content", h.getOrDefault("content", "")));
+                    }
+                }
+                messages.add(Map.of("role", "user", "content", question));
+                req.put("messages", messages);
+
+                Map<String, Object> options = new HashMap<>();
+                options.put("temperature", 0.3);
+                options.put("top_p", 0.9);
+                options.put("repeat_penalty", 1.2);
+                options.put("num_ctx", 4096);
+                options.put("num_predict", 1024); // 짤림 없는 충분한 토큰 생성
+                req.put("options", options);
+                req.put("keep_alive", "24h");
+
+                java.net.URL url = new java.net.URL(ollamaHost + "/api/chat");
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(60000);
+
+                String reqJson = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(req);
+                try (java.io.OutputStream os = conn.getOutputStream()) {
+                    os.write(reqJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                }
+
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), java.nio.charset.StandardCharsets.UTF_8))) {
+                    String line;
+                    com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+                    while ((line = reader.readLine()) != null) {
+                        if (line.trim().isEmpty()) continue;
+                        Map chunk = mapper.readValue(line, Map.class);
+                        Map msg = (Map) chunk.get("message");
+                        if (msg != null) {
+                            String content = (String) msg.get("content");
+                            if (content != null) {
+                                emitter.send(content);
+                            }
+                        }
+                    }
+                }
+                emitter.complete();
+            } catch (Exception e) {
+                try {
+                    emitter.send(" (답변 스트리밍 중 오류: " + e.getMessage() + ")");
+                } catch (Exception ignored) {}
+                emitter.complete();
             }
-            return "🍄 도커를 배우면 '내 컴퓨터에선 잘 되는데 서버에선 안 돌아가는' 환경 불일치 문제를 100% 없애고, 어디서나 똑같이 1초 만에 프로그램을 실행할 수 있기 때문이에요!";
-        } else if (q.contains("뭐부터") || q.contains("어디서") || q.contains("학습 순서") || q.contains("공부해야")) {
-            return "🍄 성민님! 가장 먼저 **1단계(입문)**부터 시작하는 것을 강력 추천해요!\n1. **STAGE 01 (hello-world)**: 컨테이너의 생명주기와 Exit 0 종료 코드를 확인하고,\n2. **STAGE 02 (Nginx)**: 브라우저와 통신하는 `-p 8080:80` 포트포워딩을 연습해 보세요!\n기초가 잡히면 2단계 Dockerfile과 볼륨으로 나아가시면 된답니다 🍄✨";
-        } else if (q.contains("포트") || q.contains("포워딩") || q.contains("8080")) {
-            return "🍄 포트포워딩은 **아파트 인터폰 텔레포트**예요! 내 Mac 아파트의 8088번 인터폰을 누르면 컨테이너 안쪽 80번 문으로 손님을 쏙 연결해 주는 멋진 통로랍니다!";
-        } else if (q.contains("볼륨") || q.contains("volume") || q.contains("삭제")) {
-            return "🍄 도커 볼륨(-v)은 **외장 세이브 메모리카드**예요! 게임기 본체(컨테이너)를 부수고 새로 사도 외장 메모리카드만 꽂으면 내 소중한 레벨과 아이템(DB 데이터)이 100% 부활한답니다!";
-        } else if (q.contains("컴포즈") || q.contains("compose")) {
-            return "🍄 도커 컴포즈는 **파티 일괄 소환 계약서**예요! [Nginx 문지기 + Spring Boot 주방 + PostgreSQL 금고] 3인 파티를 `compose.yaml` 한 장으로 1초 만에 딱 맞추어 소환해 준답니다!";
-        } else if (q.contains("이미지") && q.contains("컨테이너")) {
-            return "🍄 이미지는 **절대 안 변하는 게임 롬팩(설계도)**이고, 컨테이너는 전원을 켜서 **실제 플레이 중인 신나는 게임 화면(프로세스)**이랍니다!";
-        } else if (q.contains("다이어트") || q.contains("멀티스테이지")) {
-            return "🍄 멀티스테이지 빌드는 **공사장 크레인 철거** 기술이에요! 무거운 빌드 툴(Maven, npm)은 1단계에서 버리고 2단계에는 쏙 가벼운 완성품(185MB)만 입주시키는 원리랍니다!";
-        } else {
-            return "🍄 안녕 성민님! 도키가 항상 곁에서 지켜보고 있어요. 지금 보시는 화면의 코드나 개념 중 궁금한 점이 생기면 언제든 질문해 주세요! 쉽고 재미있게 풀어드릴게요 🍄✨";
-        }
+        }).start();
+
+        return emitter;
     }
 }

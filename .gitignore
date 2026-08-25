@@ -16,4 +16,26 @@ yarn-error.log*
 # Node modules & build artifacts
 node_modules/
 dist/
+target/
 .DS_Store
+
+# Databases & RAG local indices (Private)
+*.db
+*.sqlite
+*.sqlite3
+skala_knowledge_rag_db/
+ebooks/
+materials/
+n8n_data/
+*.plist
+
+# Course Raw Files (PDF, PPTX, DOCX)
+*.pdf
+*.pptx
+*.docx
+*.zip
+
+# Local execution logs
+*.log
+cron*.log
+watcher*.log

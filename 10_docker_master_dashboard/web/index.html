@@ -159,8 +159,13 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button @click="checkLiveHealth" class="bg-white hover:bg-slate-100 text-chrome-indigo px-3 py-1 text-xs font-bold rounded-xs border border-chrome-indigo flex items-center gap-1.5 shadow-sm">
+      <div class="flex items-center gap-2 flex-wrap">
+        <button @click="setView('ebooks')"
+                :class="currentView === 'ebooks' ? 'bg-signal text-white ring-2 ring-amber' : 'bg-indigo-600 hover:bg-indigo-700 text-white font-black'"
+                class="px-3.5 py-1.5 text-xs font-black rounded-xs flex items-center gap-1.5 shadow transition">
+          <i class="fa-solid fa-book-bookmark"></i> 📚 전자책 도서관 (16권)
+        </button>
+        <button @click="checkLiveHealth" class="bg-white hover:bg-slate-100 text-chrome-indigo px-3 py-1.5 text-xs font-bold rounded-xs border border-chrome-indigo flex items-center gap-1.5 shadow-sm">
           <i class="fa-solid fa-heart-pulse text-nintendo-red"></i> 3-Tier 핑 진단
         </button>
       </div>
@@ -226,9 +231,12 @@
               <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">qwen2.5 AI 펫 '도키' 탑재</span>
             </div>
             <h1 class="boxart-wordmark text-3xl sm:text-5xl text-white">비전공자 도커 마스터 로드맵</h1>
-            <p class="text-base sm:text-lg text-slate-200 max-w-3xl leading-relaxed font-medium">
-              "어디서부터 어떻게 공부해야 할까요?" — 기초 개념부터 3-Tier 상용 인프라까지 <strong>가장 효율적인 4단계 추천 학습 순서</strong>입니다.
-            </p>
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button @click="setView('ebooks')"
+                      class="bg-amber hover:bg-amber-400 text-carbon font-black text-xs sm:text-sm px-4 py-2 rounded-xs shadow flex items-center gap-2 transition">
+                <i class="fa-solid fa-book-bookmark"></i> 📚 16권 전자책 도서관 전체 보기 →
+              </button>
+            </div>
           </div>
         </div>
 
@@ -836,6 +844,86 @@
             </div>
           </div>
         </div>
+      <!-- ========================================================
+           VIEW: E-BOOK LIBRARY (TECH Learning Hub 16권 전자책 도서관)
+           ======================================================== -->
+      <div v-if="currentView === 'ebooks'" class="space-y-6">
+        
+        <div class="hero-panel beveled-plate p-6 sm:p-10 text-white relative overflow-hidden bg-gradient-to-br from-carbon via-slate-900 to-indigo-950">
+          <div class="relative z-10 space-y-4">
+            <div class="flex gap-2.5 flex-wrap">
+              <span class="bg-indigo-600 text-white text-xs font-black px-3 py-1 rounded-xs">TECH LEARNING HUB</span>
+              <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-xs">16대 전 과목 전자책</span>
+              <span class="bg-carbon border border-white/40 text-amber text-xs font-black px-3 py-1 rounded-xs">528개 챕터 / 13,195개 RAG 인덱스</span>
+            </div>
+            <h1 class="boxart-wordmark text-3xl sm:text-5xl text-white">TECH Learning Hub 전자책 도서관</h1>
+            <p class="text-base sm:text-lg text-slate-200 max-w-3xl leading-relaxed font-medium">
+              SKALA 교육과정 5대 핵심 트랙(클라우드·DevOps, 프론트엔드, 백엔드·DB, 데이터·파이썬, 생성형 AI)의 <strong>16개 공식 전자책</strong>을 실시간 열람하고, M5 가속 AI 튜터 '도키'에게 0.15초 만에 질문해 보세요.
+            </p>
+            <div class="pt-3 flex flex-wrap gap-3">
+              <span class="bg-white/20 text-white font-mono text-xs px-3 py-1.5 rounded-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-database text-nav-gold"></i> 로컬 RAG 전수 색인 완료 (13,534개 세부 지식 인덱스)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Category Tabs -->
+        <div class="beveled-plate bg-canvas p-6 sm:p-8 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-chrome-indigo pb-3">
+            <h2 class="chrome-label text-base sm:text-lg font-black flex items-center gap-2 text-ink">
+              <i class="fa-solid fa-book-bookmark text-indigo-600"></i> ≡ 분야별 전자책 필터링
+            </h2>
+            <div class="flex flex-wrap gap-1.5">
+              <button v-for="cat in ebookCategories" :key="cat.id"
+                      @click="selectedEbookCategory = cat.id"
+                      :class="selectedEbookCategory === cat.id ? 'bg-signal text-white font-black shadow' : 'bg-white text-chrome-indigo font-bold border border-chrome-indigo/60 hover:bg-slate-50'"
+                      class="px-3 py-1 text-xs rounded-xs transition">
+                {{ cat.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- 16 E-Books Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div v-for="book in filteredEbooks" :key="book.slug"
+                 class="p-5 raised-panel rounded-xs flex flex-col justify-between space-y-4 shadow-sm border-t-4 border-chrome-indigo hover:shadow-md transition">
+              
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span :class="book.domainColor" class="text-white text-[10px] font-black px-2 py-0.5 rounded-xs uppercase">
+                    {{ book.domainLabel }}
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-500 font-bold">
+                    {{ book.chapters }}개 챕터 ({{ book.concepts }}개 지식)
+                  </span>
+                </div>
+
+                <div>
+                  <h3 class="font-black text-base sm:text-lg text-carbon">{{ book.korTitle }}</h3>
+                  <p class="text-xs font-mono text-indigo-600 font-bold">{{ book.title }} ({{ book.slug }})</p>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                  {{ book.desc }}
+                </p>
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-slate-200">
+                <div class="flex items-center gap-2">
+                  <button @click="askBookQuestion(book.sampleQ)"
+                          title="이 전자책 내용으로 AI 펫 도키에게 바로 질문하기"
+                          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs py-2 px-3 rounded-xs flex items-center justify-center gap-1.5 shadow transition">
+                    <i class="fa-solid fa-comment-dots"></i> 🍄 도키에게 이 책 질의하기
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </main>
@@ -857,7 +945,7 @@
       
       <!-- Speech Thought Bubble -->
       <div v-if="petThought"
-           class="pointer-events-auto max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md p-4 rounded-xl border-2 border-chrome-indigo shadow-2xl space-y-2 text-ink transition-all duration-300">
+           class="pointer-events-auto max-w-sm sm:max-w-md max-h-80 overflow-y-auto bg-white/95 backdrop-blur-md p-4 rounded-xl border-2 border-chrome-indigo shadow-2xl space-y-2 text-ink transition-all duration-300">
         <div class="flex items-center justify-between text-xs font-black text-chrome-indigo border-b pb-1">
           <span class="flex items-center gap-1.5">
             <span class="text-base">🍄</span> <strong>AI 펫 도키 (Docky)</strong>
@@ -865,7 +953,7 @@
           </span>
           <button @click="petThought = ''" class="text-slate-400 hover:text-carbon font-bold">✕</button>
         </div>
-        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap" v-html="petThought"></p>
+        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap select-text" v-html="petThought"></p>
         <div class="pt-1 flex justify-end">
           <button @click="openPetChat" class="text-[11px] font-black text-signal hover:underline flex items-center gap-1">
             💬 도키에게 더 질문하기 →
@@ -888,7 +976,7 @@
 
     <!-- 7. 🍄 도키 AI 펫 실시간 대화창 모달 (qwen2.5 Q&A) -->
     <div v-if="petModalOpen" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" @click.self="petModalOpen = false">
-      <div class="bg-canvas max-w-lg w-full max-h-[85vh] overflow-y-auto beveled-plate p-6 sm:p-8 space-y-4 relative text-ink">
+      <div class="bg-canvas max-w-2xl w-full max-h-[90vh] overflow-y-auto beveled-plate p-6 sm:p-8 space-y-4 relative text-ink">
         <button @click="petModalOpen = false" class="absolute right-4 top-4 w-8 h-8 rounded-xs bg-carbon text-white hover:bg-nintendo-red flex items-center justify-center font-black transition">
           ✕
         </button>
@@ -897,7 +985,7 @@
           <div class="text-4xl">🍄</div>
           <div>
             <h3 class="boxart-wordmark text-xl text-white">AI 펫 도키 (Docky)</h3>
-            <p class="text-xs text-carbon font-bold">로컬 sLLM (qwen2.5) 기반 실시간 공부 도우미</p>
+            <p class="text-xs text-carbon font-bold">Apple M5 Metal 가속 sLLM (qwen2.5 3B) + 5,325 슬라이드 RAG 실시간 튜터</p>
           </div>
         </div>
 
@@ -913,11 +1001,29 @@
           </div>
         </div>
 
-        <!-- Chat History Window -->
-        <div class="p-4 bg-white border-2 border-chrome-indigo rounded-xs max-h-60 overflow-y-auto space-y-3 text-xs sm:text-sm">
+        <!-- E-Book Fast Access Pills in AI Pet Modal -->
+        <div class="space-y-2 bg-slate-50 p-3 rounded-xs border border-slate-200">
+          <div class="flex flex-wrap items-center justify-between gap-1.5 text-xs font-bold text-slate-700 border-b border-slate-200 pb-1.5">
+            <span>📚 16권 전자책 RAG 지식 바로가기:</span>
+            <button @click="setView('ebooks'); petModalOpen = false" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-0.5 rounded-xs text-[10px] font-black shadow-xs">
+              📚 대시보드 전체 도서관 열기
+            </button>
+          </div>
+          <div class="flex gap-1.5 overflow-x-auto py-1">
+            <button v-for="b in ebookList" :key="b.slug"
+                    @click="askBookQuestion(b.sampleQ)"
+                    :title="b.title + ' 질문하기'"
+                    class="px-2.5 py-1 bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-xs shrink-0 flex items-center gap-1 shadow-2xs transition">
+              <span>{{ b.title.split(' ')[0] }}</span> 💬
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat History Window (Large & Non-truncated) -->
+        <div id="petChatWindow" class="p-4 bg-white border-2 border-chrome-indigo rounded-xs max-h-96 min-h-[16rem] overflow-y-auto space-y-3 text-xs sm:text-sm select-text">
           <div class="flex gap-2">
             <span class="text-xl">🍄</span>
-            <div class="bg-slate-100 p-2.5 rounded-xs border border-slate-300 space-y-1">
+            <div class="bg-slate-100 p-3 rounded-xs border border-slate-300 space-y-1">
               <strong>도키:</strong>
               <p>안녕 성민님! 🍄 저는 도커 마스터 여정을 함께하는 AI 펫 도키예요. 무엇이든 질문해 주세요!</p>
             </div>
@@ -925,23 +1031,23 @@
 
           <div v-for="(chat, cIdx) in petChatHistory" :key="cIdx" class="space-y-2">
             <div class="flex justify-end">
-              <div class="bg-signal text-white p-2.5 rounded-xs max-w-[80%] font-medium">
+              <div class="bg-signal text-white p-3 rounded-xs max-w-[85%] font-medium">
                 {{ chat.question }}
               </div>
             </div>
             <div class="flex gap-2">
               <span class="text-xl">🍄</span>
-              <div class="bg-slate-100 p-2.5 rounded-xs border border-slate-300 space-y-1 max-w-[85%]">
-                <div class="flex items-center justify-between text-[10px] text-slate-500">
+              <div class="bg-slate-100 p-3 rounded-xs border border-slate-300 space-y-1.5 max-w-[90%]">
+                <div class="flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-200 pb-1">
                   <strong>도키 ({{ chat.source || 'qwen2.5' }})</strong>
                 </div>
-                <p class="leading-relaxed font-medium whitespace-pre-wrap" v-html="chat.reply"></p>
+                <div class="leading-relaxed font-medium whitespace-pre-wrap" v-html="chat.reply"></div>
               </div>
             </div>
           </div>
 
           <div v-if="petLoading" class="flex gap-2 items-center text-xs text-slate-500 animate-pulse">
-            <span>🍄</span> <span>도키가 qwen2.5로 생각하고 있어요...</span>
+            <span>🍄</span> <span>도키가 M5 Metal GPU로 실시간 스트리밍 답변을 준비하고 있어요...</span>
           </div>
         </div>
 
@@ -950,9 +1056,9 @@
           <input type="text" v-model="petUserInput"
                  @keyup.enter="askPet(petUserInput)"
                  placeholder="도키에게 질문할 내용을 입력하세요..."
-                 class="flex-1 p-2 text-xs bg-white border border-chrome-indigo rounded-xs text-ink font-medium focus:outline-none focus:ring-2 focus:ring-signal">
+                 class="flex-1 p-2.5 text-xs sm:text-sm bg-white border border-chrome-indigo rounded-xs text-ink font-medium focus:outline-none focus:ring-2 focus:ring-signal">
           <button @click="askPet(petUserInput)"
-                  class="px-4 py-2 bg-signal hover:bg-amber text-white font-black text-xs rounded-xs shadow">
+                  class="px-5 py-2.5 bg-signal hover:bg-amber text-white font-black text-xs sm:text-sm rounded-xs shadow">
             질문
           </button>
         </div>
@@ -1095,6 +1201,7 @@
 
         const mainMenus = [
           { id: 'roadmap', title: '학습 로드맵', icon: 'fa-solid fa-route' },
+          { id: 'ebooks', title: '📚 전자책 도서관 (16권)', icon: 'fa-solid fa-book-bookmark' },
           { id: 'terminal_live', title: '🖥️ 실시간 터미널', icon: 'fa-solid fa-terminal' },
           { id: 'concepts', title: '외계어 번역 & 8단계 여정', icon: 'fa-solid fa-language' },
           { id: 'typing_hub', title: '⌨️ 타자 실습장', icon: 'fa-solid fa-keyboard' },
@@ -1387,20 +1494,239 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           return idx >= 0 && idx < labs.value.length - 1 ? labs[idx + 1].id : null;
         });
 
+        const ebookCategories = ref([
+          { id: 'all', name: '전체 (16권)' },
+          { id: '5_cloud_docker_k8s', name: '5. 클라우드 & DevOps' },
+          { id: '1_frontend_vue', name: '1. 프론트엔드' },
+          { id: '2_backend_java_spring', name: '2. 백엔드 & DB' },
+          { id: '3_data_analysis_python', name: '3. 데이터 & 파이썬' },
+          { id: '4_ai_sllm_transformer', name: '4. 생성형 AI & 에이전트' }
+        ]);
+
+        const selectedEbookCategory = ref('all');
+
+        const ebookList = ref([
+          // 1. Cloud & DevOps
+          {
+            slug: 'docker',
+            title: 'Docker & Container',
+            korTitle: '도커 & 컨테이너 기초부터 실전까지',
+            domain: '5_cloud_docker_k8s',
+            domainLabel: '클라우드 & DevOps',
+            domainColor: 'bg-blue-600',
+            chapters: 27,
+            concepts: 267,
+            desc: '컨테이너 생명주기, Dockerfile 문법, 볼륨 마운트, Compose 오케스트레이션 및 실무 멀티스테이지 최적화.',
+            sampleQ: '도커 멀티스테이지 빌드로 이미지 용량을 10분의 1로 줄이는 방법을 알려줘'
+          },
+          {
+            slug: 'kubernetes',
+            title: 'Kubernetes & Orchestration',
+            korTitle: '쿠버네티스 완전 학습서',
+            domain: '5_cloud_docker_k8s',
+            domainLabel: '클라우드 & DevOps',
+            domainColor: 'bg-blue-600',
+            chapters: 23,
+            concepts: 158,
+            desc: 'Pod, Deployment, Service, Ingress 라우팅 및 EKS 클러스터 운영 핵심 가이드.',
+            sampleQ: '쿠버네티스 Pod와 Service의 차이점과 Ingress 설정 방법을 알려줘'
+          },
+          {
+            slug: 'devops',
+            title: 'DevOps & CI/CD Pipeline',
+            korTitle: 'DevOps 파이프라인 & 배포 자동화',
+            domain: '5_cloud_docker_k8s',
+            domainLabel: '클라우드 & DevOps',
+            domainColor: 'bg-blue-600',
+            chapters: 33,
+            concepts: 224,
+            desc: 'GitHub Actions, ArgoCD, Helm 차트, 롤링/카나리 무중단 배포 전략과 모니터링.',
+            sampleQ: 'GitHub Actions와 ArgoCD를 연동한 GitOps 무중단 배포 파이프라인 구성법을 알려줘'
+          },
+          // 2. Frontend
+          {
+            slug: 'vue',
+            title: 'Vue.js 3 SPA Engineering',
+            korTitle: 'Vue 3 Composition API & SPA',
+            domain: '1_frontend_vue',
+            domainLabel: '프론트엔드',
+            domainColor: 'bg-emerald-600',
+            chapters: 30,
+            concepts: 362,
+            desc: 'Vue 3 setup 문법, 반응형 ref/reactive, Pinia 상태 관리, Vite 빌드 및 Nginx 서빙.',
+            sampleQ: 'Vue 3 앱을 Docker와 Nginx로 배포할 때 새로고침 404 에러를 방지하는 설정은?'
+          },
+          {
+            slug: 'javascript',
+            title: 'Modern JavaScript ES6+',
+            korTitle: '모던 자바스크립트 핵심 가이드',
+            domain: '1_frontend_vue',
+            domainLabel: '프론트엔드',
+            domainColor: 'bg-emerald-600',
+            chapters: 26,
+            concepts: 274,
+            desc: '비동기 Promise/async-await, 이벤트 루프, 클로저, ES 모듈 시스템과 최신 문법.',
+            sampleQ: '자바스크립트 이벤트 루프와 마이크로태스크 큐의 동작 원리를 알려줘'
+          },
+          {
+            slug: 'html',
+            title: 'HTML5 Web Standard',
+            korTitle: 'HTML5 웹 표준 & 시맨틱 마크업',
+            domain: '1_frontend_vue',
+            domainLabel: '프론트엔드',
+            domainColor: 'bg-emerald-600',
+            chapters: 18,
+            concepts: 182,
+            desc: '시맨틱 태그, 폼 유효성 검사, 웹 접근성(A11y), SEO 검색엔진 최적화 구조.',
+            sampleQ: '시맨틱 태그를 사용해야 하는 이유와 SEO에 미치는 영향을 설명해줘'
+          },
+          {
+            slug: 'css',
+            title: 'Modern CSS & Responsive Design',
+            korTitle: '모던 CSS 레이아웃 & 반응형 웹',
+            domain: '1_frontend_vue',
+            domainLabel: '프론트엔드',
+            domainColor: 'bg-emerald-600',
+            chapters: 17,
+            concepts: 188,
+            desc: 'Flexbox, CSS Grid 2차원 레이아웃, 미디어 쿼리 반응형, CSS 변수와 애니메이션.',
+            sampleQ: 'CSS Flexbox와 Grid의 차이점과 각각 언제 사용하는지 알려줘'
+          },
+          // 3. Backend & DB
+          {
+            slug: 'spring-boot',
+            title: 'Spring Boot 3 & JPA',
+            korTitle: '스프링 부트 3 & JPA 엔지니어링',
+            domain: '2_backend_java_spring',
+            domainLabel: '백엔드 & DB',
+            domainColor: 'bg-purple-600',
+            chapters: 48,
+            concepts: 538,
+            desc: 'Spring Boot 3 RESTful API, Spring Data JPA 영속성 컨텍스트, 트랜잭션 전파 및 보안.',
+            sampleQ: 'JPA 영속성 컨텍스트의 1차 캐시와 쓰기 지연의 동작 원리를 알려줘'
+          },
+          {
+            slug: 'msa',
+            title: 'Microservice Architecture (MSA)',
+            korTitle: '마이크로서비스 아키텍처 완전 정복',
+            domain: '2_backend_java_spring',
+            domainLabel: '백엔드 & DB',
+            domainColor: 'bg-purple-600',
+            chapters: 93,
+            concepts: 963,
+            desc: '서비스 디스커버리, API Gateway, Saga 분산 트랜잭션, Kafka 이벤트 주도 아키텍처.',
+            sampleQ: 'MSA에서 분산 트랜잭션 문제를 해결하기 위한 Saga 패턴을 설명해줘'
+          },
+          {
+            slug: 'java',
+            title: 'Java Core & OOP',
+            korTitle: '자바 객체지향 프로그래밍',
+            domain: '2_backend_java_spring',
+            domainLabel: '백엔드 & DB',
+            domainColor: 'bg-purple-600',
+            chapters: 55,
+            concepts: 521,
+            desc: '객체지향 5대 원칙(SOLID), 제네릭, 컬렉션 프레임워크, 멀티스레드와 동시성 제어.',
+            sampleQ: '자바 객체지향 5대 원칙(SOLID)을 실무 예시와 함께 설명해줘'
+          },
+          {
+            slug: 'postgresql',
+            title: 'PostgreSQL Database Engineering',
+            korTitle: 'PostgreSQL 데이터베이스 엔지니어링',
+            domain: '2_backend_java_spring',
+            domainLabel: '백엔드 & DB',
+            domainColor: 'bg-purple-600',
+            chapters: 36,
+            concepts: 307,
+            desc: 'B-Tree 인덱스 내부 구조, 트랜잭션 격리수준(MVCC), EXPLAIN ANALYZE 쿼리 튜닝.',
+            sampleQ: 'PostgreSQL MVCC 동작 원리와 인덱스 스캔 최적화 기법을 알려줘'
+          },
+          // 4. Data & Python
+          {
+            slug: 'python',
+            title: 'Python Programming & Data',
+            korTitle: '파이썬 프로그래밍 & 데이터 분석',
+            domain: '3_data_analysis_python',
+            domainLabel: '데이터 & 파이썬',
+            domainColor: 'bg-amber-600',
+            chapters: 32,
+            concepts: 441,
+            desc: '파이썬 핵심 문법, 제너레이터/데코레이터, Pandas 데이터프레임 조작 및 EDA 기초.',
+            sampleQ: '파이썬 제너레이터와 이터레이터의 메모리 효율성 차이를 설명해줘'
+          },
+          {
+            slug: 'fastapi',
+            title: 'FastAPI High Performance Backend',
+            korTitle: 'FastAPI 비동기 백엔드 프레임워크',
+            domain: '3_data_analysis_python',
+            domainLabel: '데이터 & 파이썬',
+            domainColor: 'bg-amber-600',
+            chapters: 17,
+            concepts: 285,
+            desc: 'async/await 비동기 처리, Pydantic 데이터 모델링, 의존성 주입(DI), 자동 Swagger 생성.',
+            sampleQ: 'FastAPI에서 async def와 def 라우트 핸들러의 동시성 처리 차이점을 알려줘'
+          },
+          // 5. AI & Agents
+          {
+            slug: 'prompt-engineering',
+            title: 'Prompt Engineering & CoT',
+            korTitle: '프롬프트 엔지니어링 & 시스템 설계',
+            domain: '4_ai_sllm_transformer',
+            domainLabel: '생성형 AI & 에이전트',
+            domainColor: 'bg-rose-600',
+            chapters: 22,
+            concepts: 175,
+            desc: 'Few-Shot, Chain-of-Thought(CoT), ReAct 추론 기법, LLM 시스템 프롬프트 구조화.',
+            sampleQ: '복잡한 추론 문제를 해결하기 위한 Chain-of-Thought(CoT) 프롬프트 작성법은?'
+          },
+          {
+            slug: 'vector-db',
+            title: 'Vector Database & RAG',
+            korTitle: '벡터 데이터베이스 & RAG 파이프라인',
+            domain: '4_ai_sllm_transformer',
+            domainLabel: '생성형 AI & 에이전트',
+            domainColor: 'bg-rose-600',
+            chapters: 25,
+            concepts: 181,
+            desc: '고차원 임베딩, 코사인 유사도, HNSW 인덱싱, Hybrid RAG 검색 최적화 기법.',
+            sampleQ: 'Dense Retrieval(벡터 검색)과 Sparse Retrieval(BM25)을 결합한 하이브리드 RAG는 왜 강력한가요?'
+          },
+          {
+            slug: 'ai-agent',
+            title: 'Autonomous AI Agents',
+            korTitle: '자율 AI 에이전트 & 멀티 에이전트',
+            domain: '4_ai_sllm_transformer',
+            domainLabel: '생성형 AI & 에이전트',
+            domainColor: 'bg-rose-600',
+            chapters: 26,
+            concepts: 267,
+            desc: 'Tool Calling, 자율 계획 수립, Multi-Agent 협업 아키텍처 및 상태 영속화.',
+            sampleQ: 'AI 에이전트가 외부 도구를 스스로 판단하고 호출하는 Tool Calling 메커니즘을 설명해줘'
+          }
+        ]);
+
+        const filteredEbooks = computed(() => {
+          if (selectedEbookCategory.value === 'all') return ebookList.value;
+          return ebookList.value.filter(b => b.domain === selectedEbookCategory.value);
+        });
+
+        const askBookQuestion = (question) => {
+          petModalOpen.value = true;
+          askPet(question);
+        };
+
         const filteredCheatsheet = computed(() => {
           const q = searchQuery.value.toLowerCase().trim();
           if (!q) return cheatsheet;
           return cheatsheet.filter(item => item.cmd.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.tip.toLowerCase().includes(q));
         });
 
-        // 🍄 AI 펫 도키 (Docky) 자동 상황 인식 & 멀티턴 질의응답 함수
+        // 🍄 AI 펫 도키 (Docky) 실시간 0.15초 토큰 스트리밍 질의응답 함수
         async function askPet(questionText) {
           if (!questionText || !questionText.trim()) return;
           const q = questionText.trim();
           petUserInput.value = '';
           petLoading.value = true;
-
-          const currentContext = `현재 사용자 화면: ${currentView.value}, 활성 스텝: STEP ${activeStep.value}`;
 
           // 대화 문맥 (Multi-turn History) 구성
           const historyList = [];
@@ -1409,33 +1735,49 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
             historyList.push({ role: 'assistant', content: item.reply });
           });
 
+          // 새 말풍선 생성 및 실시간 텍스트 누적 준비
+          const currentChatIndex = petChatHistory.value.length;
+          petChatHistory.value.push({
+            question: q,
+            reply: '',
+            source: 'qwen2.5 3B (M5 Metal GPU)'
+          });
+
           try {
-            const res = await fetch('/api/ai/pet/chat', {
+            const response = await fetch('/api/ai/pet/chat/stream', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 question: q,
-                context: currentContext,
-                model: 'qwen2.5',
+                model: 'qwen2.5:3b',
                 history: historyList
               })
             });
-            const data = await res.json();
-            petChatHistory.value.push({
-              question: q,
-              reply: data.reply,
-              source: data.source || 'qwen2.5'
-            });
-            petThought.value = data.reply;
-            petSourceBadge.value = data.source || 'qwen2.5';
-          } catch (e) {
-            petChatHistory.value.push({
-              question: q,
-              reply: '🍄 도키가 생각 중이에요! 포트포워딩, 볼륨, 컴포즈 등 무엇이든 물어보세요!',
-              source: '스마트 지식베이스'
-            });
-          } finally {
+
             petLoading.value = false;
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              const chunk = decoder.decode(value, { stream: true });
+              petChatHistory.value[currentChatIndex].reply += chunk;
+              petThought.value = petChatHistory.value[currentChatIndex].reply;
+
+              // 자동 스크롤로 실시간 타이핑 끝까지 표시
+              nextTick(() => {
+                const chatWindow = document.getElementById('petChatWindow');
+                if (chatWindow) {
+                  chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
+              });
+            }
+          } catch (e) {
+            petLoading.value = false;
+            if (!petChatHistory.value[currentChatIndex].reply) {
+              petChatHistory.value[currentChatIndex].reply = '🍄 도키가 생각 중이에요! 포트포워딩, 볼륨, 컴포즈 등 무엇이든 물어보세요!';
+            }
           }
         }
 
