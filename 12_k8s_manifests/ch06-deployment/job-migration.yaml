@@ -1,31 +1,24 @@
 # ==============================================================================
-# [SKALA K8s Lab] ch06-deployment/job-migration.yaml : 1회성 배치/DB 마이그레이션 Job
-# ==============================================================================
-# • 개념: Deployment는 무한히 계속 떠 있어야 하는 서버용이지만, DB 스키마 마이그레이션이나
-#         1회성 데이터 변환 작업은 "성공적으로 끝난 후 정상 종료(Exit 0)"되어야 합니다.
-# • 핵심 기능:
-#   1. backoffLimit: 3 (실패 시 최대 3회까지 자동 재시도)
-#   2. activeDeadlineSeconds: 600 (10분 넘게 멈춰있으면 무한 대기 방지를 위해 강제 종료)
-#   3. ttlSecondsAfterFinished: 3600 (작업 완료 1시간 뒤 Completed Pod 자동 청소)
-# • 실행: kubectl apply -f ch06-deployment/job-migration.yaml
-# • 완료 대기: kubectl wait --for=condition=complete job/db-migration --timeout=600s
+# [SKALA K8s Lab] ch06-deployment/job-migration.yaml : 1회성 DB 마이그레이션 Job
 # ==============================================================================
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-migration
+  namespace: skala-gj4
 spec:
-  backoffLimit: 3                            # 실행 실패 시 최대 3번까지 재시도
-  activeDeadlineSeconds: 600                 # 작업 총 수행 제한시간 10분(600초)
-  ttlSecondsAfterFinished: 3600              # 성공 또는 실패 완료 후 1시간(3600초) 뒤 클러스터에서 자동 삭제
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 3600
   template:
     spec:
-      restartPolicy: OnFailure               # 에러로 죽었을 때만 컨테이너 재시작
+      imagePullSecrets:
+        - name: harbor-cred
+      restartPolicy: OnFailure
       containers:
         - name: migrate
-          image: shop-api:1.0.0
+          image: harbor.skala-gj.com/skala-gj4/shop-api:1.0.0
           imagePullPolicy: IfNotPresent
-          # 실전에서는 Flyway / Liquibase DB 마이그레이션 커맨드가 실행됨 (실습용 5초 시뮬레이션)
           command: ["sh", "-c", "echo '=== DB 마이그레이션 시작 ==='; sleep 5; echo '=== DB 스키마 패치 성공 완료 ==='"]
           resources:
             requests:
