@@ -1,10 +1,10 @@
-# 🐳 SKALA Cloud & Docker Master Platform v4.0
+# 🐳 SKALA Cloud & Kubernetes Master Platform v5.0
 
 <p align="center">
   <img src="https://img.shields.io/badge/Architecture-4--Tier%20Enterprise-blue?style=for-the-badge&logo=docker" alt="Architecture">
   <img src="https://img.shields.io/badge/Hardware%20Accel-Apple%20M5%20Metal%20GPU-black?style=for-the-badge&logo=apple" alt="Apple M5">
   <img src="https://img.shields.io/badge/sLLM-qwen2.5%203B%20%7C%207B-purple?style=for-the-badge&logo=openai" alt="LLM">
-  <img src="https://img.shields.io/badge/RAG%20Knowledge-6%2C113%20Chunks%20%7C%2013%2C544%20Indices-emerald?style=for-the-badge&logo=sqlite" alt="RAG">
+  <img src="https://img.shields.io/badge/RAG%20Knowledge-6%2C291%20Chunks%20%7C%2014%2C118%20Indices-emerald?style=for-the-badge&logo=sqlite" alt="RAG">
   <img src="https://img.shields.io/badge/Latency-0.15s%20SSE%20Streaming-orange?style=for-the-badge&logo=fastapi" alt="Latency">
   <img src="https://img.shields.io/badge/Auto--Sync-Dual%20Web%20Diff%20%26%20n8n-teal?style=for-the-badge&logo=n8n" alt="Auto Sync">
 </p>

@@ -1,0 +1,65 @@
+# ==============================================================================
+# [SKALA Cloud & K8s] Spring Boot 3 프로덕션 표준 application.yml
+# ==============================================================================
+# • 12-Factor App 원칙: 공통 기본값만 정의하며, 환경별 차이는 ConfigMap/Secret으로 주입
+# • 핵심 기능:
+#   1. 무중단 배포를 위한 Graceful Shutdown (진행 중인 HTTP 트래픽 안전 마무리)
+#   2. 관리 포트(8081)와 비즈니스 포트(8080)의 물리적 분리를 통한 보안 격리
+#   3. K8s Liveness & Readiness 프로브 그룹 분리 (재시작 폭풍 방지)
+#   4. Downward API 연동을 통한 로그 및 메트릭의 Pod 명찰 부착
+# ==============================================================================
+
+spring:
+  application:
+    name: shop-api
+  lifecycle:
+    # [Graceful Shutdown 대기 시간]: Pod 종료 신호(SIGTERM) 수신 시 최대 25초간 기존 요청 완료 대기
+    timeout-per-shutdown-phase: 25s
+
+server:
+  port: 8080
+  # [우아한 종료 활성화]: 새 요청 수신을 즉시 중단하고 이미 처리 중인 요청만 깔끔하게 완료
+  shutdown: graceful
+  # [L7 Ingress/ALB 호환]: AWS ALB/Nginx가 TLS(HTTPS)를 종단하므로 X-Forwarded-* 헤더를 신뢰하여
+  # https 접속 시 내부 리다이렉트가 http:// 로 튕겨 나가는 프로토콜 불일치 버그 원천 차단
+  forward-headers-strategy: framework
+
+management:
+  server:
+    # [보안 포트 격리]: /actuator 엔드포인트를 8081로 격리하여 외부 Ingress(8080)를 통한
+    # 시스템 내부 정보 및 Prometheus 메트릭의 인터넷 무단 노출 100% 차단
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      # [K8s 전용 프로브 활성화]: /actuator/health/liveness 및 /readiness 엔드포인트 자동 생성
+      probes:
+        enabled: true
+      show-details: never
+      group:
+        # [Liveness Probe - 가벼운 생존 체크]: 프로세스가 살아있는지만 확인 (절대 외부 DB 확인 금지 -> 재시작 폭풍 방지)
+        liveness:
+          include: livenessState
+        # [Readiness Probe - 트래픽 투입 준비 체크]: 수동 스위치(manualReadiness) 및 의존성 검사
+        readiness:
+          include: readinessState,manualReadiness
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  metrics:
+    tags:
+      # [Downward API 태그]: Prometheus 메트릭에 현재 Pod의 고유 이름을 붙여 복제본별 모니터링 지원
+      pod: ${POD_NAME:local}
+
+app:
+  greeting: "안녕하세요 (Spring Boot 3 on Kubernetes)"
+
+logging:
+  pattern:
+    # [분산 환경 로깅 표준]: 다중 복제본 환경에서 어느 Pod가 로그를 남겼는지 식별자 기록
+    level: "%5p [${POD_NAME:local}]"

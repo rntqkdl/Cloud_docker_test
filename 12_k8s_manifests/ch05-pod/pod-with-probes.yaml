@@ -1,0 +1,59 @@
+# ==============================================================================
+# [SKALA K8s Lab] ch05-pod/pod-with-probes.yaml : 3대 헬스체크 프로브 완비 Pod
+# ==============================================================================
+# • 개념: startupProbe, livenessProbe, readinessProbe 3대 프로브를 모두 적용하여
+#         서버 기동 지연, 데드락 먹통, 트래픽 유입 시점을 100% 안전하게 제어합니다.
+# • 3대 프로브의 역할 분담:
+#   1. startupProbe  : JVM 스프링 부트가 완전히 뜰 때까지 liveness 판단을 유예 (최대 150초)
+#   2. livenessProbe : 프로세스 데드락/무한루프 감지 -> 실패 시 컨테이너 강제 재시작
+#   3. readinessProbe: 트래픽 수신 준비 완료 감지 -> 실패 시 Service VIP에서 엔드포인트 제외
+# • 실행: kubectl apply -f ch05-pod/pod-with-probes.yaml
+# • 관전: kubectl get pod shop-api-probes -w (READY 0/1 -> 1/1 변화 관측)
+# ==============================================================================
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shop-api-probes
+  labels:
+    app: shop-api-probes
+spec:
+  containers:
+    - name: app
+      image: shop-api:1.0.0
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: http
+          containerPort: 8080
+        - name: mgmt
+          containerPort: 8081
+      # ── 1. 스타트업 프로브 (기동 유예 시간 제공) ──────────────────────
+      # Spring Boot가 무거워 초기 기동에 30초 이상 걸릴 때 liveness가 섣불리 재시작시키는 것 방지
+      # 5초마다 30번 검사 = 최대 150초(2분 30초) 동안 기동 대기 (성공 즉시 종료되고 liveness로 바통 터치)
+      startupProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: mgmt                         # 8081 포트 검사
+        periodSeconds: 5
+        failureThreshold: 30
+
+      # ── 2. 라이브니스 프로브 (프로세스 생사 감지) ──────────────────────
+      # 프로세스가 살아있는지만 확인 (절대 외부 DB나 캐시를 검사하지 않음 -> DB 장애 시 모든 앱 연쇄 재시작 방지)
+      # 10초마다 검사, 3초 타임아웃, 연속 3회 실패 시 컨테이너 KILL 후 재기동
+      livenessProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: mgmt
+        periodSeconds: 10
+        timeoutSeconds: 3
+        failureThreshold: 3
+
+      # ── 3. 레디니스 프로브 (트래픽 수신 준비 검사) ────────────────────
+      # "지금 고객 요청을 받아도 되는가?" 검사 (실패 시 컨테이너를 죽이지 않고 서비스 트래픽만 차단)
+      # 5초마다 검사, 실패 시 즉시 엔드포인트(Service)에서 제외하여 500 에러 원천 차단
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: mgmt
+        periodSeconds: 5
+        timeoutSeconds: 3
+        failureThreshold: 3

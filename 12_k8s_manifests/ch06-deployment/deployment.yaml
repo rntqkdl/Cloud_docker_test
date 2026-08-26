@@ -1,0 +1,76 @@
+# ==============================================================================
+# [SKALA K8s Lab] ch06-deployment/deployment.yaml : 무중단 롤링 배포 Deployment
+# ==============================================================================
+# • 개념: Pod와 ReplicaSet을 감싸며 24시간 자가 치유(Self-Healing), 무중단 롤링 업데이트,
+#         자동 롤백(Rollback), 버전 이력 관리를 담당하는 최상위 워크로드 리소스입니다.
+# • 롤링 배포 수학 (Zero-Downtime Math):
+#   - replicas: 3 (기본 3대 유지)
+#   - maxSurge: 1 (새 버전 Pod를 1대 먼저 띄움 -> 총 4대 일시 허용)
+#   - maxUnavailable: 0 (기존 정상 동작 Pod를 절대 1대도 줄이지 않음 -> 100% 가용성 보장)
+# • 실행: kubectl apply -f ch06-deployment/deployment.yaml
+# • 버전 업그레이드: kubectl set image deploy/shop-api app=shop-api:1.0.1
+# • 배포 현황 모니터링: kubectl rollout status deploy/shop-api --timeout=180s
+# • 비상 롤백: kubectl rollout undo deploy/shop-api
+# ==============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-api
+  labels:
+    app: shop-api
+spec:
+  replicas: 3                                # 항상 유지해야 하는 Pod 복제본 개수
+  revisionHistoryLimit: 5                    # 롤백을 위해 보관할 이전 배포 이력(ReplicaSet) 개수
+  selector:
+    matchLabels:
+      app: shop-api                          # [불변 철칙]: 이 라벨을 가진 Pod를 이 Deployment가 관리함
+  strategy:
+    type: RollingUpdate                      # 중단 없는 점진적 교체 방식
+    rollingUpdate:
+      maxSurge: 1                            # 새 버전 배포 시 최대 1대 추가 생성 허용 (3+1 = 4대)
+      maxUnavailable: 0                      # 배포 중에도 기존 정상 Pod는 0대도 죽이지 않음 (무중단 보장)
+  template:
+    metadata:
+      labels:
+        app: shop-api                        # spec.selector.matchLabels와 반드시 100% 일치해야 함
+    spec:
+      containers:
+        - name: app
+          image: shop-api:1.0.0              # 배포할 컨테이너 이미지
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080            # 비즈니스 포트
+            - name: mgmt
+              containerPort: 8081            # 관리/프로브 포트
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          # 3대 프로브가 Pod 템플릿 내부에 탑재되어 새 버전이 완벽히 뜰 때까지 트래픽 전환 보류
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: mgmt
+            periodSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: mgmt
+            periodSeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: mgmt
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
