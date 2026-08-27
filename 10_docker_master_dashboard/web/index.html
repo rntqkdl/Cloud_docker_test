@@ -97,6 +97,34 @@
       font-family: 'JetBrains Mono', monospace;
       tab-size: 2;
     }
+    .mac-window-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .card-lift {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .gradient-border-docker {
+      background: linear-gradient(to right, #0284c7, #4f46e5);
+      padding: 1px;
+      border-radius: 16px;
+    }
+    .gradient-border-k8s {
+      background: linear-gradient(to right, #7c3aed, #0284c7);
+      padding: 1px;
+      border-radius: 16px;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 selection:bg-sky-500 selection:text-white flex flex-col items-center">
@@ -281,10 +309,30 @@
           </div>
         </div>
 
+        <!-- Search & Filter Bar -->
+        <div class="p-5 rounded-2xl bg-white border-2 border-sky-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="relative w-full sm:w-96">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" v-model="searchDockerQuery" placeholder="도커 실습 검색 (예: 볼륨, 포트, Harbor, Compose, Alpine...)"
+                   class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition">
+            <button v-if="searchDockerQuery" @click="searchDockerQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="text-xs text-slate-500 font-bold mr-1">추천 태그:</span>
+            <button v-for="tag in ['Alpine', '포트', '볼륨', 'Harbor', 'Compose', '다이어트']" :key="tag"
+                    @click="searchDockerQuery = tag"
+                    class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold transition">
+              #{{ tag }}
+            </button>
+          </div>
+        </div>
+
         <!-- Docker 10 Labs Cards -->
         <div class="space-y-6">
-          <div v-for="lab in dockerLabsTrack" :key="lab.stage"
-               class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm hover:border-sky-300 transition">
+          <div v-for="lab in dockerLabsTrack.filter(l => !searchDockerQuery || l.title.includes(searchDockerQuery) || l.metaphor.includes(searchDockerQuery) || l.commands.includes(searchDockerQuery))" :key="lab.stage"
+               class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm hover:border-sky-300 card-lift">
             
             <!-- Card Header -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
@@ -315,10 +363,21 @@
 
             <!-- Pillar 2: Command & Code Breakdown -->
             <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="eyebrow text-emerald-700 flex items-center gap-1"><i class="fa-solid fa-terminal"></i> 💻 2. 터미널 실행 명령어 블록</span>
+              <div class="rounded-xl overflow-hidden border border-slate-800 shadow-md">
+                <!-- Mac Terminal Header -->
+                <div class="bg-slate-950 px-4 py-2.5 flex items-center justify-between border-b border-slate-800/80">
+                  <div class="flex items-center gap-2">
+                    <span class="mac-window-dot bg-rose-500/90"></span>
+                    <span class="mac-window-dot bg-amber-500/90"></span>
+                    <span class="mac-window-dot bg-emerald-500/90"></span>
+                    <span class="text-xs font-mono text-slate-400 font-semibold ml-2">bash — {{ lab.stage }}</span>
+                  </div>
+                  <button @click="copyText(lab.commands)" class="text-xs font-mono text-slate-400 hover:text-white transition flex items-center gap-1.5 bg-slate-800/60 hover:bg-slate-800 px-2.5 py-1 rounded">
+                    <i class="fa-solid fa-copy text-xs"></i> 복사
+                  </button>
+                </div>
+                <pre class="p-4 bg-slate-900 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
               </div>
-              <pre class="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
               
               <div class="space-y-2 pt-1">
                 <span class="eyebrow text-indigo-700 flex items-center gap-1.5">
@@ -454,22 +513,42 @@
 
         <!-- Tab: Lab Workbook (20대 전수 실습 워크북) -->
         <div v-else-if="k8sSubTab === 'lab_workbook'" class="space-y-6">
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl bg-purple-50 border-2 border-purple-200">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-purple-50 via-indigo-50 to-sky-50 border-2 border-purple-200">
             <div>
               <span class="eyebrow text-purple-800">Cloud_쿠버네티스 이해 및 앱 배포 실습_2608.pdf</span>
               <h3 class="text-xl font-black text-purple-950 mt-1">20대 전수 실습 공식 워크북 & 대화형 가이드</h3>
               <p class="text-xs text-purple-800 font-medium mt-0.5">교재에 수록된 20개 실습 전체의 목표, 원클릭 복사 명령어, 비전공자 해설, 트러블슈팅을 완벽 지원합니다.</p>
             </div>
-            <div class="flex items-center gap-2">
-              <button @click="selectedLabDay = 'all'" :class="selectedLabDay === 'all' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">전체 (20개)</button>
-              <button @click="selectedLabDay = 'Day 1'" :class="selectedLabDay === 'Day 1' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 1 (실습 01~08)</button>
-              <button @click="selectedLabDay = 'Day 2'" :class="selectedLabDay === 'Day 2' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 2 / 부록 (실습 09~20)</button>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button @click="selectedLabDay = 'all'" :class="selectedLabDay === 'all' ? 'bg-purple-700 text-white font-extrabold shadow-xs' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">전체 (20개)</button>
+              <button @click="selectedLabDay = 'Day 1'" :class="selectedLabDay === 'Day 1' ? 'bg-purple-700 text-white font-extrabold shadow-xs' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 1 (실습 01~08)</button>
+              <button @click="selectedLabDay = 'Day 2'" :class="selectedLabDay === 'Day 2' ? 'bg-purple-700 text-white font-extrabold shadow-xs' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 2 / 부록 (실습 09~20)</button>
+            </div>
+          </div>
+
+          <!-- K8s Search Filter Bar -->
+          <div class="p-5 rounded-2xl bg-white border-2 border-purple-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="relative w-full sm:w-96">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" v-model="searchLabQuery" placeholder="K8s 실습 검색 (예: OOM, 라벨, 프로브, EFS, 롤백, RBAC...)"
+                     class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition">
+              <button v-if="searchLabQuery" @click="searchLabQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-xs text-slate-500 font-bold mr-1">빠른 필터:</span>
+              <button v-for="tag in ['조정루프', '라벨', 'RBAC', '프로브', '롤백', 'EFS', 'OOM', '요금']" :key="tag"
+                      @click="searchLabQuery = tag"
+                      class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 text-xs font-bold transition">
+                #{{ tag }}
+              </button>
             </div>
           </div>
 
           <div class="space-y-6">
-            <div v-for="lab in k8sLabWorkbook.filter(l => selectedLabDay === 'all' || l.day === selectedLabDay)" :key="lab.num"
-                 class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-4 shadow-sm hover:border-purple-300 transition">
+            <div v-for="lab in k8sLabWorkbook.filter(l => (selectedLabDay === 'all' || l.day === selectedLabDay) && (!searchLabQuery || l.title.includes(searchLabQuery) || l.deepExplanation.includes(searchLabQuery) || l.commands.includes(searchLabQuery)))" :key="lab.num"
+                 class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm hover:border-purple-300 card-lift">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
                 <div class="flex items-center gap-3">
                   <span class="w-9 h-9 rounded-xl bg-purple-700 text-white font-black text-sm flex items-center justify-center shadow-xs">#{{ lab.num }}</span>
@@ -505,10 +584,21 @@
 
               <!-- Command Block -->
               <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="eyebrow text-emerald-700 flex items-center gap-1"><i class="fa-solid fa-terminal"></i> 터미널 실행 명령어 블록</span>
+                <div class="rounded-xl overflow-hidden border border-slate-800 shadow-md">
+                  <!-- Mac Terminal Header -->
+                  <div class="bg-slate-950 px-4 py-2.5 flex items-center justify-between border-b border-slate-800/80">
+                    <div class="flex items-center gap-2">
+                      <span class="mac-window-dot bg-rose-500/90"></span>
+                      <span class="mac-window-dot bg-amber-500/90"></span>
+                      <span class="mac-window-dot bg-emerald-500/90"></span>
+                      <span class="text-xs font-mono text-slate-400 font-semibold ml-2">zsh — 실습 #{{ lab.num }} ({{ lab.day }})</span>
+                    </div>
+                    <button @click="copyText(lab.commands)" class="text-xs font-mono text-slate-400 hover:text-white transition flex items-center gap-1.5 bg-slate-800/60 hover:bg-slate-800 px-2.5 py-1 rounded">
+                      <i class="fa-solid fa-copy text-xs"></i> 복사
+                    </button>
+                  </div>
+                  <pre class="p-4 bg-slate-900 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
                 </div>
-                <pre class="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
               </div>
 
               <!-- Line-by-Line Code Breakdown -->
@@ -2902,6 +2992,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           k8sLabelSecurity,
           selectedLabDay: ref('all'),
           searchLabQuery: ref(''),
+          searchDockerQuery: ref(''),
           k8sPhilosophyCards,
           k8sArchitectureData,
           k8sResourcesList,
