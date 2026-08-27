@@ -1668,6 +1668,10 @@
         const modalType = ref('');
         const modalData = ref('');
         const k8sSubTab = ref('philosophy');
+        const curriculumTab = ref('docker');
+        const selectedLabDay = ref('all');
+        const searchLabQuery = ref('');
+        const searchDockerQuery = ref('');
 
         const stepTitles = [
           '왜 쓰는가? & 이론 원리',
@@ -4146,15 +4150,15 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           curriculumLabsMapping,
           k8sAbbreviationsList,
           kubectl8CoreCommands,
-          curriculumTab: ref('docker'),
+          curriculumTab,
           masterStoryboard,
           dockerLabsTrack,
           k8sDevopsRoles,
           k8sLabWorkbook,
           k8sLabelSecurity,
-          selectedLabDay: ref('all'),
-          searchLabQuery: ref(''),
-          searchDockerQuery: ref(''),
+          selectedLabDay,
+          searchLabQuery,
+          searchDockerQuery,
           k8sPhilosophyCards,
           k8sArchitectureData,
           k8sResourcesList,
