@@ -311,6 +311,149 @@
           </div>
         </div>
 
+        
+        <!-- Tab: DevOps Roles (현업 엔지니어 4대 실무) -->
+        <div v-else-if="k8sSubTab === 'devops_roles'" class="space-y-6">
+          <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white space-y-2">
+            <h3 class="text-xl font-extrabold flex items-center gap-2">
+              <span>🏢</span> "쿠버네티스가 다 알아서 해주는데, 현업 엔지니어는 매일 무슨 일을 할까?"
+            </h3>
+            <p class="text-sm text-indigo-200 font-medium leading-relaxed">
+              비행기가 오토파일럿으로 비행해도 기장(조종사)이 절대적으로 필요하듯, <strong>인프라/DevOps 엔지니어는 쿠버네티스가 스스로 풀지 못하는 비즈니스와 현실 세계의 문제</strong>를 해결하는 핵심 총책임자입니다.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div v-for="role in k8sDevopsRoles" :key="role.id"
+                 class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-4 shadow-sm hover:border-indigo-400 transition flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">{{ role.emoji }}</span>
+                  <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">{{ role.tag }}</span>
+                </div>
+                <h4 class="text-lg font-extrabold text-slate-900 leading-snug">{{ role.title }}</h4>
+                <p class="text-xs font-bold text-indigo-700 leading-normal">{{ role.subtitle }}</p>
+                <div class="space-y-2.5 pt-2">
+                  <div v-for="it in role.items" :key="it.name"
+                       class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                    <div class="font-mono text-xs font-extrabold text-slate-900">{{ it.name }}</div>
+                    <div class="text-xs text-slate-600 font-medium leading-relaxed">{{ it.desc }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950 font-bold leading-relaxed">
+                💡 <span class="text-indigo-900">{{ role.takeaway }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Lab Workbook (20대 전수 실습 워크북) -->
+        <div v-else-if="k8sSubTab === 'lab_workbook'" class="space-y-6">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl bg-purple-50 border-2 border-purple-200">
+            <div>
+              <span class="eyebrow text-purple-800">Cloud_쿠버네티스 이해 및 앱 배포 실습_2608.pdf</span>
+              <h3 class="text-xl font-black text-purple-950 mt-1">20대 전수 실습 공식 워크북 & 대화형 가이드</h3>
+              <p class="text-xs text-purple-800 font-medium mt-0.5">교재에 수록된 20개 실습 전체의 목표, 원클릭 복사 명령어, 비전공자 해설, 트러블슈팅을 완벽 지원합니다.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button @click="selectedLabDay = 'all'" :class="selectedLabDay === 'all' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">전체 (20개)</button>
+              <button @click="selectedLabDay = 'Day 1'" :class="selectedLabDay === 'Day 1' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 1 (실습 01~08)</button>
+              <button @click="selectedLabDay = 'Day 2'" :class="selectedLabDay === 'Day 2' ? 'bg-purple-700 text-white font-extrabold' : 'bg-white text-slate-700 border border-slate-300 font-bold'" class="px-3 py-1.5 rounded-lg text-xs transition">Day 2 / 부록 (실습 09~20)</button>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div v-for="lab in k8sLabWorkbook.filter(l => selectedLabDay === 'all' || l.day === selectedLabDay)" :key="lab.num"
+                 class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-4 shadow-sm hover:border-purple-300 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-9 h-9 rounded-xl bg-purple-700 text-white font-black text-sm flex items-center justify-center shadow-xs">#{{ lab.num }}</span>
+                  <div>
+                    <h4 class="text-base sm:text-lg font-black text-slate-900">{{ lab.title }}</h4>
+                    <span class="text-xs font-semibold text-slate-500">{{ lab.chapter }} · 교재 {{ lab.page }}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-md bg-purple-100 text-purple-800 font-bold text-xs">{{ lab.day }}</span>
+                  <button @click="copyText(lab.commands)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition flex items-center gap-1.5 border border-slate-300">
+                    <i class="fa-solid fa-copy text-xs"></i> 명령어 복사
+                  </button>
+                  <button @click="executeLiveCommand(lab.commands)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow-xs">
+                    <i class="fa-solid fa-play text-xs"></i> 터미널 실행
+                  </button>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <span class="eyebrow text-slate-600">실습 목표</span>
+                <p class="text-sm font-medium text-slate-800 leading-relaxed">{{ lab.goal }}</p>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="eyebrow text-emerald-700 flex items-center gap-1"><i class="fa-solid fa-terminal"></i> 실행 명령어 블록</span>
+                </div>
+                <pre class="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
+                  <span class="eyebrow text-amber-800 flex items-center gap-1"><i class="fa-solid fa-lightbulb text-amber-600"></i> 핵심 깨달음 (Key Takeaway)</span>
+                  <p class="text-xs text-amber-950 font-medium leading-relaxed">{{ lab.takeaway }}</p>
+                </div>
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-1">
+                  <span class="eyebrow text-rose-800 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-rose-600"></i> 실무 트러블슈팅 (Troubleshooting)</span>
+                  <p class="text-xs text-rose-950 font-medium leading-relaxed">{{ lab.trouble }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Label Security (라벨 보안 & 트래픽 탈취) -->
+        <div v-else-if="k8sSubTab === 'label_security'" class="space-y-6">
+          <div class="p-6 rounded-2xl bg-gradient-to-r from-rose-900 to-slate-950 text-white space-y-2">
+            <h3 class="text-xl font-extrabold flex items-center gap-2">
+              <span>🛡️</span> {{ k8sLabelSecurity.title }}
+            </h3>
+            <p class="text-sm text-rose-200 font-medium leading-relaxed">
+              라벨 스티커 하나로 남의 서비스 트래픽이 엉뚱한 파드로 흘러 들어가는 <strong>라벨 오염(Label Injection) 취약점</strong>과 이를 막아내는 4중 방어벽 체계를 심층 학습합니다.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <h4 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-biohazard text-rose-600"></i> 라벨 조작으로 발생 가능한 3대 치명적 사고
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div v-for="th in k8sLabelSecurity.threats" :key="th.title"
+                   class="p-6 rounded-2xl bg-white border-2 border-rose-200 space-y-2.5 shadow-sm">
+                <span class="text-3xl">{{ th.emoji }}</span>
+                <h5 class="font-extrabold text-slate-900 text-sm">{{ th.title }}</h5>
+                <p class="text-xs text-slate-700 leading-relaxed font-medium" v-html="th.desc"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4 pt-4">
+            <h4 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-shield-check text-emerald-600"></i> 엔터프라이즈 4중 방어벽 아키텍처
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div v-for="def in k8sLabelSecurity.defenses" :key="def.step"
+                   class="p-6 rounded-2xl bg-white border-2 border-emerald-200 space-y-2 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-black px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">{{ def.step }}</span>
+                  <span class="font-extrabold text-slate-900 text-sm">{{ def.title }}</span>
+                </div>
+                <p class="text-xs text-slate-700 leading-relaxed font-medium">{{ def.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Tab 2: Architecture -->
         <div v-else-if="k8sSubTab === 'arch'" class="space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -806,12 +949,343 @@
         ];
 
         const k8sSubTabs = [
-          { id: 'philosophy', title: '💡 왜 쿠버네티스인가? (철학과 원리)', icon: 'fa-solid fa-lightbulb' },
-          { id: 'arch', title: '🏛️ 클러스터 아키텍처 (뇌와 일꾼)', icon: 'fa-solid fa-sitemap' },
-          { id: 'glossary', title: '📖 8대 핵심 리소스 용어 대사전', icon: 'fa-solid fa-book-atlas' },
+          { id: 'philosophy', title: '💡 1~4세대 진화사와 철학', icon: 'fa-solid fa-lightbulb' },
+          { id: 'devops_roles', title: '🏢 현업 엔지니어 4대 실무', icon: 'fa-solid fa-user-tie' },
+          { id: 'lab_workbook', title: '🚀 20대 전수 실습 워크북 (교재 완벽 연동)', icon: 'fa-solid fa-book-open' },
+          { id: 'label_security', title: '🛡️ 라벨 보안 & 트래픽 탈취 방어', icon: 'fa-solid fa-shield-halved' },
+          { id: 'arch', title: '🏛️ 클러스터 아키텍처', icon: 'fa-solid fa-sitemap' },
+          { id: 'glossary', title: '📖 10대 핵심 리소스 대사전', icon: 'fa-solid fa-book-atlas' },
           { id: 'kubectl', title: '⌨️ 실무 필수 kubectl 명령어 대백과', icon: 'fa-solid fa-terminal' },
-          { id: 'deployment_flow', title: '🚀 EKS 실전 Spring Boot 무중단 배포', icon: 'fa-solid fa-rocket' }
+          { id: 'deployment_flow', title: '🚀 Spring Boot ➔ EKS 표준 매니페스트', icon: 'fa-solid fa-rocket' }
         ];
+
+        
+        const k8sDevopsRoles = [
+          {
+            id: 'sre',
+            emoji: '🚨',
+            title: '1. 장애 분석 및 트러블슈팅 (SRE / Root Cause Analysis)',
+            subtitle: '쿠버네티스는 껐다 켤 뿐, "왜 죽었는가?"의 원인을 수술하는 일',
+            tag: 'SRE / 고가용성',
+            tagColor: 'rose',
+            items: [
+              { name: 'OOMKilled (Exit Code 137)', desc: '단순 메모리 부족인지, 소스코드의 메모리 누수(Memory Leak)인지 JVM 힙 덤프를 떠서 근본 원인을 색출합니다.' },
+              { name: 'CrashLoopBackOff', desc: 'DB 커넥션 풀 고갈, ConfigMap 오타, 포트 충돌 등으로 컨테이너가 무한 재부팅될 때 --previous 로그를 추적하여 응급 복구합니다.' },
+              { name: 'Node DiskPressure / Kernel Panic', desc: '도커 로그가 디스크를 꽉 채워 노드가 통째로 마비되는 것을 막기 위해 로그 로테이션 정책과 리소스 청소를 지휘합니다.' }
+            ],
+            takeaway: '쿠버네티스는 자동 복구만 할 뿐, 장애의 재발 방지 대책을 수립하는 것은 엔지니어의 핵심 역량입니다.'
+          },
+          {
+            id: 'finops',
+            emoji: '💰',
+            title: '2. 클라우드 비용 최적화 (FinOps / Capacity Planning)',
+            subtitle: 'AWS 월 청구서 수억 원 나오는 것을 50% 삭감하는 비즈니스 임팩트',
+            tag: 'FinOps / 원가 절감',
+            tagColor: 'amber',
+            items: [
+              { name: 'Requests / Limits 다이어트', desc: '개발자가 대충 2CPU, 4GB로 신청한 자원을 실측(Prometheus/Grafana)하여 200m CPU, 512MB로 최적화해 노드 50대를 15대로 압축합니다.' },
+              { name: '스팟 인스턴스 (Spot Instance) 연동', desc: 'AWS에서 70~90% 할인되는 스팟 서버를 안전하게 클러스터에 엮어 배치 작업 비용을 극적으로 낮춥니다.' },
+              { name: '야간 / 주말 자동 절전 (KEDA / CronHPA)', desc: '퇴근 후나 주말에 테스트 서버 파드 수를 0대로 줄여 불필요한 전기세/서버비를 1원도 낭비하지 않게 합니다.' }
+            ],
+            takeaway: '인프라 엔지니어의 연봉이 높은 결정적인 이유는 회사에 수억 원의 클라우드 비용을 직접 아껴주기 때문입니다.'
+          },
+          {
+            id: 'gitops',
+            emoji: '🚀',
+            title: '3. 배포 자동화 파이프라인 (GitOps / CI-CD Highway)',
+            subtitle: '100명의 개발자가 코딩만 하면 0초 만에 EKS로 무중단 배포되는 고속도로 건설',
+            tag: 'GitOps / 배포 자동화',
+            tagColor: 'sky',
+            items: [
+              { name: 'ArgoCD 선언형 배포', desc: 'GitHub 리포지토리에 커밋만 푸시되면 EKS 클러스터와 1초 만에 자동 동기화되는 GitOps 파이프라인을 운영합니다.' },
+              { name: '카나리 (Canary) 배포 & 자동 롤백', desc: '새 버전 배포 시 5% 트래픽만 먼저 흘려보고, 에러율이 1%라도 오르면 사람이 손대기 전에 0.1초 만에 자동 롤백시킵니다.' },
+              { name: '보안 취약점 자동 검사 (Trivy / Cosign)', desc: '빌드 시점에 해킹 백도어나 알려진 보안 취약점(CVE)이 있는지 자동 스캔하여 불량 이미지를 배포 단계에서 원천 차단합니다.' }
+            ],
+            takeaway: '개발자가 kubectl 명령어를 몰라도 안전하게 하루 50번씩 배포할 수 있는 고속도로를 깔아주는 역할입니다.'
+          },
+          {
+            id: 'security',
+            emoji: '🔒',
+            title: '4. 철통 보안 & 거버넌스 (Security / Compliance)',
+            subtitle: '해킹 침투 차단, 네임스페이스 격리, 금융/공공 ISMS-P 보안 인증 통과',
+            tag: 'Security / ISMS-P',
+            tagColor: 'purple',
+            items: [
+              { name: 'RBAC 권한 분리', desc: '신입 개발자나 외부 인력이 운영 DB나 다른 팀의 네임스페이스를 함부로 건드리지 못하게 읽기 전용/배포 전용 권한을 엄격히 통제합니다.' },
+              { name: '네트워크 정책 (NetworkPolicy 방화벽)', desc: '웹 프론트엔드 파드가 데이터베이스(DB) 파드에 직접 닿지 못하게 파드 간 가상 방화벽을 쳐서 침투를 방어합니다.' },
+              { name: 'Secret 암호화 및 Vault 연동', desc: 'DB 패스워드와 API 키가 소스코드에 하드코딩되지 않도록 etcd 암호화 및 HashiCorp Vault 중앙 키 저장소를 연동합니다.' }
+            ],
+            takeaway: '단 1건의 개인정보 유출 사고도 발생하지 않도록 클러스터의 모든 출입문과 통신로를 잠그는 파수꾼입니다.'
+          }
+        ];
+
+
+        const k8sLabWorkbook = [
+          {
+            num: 1,
+            day: 'Day 1',
+            title: '클러스터에 가기 전 — 로컬에서 먼저 돌려본다',
+            chapter: '본과정 1, 2, 5장',
+            page: 'p.7~8',
+            goal: '내 맥북에서 단위 테스트 7개 전수 통과, 137MB JRE 경량화 빌드, 메모리 1GB 제한 및 포트 8080/8081 분리 검증',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/01_docker_shop_api\nexport ME=g124 && export NS=skala-gj4\n./gradlew test\ndocker build --platform linux/amd64 -t shop-api:1.0.0 .\ndocker run -d --rm --name shop-local -p 8080:8080 -p 8081:8081 --memory=1g -e POD_NAME=local shop-api:1.0.0\ncurl -s localhost:8080/api/info | jq .\ncurl -s -o /dev/null -w '%{http_code}\\n' localhost:8080/actuator/health   # 404가 정상!\ndocker rm -f shop-local`,
+            takeaway: '로컬에서 안 되는 것은 클러스터에서도 절대 안 된다. 비즈니스 포트(8080)와 관리 포트(8081)를 분리해 404를 유도하는 것이 보안의 기본이다.',
+            trouble: '8080 포트로 /actuator/health 찔렀을 때 404가 나오는 것은 에러가 아니라 관리 포트 분리 보안이 정상 작동 중인 것입니다.'
+          },
+          {
+            num: 2,
+            day: 'Day 1',
+            title: '조정 루프와 술래잡기 — 지워도 지워도 세 개다',
+            chapter: '본과정 1장',
+            page: 'p.9~10',
+            goal: '무한 삭제 루프 공격에도 1초 만에 부활하는 자가 치유(Self-Healing) 목격 및 --cascade=orphan 사슬 끊기 실험',
+            commands: `kubectl create deployment race-$ME --image=nginx:1.27 --replicas=3\nfor i in 1 2 3; do kubectl delete pod -l app=race-$ME --wait=false; sleep 3; kgp -l app=race-$ME; done\nkubectl delete deployment race-$ME --cascade=orphan   # 1단계: 사장님만 해고 (RS, Pod 살아남음)\nkubectl delete rs -l app=race-$ME --cascade=orphan           # 2단계: 반장님까지 해고 (고아 파드 됨)\nkubectl delete pod -l app=race-$ME                           # 3단계: 이제 영원히 소멸 (No resources found)`,
+            takeaway: '조정 루프는 마법이 아니라 Deployment ➔ ReplicaSet ➔ Pod 로 이어지는 소유권 사슬이다. 실무에서는 무조건 Deployment를 써야 한다.',
+            trouble: '단일 파드(kubectl run)는 죽으면 아무도 안 살려줍니다. 오직 Deployment가 부모로 있어야 자가치유가 작동합니다.'
+          },
+          {
+            num: 3,
+            day: 'Day 1',
+            title: 'Harbor에 이미지 올리기',
+            chapter: '본과정 2장',
+            page: 'p.11~12',
+            goal: '사내 Harbor 레지스트리 로그인(호스트명만), Apple Silicon linux/amd64 크로스 빌드 & Push, imagePullSecrets 확인',
+            commands: `docker login harbor.skala-gj.com -u skala-gj4 -p '9Yhi5ttZ4PIe2707'\nIMG=harbor.skala-gj.com/$NS/shop-$ME:1.0.0\ndocker buildx build --platform linux/amd64 -t $IMG --push .\nkubectl get secret harbor-cred`,
+            takeaway: 'docker login에 https://를 붙이면 401 에러가 난다. Mac M시리즈는 반드시 --platform linux/amd64로 빌드해야 exec format error를 막는다.',
+            trouble: 'imagePullSecrets: [{ name: harbor-cred }] 가 빠지면 클러스터가 이미지를 못 가져와 ImagePullBackOff 에러가 납니다.'
+          },
+          {
+            num: 4,
+            day: 'Day 1',
+            title: '라벨 하나로 트래픽을 훔친다',
+            chapter: '본과정 3장',
+            page: 'p.13~14',
+            goal: '라벨 삭제(app-) 시 고아 파드 생성 및 엉뚱한 Service(other-g124)로 라벨 변경 시 트래픽 가로채기 목격',
+            commands: `kubectl create deployment shop-$ME --image=nginx:1.27 --replicas=3\nPOD=$(kubectl get pod -l app=shop-$ME -o name | head -1)\nkubectl label $POD app-                              # 라벨 떼기 (총 4개로 늘어남!)\nkubectl create deployment other-$ME --image=nginx:1.27\nkubectl expose deployment other-$ME --port=80\nkubectl label $POD app=other-$ME --overwrite         # 남의 서비스로 스티커 교체\nkubectl get endpoints other-$ME                      # 엔드포인트 2개로 트래픽 탈취 확인!\nkubectl delete deploy shop-$ME other-$ME && kubectl delete svc other-$ME && kubectl delete pod $POD`,
+            takeaway: 'Service는 부모가 누구인지 모른다. 오직 라벨 일치만 보고 트래픽을 넘긴다. 라벨 오타나 중복은 치명적인 보안/장애 사고를 유발한다.',
+            trouble: '이미 라벨이 있는 파드에 새 라벨을 붙일 때는 --overwrite 플래그를 붙여야 안전장치를 통과합니다.'
+          },
+          {
+            num: 5,
+            day: 'Day 1',
+            title: '권한의 경계 확인하기 (RBAC)',
+            chapter: '본과정 5장',
+            page: 'p.15',
+            goal: 'kubectl auth can-i 명령어로 내 계정이 할 수 있는 것과 금지된 클러스터 관리자 영역 검증',
+            commands: `kubectl auth can-i create pod\nkubectl auth can-i delete pod\nkubectl auth can-i create namespace                   # no (금지구역)\nkubectl auth can-i create pod -n skala-gj1            # no (다른 반 침범 금지)`,
+            takeaway: '개발자 계정은 자기 네임스페이스 안에서만 생성/수정/삭제가 가능하며, 클러스터 범위나 타 네임스페이스 접근은 철저히 차단된다.',
+            trouble: 'Forbidden 오류가 나면 현재 네임스페이스가 내 방(skala-gj4)으로 설정되어 있는지 확인하세요.'
+          },
+          {
+            num: 6,
+            day: 'Day 1',
+            title: '매니페스트를 30초에 — 뼈대를 뽑아 고쳐 쓴다',
+            chapter: '본과정 5장',
+            page: 'p.16~17',
+            goal: '--dry-run=client -o yaml 로 빈 파일에서 타이핑하지 않고 30초 만에 완벽한 YAML 뼈대 생성 및 Heredoc 적용',
+            commands: `kubectl create deploy my-app --image=nginx:1.27 --replicas=2 --dry-run=client -o yaml > app.yaml\ncat app.yaml\nkubectl apply -f - <<'EOF'\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: test-config-$ME\ndata:\n  app.env: \"production\"\nEOF\nkubectl delete cm test-config-$ME && rm -f app.yaml`,
+            takeaway: '실무 엔지니어는 YAML을 처음부터 빈 화면에 치지 않는다. dry-run으로 뼈대를 뽑아 필요한 부분만 수정한다.',
+            trouble: 'Heredoc 적용 시 <<\'EOF\' 처럼 따옴표를 붙여야 셸이 환경변수를 멋대로 치환하지 않습니다.'
+          },
+          {
+            num: 7,
+            day: 'Day 1',
+            title: '프로브를 직접 흔들어본다',
+            chapter: '본과정 7장',
+            page: 'p.18',
+            goal: 'POST /api/unready?ready=false 호출 시 파드가 죽지 않고 READY 1/1 ➔ 0/1 로 트래픽만 제외되는 Readiness 원리 체득',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l07-pod.yaml | kubectl apply -f -\nkubectl port-forward pod/shop-$ME 8080:8080 8081:8081 &\ncurl -X POST http://localhost:8080/api/unready?ready=false\nkgp -l app=shop-$ME                                   # READY 0/1 로 트래픽 차단 목격!\ncurl -X POST http://localhost:8080/api/unready?ready=true    # 다시 READY 1/1 복구!\nkillall kubectl 2>/dev/null || true\nkubectl delete pod shop-$ME`,
+            takeaway: 'Liveness는 실패 시 파드를 재부팅시키고, Readiness는 파드를 살려둔 채 트래픽만 차단한다. 용도를 절대 섞으면 안 된다.',
+            trouble: 'liveness 프로브에 DB 연결 체크를 넣으면 DB가 흔들릴 때 모든 파드가 동시에 연쇄 재부팅되어 장애가 폭증합니다.'
+          },
+          {
+            num: 8,
+            day: 'Day 1',
+            title: '로그를 제대로 보는 법',
+            chapter: '본과정 7장',
+            page: 'p.19~20',
+            goal: 'kubectl logs 실시간 스트리밍(-f), 다중 파드 접두사(--prefix), 직전 사망 로그(--previous) 진단 기술 습득',
+            commands: `kubectl logs -f deploy/shop-$ME --tail=50\nkubectl logs -l app=shop-$ME --tail=20 --prefix\nkubectl logs shop-$ME-xxxx --previous                 # CrashLoopBackOff 직전 사망 원인 확인`,
+            takeaway: 'CrashLoop 상태에서 그냥 logs를 치면 새로 뜬 컨테이너의 빈 로그만 나온다. 반드시 --previous를 쳐야 죽은 이유가 나온다.',
+            trouble: '여러 파드 로그를 한 번에 볼 때는 --prefix 옵션을 줘야 어느 파드에서 에러가 났는지 식별됩니다.'
+          },
+          {
+            num: 9,
+            day: 'Day 2',
+            title: '실패하는 배포 만들기',
+            chapter: '본과정 8장',
+            page: 'p.21~22',
+            goal: '존재하지 않는 이미지 태그로 배포 실패 유도, rollout status 타임아웃 감지 및 rollout undo 로 1초 만에 롤백',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l03-deployment.yaml | kubectl apply -f -\nkubectl set image deploy/shop-$ME app=harbor.skala-gj.com/$NS/shop-$ME:not-exist\nkubectl rollout status deploy/shop-$ME --timeout=20s  # 타임아웃 발생!\nkubectl rollout undo deploy/shop-$ME                  # 1초 만에 옛날 버전으로 롤백!\nkubectl delete deploy shop-$ME`,
+            takeaway: 'CI/CD 파이프라인에서 rollout status --timeout이 없으면 배포가 실패해도 무한 대기하며 파이프라인이 멈춘다.',
+            trouble: '새 버전 배포 중 문제가 생겼을 때 Deployment가 있으면 rollout undo 한 줄로 즉시 복구됩니다.'
+          },
+          {
+            num: 10,
+            day: 'Day 2',
+            title: 'Endpoints에서 빠지는 순간',
+            chapter: '본과정 9장',
+            page: 'p.23',
+            goal: 'Service 뒤에 붙어있던 파드가 Readiness 실패 시 Endpoints 목록에서 0.1초 만에 자동 탈락하는 메커니즘 관측',
+            commands: `kubectl get endpoints shop-$ME -w`,
+            takeaway: 'Service의 엔드포인트는 Running 상태가 아니라 오직 READY=true 인 파드만 등록된다.',
+            trouble: '503 Service Unavailable이 뜨면 파드가 죽은 게 아니라 Readiness 프로브가 실패 중인지 확인해야 합니다.'
+          },
+          {
+            num: 11,
+            day: 'Day 2',
+            title: '로컬에서 클러스터에 붙기 — 포트포워딩',
+            chapter: '본과정 6, 9장',
+            page: 'p.24~25',
+            goal: '공인 IP/Ingress 없이도 내 맥북 로컬 포트를 EKS 내부 Service/Pod로 터널링하여 브라우저에서 직접 디버깅',
+            commands: `kubectl port-forward svc/shop-$ME 8080:80 &\ncurl localhost:8080/api/info\nkillall kubectl 2>/dev/null || true`,
+            takeaway: 'port-forward는 개발/디버깅 전용이다. 운영 트래픽은 반드시 Ingress/Service를 통해야 한다.',
+            trouble: '백그라운드로 띄운 포트포워딩이 안 끝날 때는 killall kubectl 로 정리할 수 있습니다.'
+          },
+          {
+            num: 12,
+            day: 'Day 2',
+            title: '애노테이션은 마법이 아니다 — Ingress',
+            chapter: '본과정 11장',
+            page: 'p.26~27',
+            goal: 'ingressClassName: nginx 설정 및 skala-gj4-shop.skala-gj.com 와일드카드 도메인으로 외부 인터넷 접속 라우팅',
+            commands: `kubectl get ingress shop-$ME\ncurl http://skala-gj4-shop.skala-gj.com/api/info`,
+            takeaway: 'Ingress 애노테이션은 Ingress Controller에게 전달하는 설정값이다. 컨트롤러 종류(Nginx, ALB)에 맞게 작성해야 한다.',
+            trouble: 'host명이 *.skala-gj.com 규격에 맞지 않으면 인그레스 컨트롤러가 트래픽을 버립니다.'
+          },
+          {
+            num: 13,
+            day: 'Day 2',
+            title: '고쳤는데 왜 그대로인가 (ConfigMap 갱신)',
+            chapter: '본과정 12장',
+            page: 'p.28',
+            goal: 'ConfigMap을 수정해도 환경변수로 주입된 파드는 안 바뀐다는 사실 확인 및 rollout restart 로 롤링 재기동',
+            commands: `kubectl edit cm shop-config-$ME\nkubectl rollout restart deploy/shop-$ME`,
+            takeaway: '환경변수(env)로 주입된 설정은 파드가 뜰 때 고정된다. 설정을 바꾸면 반드시 파드를 롤링 재시작해야 반영된다.',
+            trouble: '볼륨 마운트된 ConfigMap은 수 분 뒤 자동 갱신되지만, env 주입은 영원히 안 바뀌므로 rollout restart가 필수입니다.'
+          },
+          {
+            num: 14,
+            day: 'Day 2',
+            title: 'RWO의 벽에 부딪혀본다 (EBS 다중 마운트 실패)',
+            chapter: '본과정 12장',
+            page: 'p.29~30',
+            goal: 'AWS EBS 볼륨(ReadWriteOnce)은 1개의 노드에만 붙을 수 있어 다른 노드의 파드가 Multi-Attach error 로 멈추는 한계 목격',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l14-pvc-pod.yaml | kubectl apply -f -\nkubectl describe pod -l app=pvc-$ME | grep -iE 'multi-attach|failedmount'\nkubectl delete -f - <<EOF\n$(./render.sh l14-pvc-pod.yaml)\nEOF`,
+            takeaway: 'EBS(ebs-sc)는 RWO다. 여러 노드에 분산된 파드들이 공유해야 한다면 EFS(efs-sc)를 써야 한다.',
+            trouble: 'Multi-Attach error for volume 은 서로 다른 서버 노드가 동일한 EBS 디스크를 동시에 잡으려 할 때 발생합니다.'
+          },
+          {
+            num: 15,
+            day: 'Day 2',
+            title: '두 줄만 바꾸면 공유가 된다 (EFS RWX 볼륨)',
+            chapter: '본과정 12장',
+            page: 'p.31',
+            goal: 'storageClassName: efs-sc 와 accessModes: [ReadWriteMany] 로 변경하여 여러 노드의 파드가 동일 디렉터리 동시 공유',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l15-efs-shared.yaml | kubectl apply -f -\nkubectl get pvc -l app=efs-$ME\nkubectl delete -f - <<EOF\n$(./render.sh l15-efs-shared.yaml)\nEOF`,
+            takeaway: '여러 파드가 로그나 업로드 파일을 동시에 읽고 써야 할 때는 네트워크 공유 스토리지(EFS)를 쓴다.',
+            trouble: 'EFS는 동시 쓰기가 가능하지만 EBS보다 I/O 속도가 느리므로 대용량 DB에는 적합하지 않습니다.'
+          },
+          {
+            num: 16,
+            day: 'Day 2',
+            title: '로그가 안 남는 죽음 — OOMKilled',
+            chapter: '본과정 13장',
+            page: 'p.32~33',
+            goal: '메모리 상한(256Mi) 초과 시 커널이 SIGKILL(Exit Code 137)로 앱을 강제 사살하여 로그가 안 남는 현상 분석 및 QoS 클래스 확인',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l16-oom.yaml | kubectl apply -f -\nkubectl describe pod -l app=oom-$ME | grep -A3 'Last State'   # Exit Code 137 OOMKilled 확인!\nkubectl logs -l app=oom-$ME --previous                       # 비어있음 확인!\nkubectl get pod -l app=oom-$ME -o jsonpath='{.items[0].status.qosClass}{\\n}'  # Burstable\nkubectl delete -f - <<EOF\n$(./render.sh l16-oom.yaml)\nEOF`,
+            takeaway: 'Exit Code 137 = 128 + 9(SIGKILL)이다. 리눅스 커널이 즉시 사살했기 때문에 자바가 예외 로그를 남길 기회조차 없었다.',
+            trouble: 'JVM 힙 메모리를 컨테이너 limit의 90%로 잡으면 메타스페이스나 스레드 메모리 때문에 힙은 안 찼는데 OOMKilled됩니다 (75%가 권장).'
+          },
+          {
+            num: 17,
+            day: 'Day 2',
+            title: '자원이 남아도 안 뜬다 (ENI IP 상한)',
+            chapter: '본과정 13장',
+            page: 'p.34',
+            goal: 'CPU/메모리가 널널해도 AWS 인스턴스당 네트워크 카드(ENI) IP 한계(58개) 때문에 파드가 Pending에 빠지는 현상 분석',
+            commands: `kubectl get nodes -o custom-columns='NODE:.metadata.name,MAXPODS:.status.allocatable.pods,CPU:.status.allocatable.cpu'\nkubectl create deploy tiny-$ME --image=registry.k8s.io/pause:3.9 --replicas=40\nkubectl set resources deploy/tiny-$ME --requests=cpu=1m,memory=4Mi\nkubectl describe pod -l app=tiny-$ME | grep -m1 -A3 Events   # Too many pods 에러 확인!\nkubectl delete deploy tiny-$ME`,
+            takeaway: 'AWS EKS에서는 인스턴스 크기를 키워도 ENI IP 상한(m6i.xlarge 기준 58개)이 걸려있다. 파드 개수가 많으면 노드 대수를 늘려야 한다.',
+            trouble: '실습 후 반드시 tiny-$ME 배포를 삭제해야 다른 수강생들이 파드를 띄울 수 있습니다.'
+          },
+          {
+            num: 18,
+            day: 'Day 2',
+            title: '완성 매니페스트 광주판 (종료 예산 검산)',
+            chapter: '본과정 13장',
+            page: 'p.35~36',
+            goal: 'preStop(5s) + graceful shutdown(25s) = 30s < terminationGracePeriodSeconds(40s) 무중단 종료 10초 여유 공식 검증',
+            commands: `cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/03_skala_campus_labs\n./render.sh l18-complete/10-deployment.yaml | kubectl apply -f -\nkubectl get deploy shop-$ME`,
+            takeaway: 'preStop과 스프링부트 종료 시간의 합이 terminationGracePeriodSeconds보다 크면 진행 중이던 고객 요청이 강제 단절(SIGKILL)된다.',
+            trouble: '5초(preStop) + 25초(graceful) = 30초 < 40초(GracePeriod) 부등식을 항상 검산하세요.'
+          },
+          {
+            num: 19,
+            day: 'Day 2',
+            title: '배포 후 다섯 줄 점검 (CI/CD 검증)',
+            chapter: '본과정 13장',
+            page: 'p.37~38',
+            goal: 'apply 성공과 실제 서비스 가능은 다르다! 롤아웃 상태, READY 1/1, Endpoints, 내부 curl 200, 에러 로그 5단계 검증',
+            commands: `kubectl rollout status deploy/shop-$ME --timeout=180s\nkubectl get pods -l app=shop-$ME\nkubectl get endpoints shop-$ME\nkubectl run t-$ME --rm -it --image=curlimages/curl --restart=Never -- curl -s -o /dev/null -w '%{http_code}\\n' http://shop-$ME/api/info\nkubectl logs --tail=30 deploy/shop-$ME | grep -iE 'error|exception'`,
+            takeaway: '이 5줄은 실제 현업 CI/CD 파이프라인의 핵심 검증 스크립트다. STATUS가 아니라 READY 열을 봐야 진짜 살아있는지 안다.',
+            trouble: 'ClusterIP는 클러스터 외부에서는 접근이 안 되므로 임시 파드(t-$ME)를 띄워 내부에서 curl로 찔러봐야 합니다.'
+          },
+          {
+            num: 20,
+            day: 'Day 2',
+            title: '안 지운 것이 요금이 된다 (리소스 전면 청소)',
+            chapter: '본과정 13장',
+            page: 'p.39',
+            goal: 'kubectl get all 에 안 나오는 Ingress, ConfigMap, Secret, PVC, EBS 볼륨까지 100% 완전 정리',
+            commands: `kubectl delete deploy,svc,ingress -l app=shop-$ME\nkubectl get all -l app=shop-$ME\nkubectl get pvc                                       # get all에 안 나옴! 반드시 확인!\nkubectl get cm,secret,hpa,pdb -l app=shop-$ME`,
+            takeaway: 'PVC가 남으면 AWS EBS 디스크도 남아 아무도 안 쓰는데 매달 요금이 나간다. 정리 순서는 App ➔ 리소스 ➔ PVC 순이다.',
+            trouble: 'kubectl get all은 이름과 달리 PVC, Ingress, ConfigMap, Secret을 보여주지 않으므로 개별 조회가 필수입니다.'
+          }
+        ];
+
+
+        const k8sLabelSecurity = {
+          title: '라벨 오염(Label Injection)과 트래픽 탈취 위험 심층 분석',
+          threats: [
+            {
+              title: '1. 결제 데이터 탈취 (Traffic Hijacking)',
+              emoji: '💳',
+              desc: '악의적인 파드에 <code>app=payment-service</code> 라벨을 붙이면, 고객의 신용카드 번호와 비밀번호가 해커 파드로 50% 분산 전송되는 대형 유출 사고가 발생합니다.'
+            },
+            {
+              title: '2. 서비스 전면 마비 (500 Error Storm)',
+              emoji: '💥',
+              desc: '로그인 인증 서비스에 실수로 이미지 변환 파드가 섞여 들어가면, 로그인 요청 2번 중 1번꼴로 "알 수 없는 오류"가 터지며 회사 서비스가 마비됩니다.'
+            },
+            {
+              title: '3. 멀티 테넌트 간섭 (Cross-Tenant Pollution)',
+              emoji: '🏢',
+              desc: '같은 네임스페이스를 여러 팀이 공유할 때 라벨 이름이 겹치면, A팀의 개발 중인 불안정한 파드가 B팀의 상용 서비스로 트래픽을 빨아들입니다.'
+            }
+          ],
+          defenses: [
+            {
+              step: '1차 방어벽',
+              title: '네임스페이스(Namespace) 완전 격리',
+              desc: 'Service의 라벨 검색(Selector)은 오직 자기 네임스페이스 안에서만 작동합니다. 다른 방(skala-gj1, skala-gj2)의 파드는 절대 우리 방 서비스에 침투할 수 없습니다.'
+            },
+            {
+              step: '2차 방어벽',
+              title: 'RBAC 세부 권한 통제 (실습 5)',
+              desc: '일반 개발자가 터미널에서 kubectl label 이나 edit 명령어로 라벨을 조작하지 못하도록 막고, 검증된 CI/CD 배포 봇만 라벨을 달 수 있게 권한을 제한합니다.'
+            },
+            {
+              step: '3차 방어벽',
+              title: '엄격한 복합 라벨링 (Multi-Key Matching)',
+              desc: 'app=shop 단독으로 쓰지 않고, app=shop, env=prod, team=billing, version=v1.0 처럼 4~5개 라벨이 100% 동시에 일치해야만 트래픽을 넘기도록 묶습니다.'
+            },
+            {
+              step: '4차 방어벽',
+              title: '네트워크 정책 (NetworkPolicy 가상 방화벽)',
+              desc: '파드와 파드 사이의 네트워크 통신 자체를 IP와 포트 단위로 엄격히 방화벽처럼 틀어막아 비인가 통신을 원천 차단합니다.'
+            }
+          ]
+        };
 
         const k8sPhilosophyCards = [
           {
@@ -1674,6 +2148,11 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           wasContainer,
           k8sSubTab,
           k8sSubTabs,
+          k8sDevopsRoles,
+          k8sLabWorkbook,
+          k8sLabelSecurity,
+          selectedLabDay: ref('all'),
+          searchLabQuery: ref(''),
           k8sPhilosophyCards,
           k8sArchitectureData,
           k8sResourcesList,
