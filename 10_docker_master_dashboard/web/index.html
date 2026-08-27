@@ -215,6 +215,84 @@
           </div>
         </div>
 
+        
+        <!-- ========================================================
+             MASTER ONE-BOX BLUEPRINT: 왜 이 순서로 배우는가? (6단계 대서사시)
+             ======================================================== -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-indigo-200 shadow-md space-y-8">
+          
+          <!-- Master Box Header -->
+          <div class="space-y-3 border-b-2 border-slate-100 pb-6">
+            <div class="flex items-center gap-2.5">
+              <span class="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-mono text-xs font-black uppercase tracking-wider">
+                Master Roadmap Synthesis
+              </span>
+              <span class="text-xs font-bold text-slate-500">도커부터 쿠버네티스까지 필연적 진화의 흐름</span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug">
+              🌟 전체 학습 맥락 정리본: 우리는 왜 이 흐름으로 공부하는가?
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-4xl">
+              단순히 명령어 몇 개를 외우는 것은 아무 의미가 없습니다. <strong>과거의 컴퓨터 환경이 어떤 치명적인 고통에 부딪혔고, 왜 도커가 탄생했으며, 왜 결국 쿠버네티스라는 자가치유 엔진으로 진화할 수밖에 없었는지</strong> 6단계 대서사시의 필연적 이유를 한 칸으로 완벽히 정리합니다.
+            </p>
+          </div>
+
+          <!-- 6-Stage Flow Storyboard (Vertical Connected Cards) -->
+          <div class="space-y-6">
+            <div v-for="(stage, sIdx) in masterStoryboard" :key="stage.step"
+                 class="p-6 sm:p-8 rounded-2xl bg-slate-50 border-2 border-slate-200/80 hover:border-indigo-400 space-y-4 transition duration-200 shadow-xs">
+              
+              <!-- Stage Header -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-slate-900 text-white font-black text-base flex items-center justify-center shadow-xs shrink-0">
+                    {{ stage.emoji }}
+                  </span>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-xs font-black text-indigo-700 uppercase">{{ stage.step }}</span>
+                      <span class="text-xs text-slate-400 font-medium">| {{ stage.era }}</span>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-black text-slate-900">{{ stage.title }}</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Core Pain Point / Slogan -->
+              <div class="p-4 rounded-xl bg-amber-100/60 border border-amber-300/80 text-amber-950 font-bold text-sm sm:text-base leading-relaxed flex items-start gap-2.5">
+                <span class="text-lg shrink-0">💡</span>
+                <span>{{ stage.painPoint }}</span>
+              </div>
+
+              <!-- The Story Narrative -->
+              <div class="space-y-1.5">
+                <span class="eyebrow text-slate-500 font-bold">역사적 배경과 벌어진 상황</span>
+                <p class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed pl-1">{{ stage.story }}</p>
+              </div>
+
+              <!-- Why We Must Learn This Step -->
+              <div class="p-4 rounded-xl bg-indigo-50/80 border border-indigo-200 space-y-1">
+                <span class="eyebrow text-indigo-800 flex items-center gap-1.5 font-black text-xs">
+                  <i class="fa-solid fa-graduation-cap text-indigo-600"></i> 이 단계를 반드시 공부해야 하는 핵심 이유
+                </span>
+                <p class="text-xs sm:text-sm text-indigo-950 font-semibold leading-relaxed">{{ stage.whyLearn }}</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Summary Banner -->
+          <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white space-y-3">
+            <h4 class="text-lg font-black text-amber-300 flex items-center gap-2">
+              <i class="fa-solid fa-compass"></i> 결론: 도커와 쿠버네티스를 정복한 나의 미래 역량
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+              도커로 완벽한 밀키트를 만들고(STAGE 00~09), 쿠버네티스로 24시간 자가치유 무중단 클라우드 시스템을 지휘하며(Lab 01~20), 기업의 서비스 장애를 0초 만에 복구하고 AWS 비용을 수억 원씩 아껴주는 <strong>최상위 인프라/DevOps 엔지니어의 핵심 무기</strong>를 완벽히 장착하게 됩니다.
+            </p>
+          </div>
+
+        </div>
+
         <!-- 9-Stage Grid Cards (Bright Colorful Cards with Large Readable Text) -->
         <div class="space-y-4">
           <div class="flex items-center justify-between border-b border-slate-200 pb-3">
@@ -2449,6 +2527,63 @@
   }
 ];
 
+                const masterStoryboard = [
+  {
+    "step": "1단계",
+    "title": "태초의 배포 지옥 (물리 서버와 가상머신의 한계)",
+    "emoji": "🔥",
+    "era": "2000년대 ~ 2013년 (도커 이전 시대)",
+    "painPoint": "\"내 노트북에서는 잘 돌아가는데, 서버에 올리면 왜 에러가 날까?\"",
+    "story": "개발자는 자바 17을 쓰는데 운영 서버에는 자바 8이 깔려있거나, 라이브러리 버전이 안 맞아서 배포할 때마다 금요일 밤새 야근을 했습니다. 서버 1대를 증설하려면 쇳덩이 컴퓨터를 주문하고 OS를 손으로 까느라 2주일이 걸렸습니다.",
+    "whyLearn": "이 끔찍한 환경 불일치와 수동 배포의 고통을 알아야, 왜 프로그램을 '통째로 진공포장'하는 도커가 전 세계를 뒤흔들었는지 그 필연적 이유를 깨닫게 됩니다."
+  },
+  {
+    "step": "2단계",
+    "title": "도커 밀키트 혁명 (STAGE 00 ~ 09)",
+    "emoji": "🐳",
+    "era": "2013년 ~ 2015년 (도커의 대유행)",
+    "painPoint": "\"프로그램과 실행 환경을 통째로 밀키트로 포장해서 1초 만에 실행하자!\"",
+    "story": "Dockerfile 레시피 한 장만 있으면, 5MB짜리 초경량 리눅스(STAGE 00)부터 Nginx 웹서버, Postgres DB(STAGE 04), Spring WAS 3대 분산(STAGE 08)까지 누구의 컴퓨터에서나 1초 만에 완벽히 똑같이 실행되는 기적이 일어났습니다. 1.78GB짜리 무거운 이미지를 185MB로 90% 다이어트(STAGE 09)하는 최적화까지 완성합니다.",
+    "whyLearn": "모든 클라우드와 쿠버네티스의 기본 레고 블록이 바로 '도커 컨테이너'이기 때문에, 컨테이너를 자유자재로 만들고 다이어트시키는 기초 체력을 10단계에 걸쳐 다집니다."
+  },
+  {
+    "step": "3단계",
+    "title": "도커의 한계와 카오스 (컨테이너 100개의 늪)",
+    "emoji": "💥",
+    "era": "2014년 ~ 2015년 (도커 과도기)",
+    "painPoint": "\"컨테이너가 100개가 되니까 사람이 1초마다 터미널을 쳐다볼 수가 없다!\"",
+    "story": "도커는 컴퓨터 1대에서는 완벽했지만, 서비스가 커져서 서버 컴퓨터가 50대가 되고 컨테이너가 수백 개로 늘어나자 감당이 안 되었습니다. 새벽 3시에 서버 1대가 벼락 맞아 꺼지면 그 안에 돌던 컨테이너 20대가 한 번에 죽었는데, 사람이 일어나서 일일이 `docker run`을 다시 칠 수 없었습니다.",
+    "whyLearn": "도커 단독으로는 24시간 무중단 자가 치유(Self-Healing)와 자동 분산 배치가 불가능함을 뼈저리게 체감하고, 지휘자(오케스트레이션)의 필요성을 이해합니다."
+  },
+  {
+    "step": "4단계",
+    "title": "선언형 자가 치유와 뇌 구조 혁명 (K8s Lab 01 ~ 08)",
+    "emoji": "🧠",
+    "era": "2015년 ~ 2017년 (구글 Borg ➔ 쿠버네티스 오픈소스 공개)",
+    "painPoint": "\"사람이 명령하지 마라. '원하는 상태(3대)'만 적어두면 AI 지휘자가 24시간 맞춘다.\"",
+    "story": "구글이 10년간 비밀리에 쓰던 기술(Borg)을 쿠버네티스(K8s)로 공개했습니다. 사람이 파드를 100번 강제로 폭파해도 2초 만에 다시 3대를 살려내는 조정 루프(Lab 02), 라벨 스티커 하나로 트래픽을 넘기는 L4 부하 분산(Lab 04), 죽여야 할 때와 손님만 막아야 할 때를 가리는 3대 프로브 킬스위치(Lab 07)를 정복합니다.",
+    "whyLearn": "쿠버네티스의 가장 핵심인 '선언형 API'와 '조정 루프(자가 치유)'의 뇌 구조를 완벽하게 내 것으로 만듭니다."
+  },
+  {
+    "step": "5단계",
+    "title": "무중단 배포와 엔터프라이즈 스토리지 (K8s Lab 09 ~ 15)",
+    "emoji": "🚀",
+    "era": "2018년 ~ 2021년 (클라우드 네이티브 대전환)",
+    "painPoint": "\"새 버전 배포할 때 사이트가 1초도 안 끊기고, 결제 데이터가 1바이트도 안 날아가게 하라.\"",
+    "story": "버그 있는 버전 배포 시 1초 만에 과거 버전으로 되돌리는 `rollout undo`(Lab 09), 에러 난 파드를 트래픽에서 0.1초 만에 빼버리는 Endpoints(Lab 10), 단일 노드에 갇히는 외장하드(EBS)의 한계를 깨고 수십 대 서버가 동시에 폴더를 공유하는 네트워크 스토리지 EFS(Lab 15)로 엔터프라이즈 무중단 인프라를 완성합니다.",
+    "whyLearn": "실제 네이버, 카카오, 토스가 1년 365일 무중단으로 수억 건의 트래픽을 처리하는 상용 무중단 배포 및 공유 스토리지 아키텍처를 체득합니다."
+  },
+  {
+    "step": "6단계",
+    "title": "현업 SRE 트러블슈팅 & FinOps 비용 절감 (K8s Lab 16 ~ 20)",
+    "emoji": "💎",
+    "era": "현재 ~ 미래 (고연봉 DevOps / SRE 엔지니어의 핵심 영역)",
+    "painPoint": "\"쿠버네티스는 껐다 켤 뿐이다. 왜 죽었는지 수술하고, AWS 비용을 50% 아껴라!\"",
+    "story": "커널이 앱을 강제 총살하는 OOMKilled Exit Code 137의 수학적 원리(Lab 16), AWS 클라우드의 랜카드(ENI) 물리적 한계 돌파(Lab 17), 결제 중단을 0건으로 만드는 Graceful 종료 10초 여유 공식(Lab 18), 배포 후 5대 전수 점검(Lab 19), 그리고 아무도 안 쓰는데 매달 청구되는 PVC 요금 폭탄 청소(Lab 20)로 대망의 마스터 과정을 완성합니다.",
+    "whyLearn": "단순히 도커/쿠버네티스 명령어를 아는 초보 개발자를 넘어, 기업의 대형 장애를 막고 수억 원의 클라우드 비용을 아끼는 대체 불가능한 핵심 엔지니어로 도약합니다."
+  }
+];
+
         const k8sPhilosophyCards = [
           {
             title: '쿠버네티스의 어원과 K8s의 유래',
@@ -3310,6 +3445,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           wasContainer,
           k8sSubTab,
           k8sSubTabs,
+          masterStoryboard,
           dockerLabsTrack,
           k8sDevopsRoles,
           k8sLabWorkbook,
