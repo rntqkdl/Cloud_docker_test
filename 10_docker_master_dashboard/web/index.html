@@ -1877,11 +1877,12 @@
   {
     "num": 3,
     "day": "Day 1",
-    "title": "Harbor에 이미지 올리기",
+    "title": "Harbor에 이미지 올리기 (내 방 책상 서랍 vs 사원증 찍는 사내 보안 물류센터)",
     "chapter": "본과정 2장",
     "page": "p.11~12",
     "goal": "사내 Harbor 레지스트리 로그인(호스트명만), Apple Silicon linux/amd64 크로스 빌드 & Push, imagePullSecrets 확인",
-    "deepExplanation": "내 맥북 안에 있는 이미지는 AWS 클라우드 서버가 가져갈 수 없습니다. 따라서 사내 중앙 보안 창고(Harbor)에 이미지를 올리고, 쿠버네티스에게 창고 문을 열 수 있는 비밀번호 출입증(imagePullSecrets: harbor-cred)을 쥐여주는 원리를 배웁니다.",
+    "metaphor": "내 방 책상 서랍(내 맥북) vs 사원증 찍고 들어가는 사내 전용 보안 물류센터(Harbor). 내가 맥북에서 만든 밀키트는 내 컴퓨터 안에만 있으므로 AWS 전산실 서버들이 가져갈 수 없습니다. 또한 맥북(한국 220V 콘센트/ARM)과 AWS 서버(미국 110V 콘센트/x86_64)의 규격이 다르므로 '돼지코 변환기(--platform linux/amd64)'를 끼워 구운 뒤, 암호화된 전자 사원증(imagePullSecrets: harbor-cred)을 가진 서버만 안전하게 꺼내가도록 통제하는 것입니다.",
+    "deepExplanation": "로컬에서 검증한 이미지를 실제 클라우드 클러스터로 보내는 3단계 핵심 관문을 마스터합니다. ① 내 노트북 하드에서 꺼내 사내 보안 창고(Harbor)에 안전하게 입고(docker push)하고, ② 맥북(ARM)과 AWS 서버(x86_64)의 뇌 규격 차이로 발생하는 exec format error 즉사를 방지하기 위해 크로스 빌드를 수행하며, ③ 쿠버네티스에게 창고 문을 열 수 있는 전자 사원증(imagePullSecrets)을 쥐여줍니다.",
     "commands": "docker login harbor.skala-gj.com -u skala-gj4 -p '9Yhi5ttZ4PIe2707'\nIMG=harbor.skala-gj.com/$NS/shop-$ME:1.0.0\ndocker buildx build --platform linux/amd64 -t $IMG --push .\nkubectl get secret harbor-cred",
     "breakdown": [
       {
@@ -1902,15 +1903,19 @@
       }
     ],
     "expectedOutput": "Login Succeeded | pushed: 1.0.0 | secret/harbor-cred kubernetes.io/dockerconfigjson 1",
-    "realWorldStory": "회사에서 만든 유료 결제 로직이나 인공지능 알고리즘 이미지를 공개 인터넷에 올리면 경쟁사에 기술이 통째로 털립니다. 그래서 사내 전용 폐쇄망 창고(Harbor)를 두고 암호화된 출입증(Secret)을 가진 서버만 이미지를 가져가도록 통제합니다.",
+    "realWorldStory": "회사에서 만든 유료 결제 로직이나 인공지능 알고리즘 이미지를 공개 인터넷(Docker Hub)에 올리면 경쟁사에 기술이 통째로 털립니다. 그래서 사내 전용 폐쇄망 창고(Harbor)를 두고 암호화된 출입증(Secret)을 가진 서버만 이미지를 가져가도록 통제하며, 악성코드 검사(CVE 스캔)를 통과한 안전한 이미지만 배포합니다.",
     "terms": [
       {
-        "word": "크로스 빌드 (Cross Build)",
-        "meaning": "내 노트북은 Apple M시리즈(ARM)이지만, 서버 컴퓨터(Intel/AMD 64비트)에서 돌아가도록 규격을 맞추어 굽는 기술."
+        "word": "Harbor (사내 보안 레지스트리)",
+        "meaning": "동네 마트(공개 도커허브)가 아니라 사원증이 있는 직원만 출입하는 회사 전용 비밀 물류센터."
       },
       {
-        "word": "imagePullSecrets",
-        "meaning": "비공개 보안 창고에 들어가서 이미지를 꺼내올 수 있는 쿠버네티스 전용 전자 열쇠/비밀번호."
+        "word": "크로스 빌드 (Cross Build)",
+        "meaning": "내 노트북(ARM)과 서버 컴퓨터(Intel/AMD)의 두뇌 규격이 다를 때, 서버에 맞춰 구워주는 110V/220V 돼지코 변환 기술."
+      },
+      {
+        "word": "imagePullSecrets (harbor-cred)",
+        "meaning": "비공개 보안 창고 문을 열고 이미지를 안전하게 다운로드할 수 있는 쿠버네티스 전용 전자 출입증."
       }
     ],
     "takeaway": "docker login에 https://를 붙이면 401 에러가 난다. Mac M시리즈는 반드시 --platform linux/amd64로 빌드해야 exec format error를 막는다.",
