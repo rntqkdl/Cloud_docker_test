@@ -253,6 +253,109 @@
       <!-- ========================================================
            VIEW: KUBERNETES MASTER (쿠버네티스 완전 정복 5대 트랙)
            ======================================================== -->
+      
+      <!-- ========================================================
+           VIEW: DOCKER MASTER TRACK (10대 실습 4대 기둥 완비)
+           ======================================================== -->
+      <div v-else-if="currentView === 'docker_track'" class="space-y-8">
+        
+        <!-- Header -->
+        <div class="rounded-2xl bg-gradient-to-r from-sky-700 via-blue-700 to-indigo-800 p-8 sm:p-12 text-white shadow-lg space-y-4">
+          <span class="eyebrow bg-white/20 text-white px-3 py-1 rounded-full inline-block">
+            Docker Core Engineering Track
+          </span>
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight">
+            🐳 도커 핵심 마스터 트랙 (STAGE 00 ~ 09)
+          </h1>
+          <p class="text-base sm:text-lg text-sky-100 max-w-3xl leading-relaxed font-medium">
+            비전공자 눈높이 <strong>1초 일상 비유</strong>부터 <strong>라인별 코드 해설, 눈으로 확인하는 실제 결과, 네이버/쿠팡 현업 실무 적용 사례</strong>까지 4대 기둥으로 도커의 본질을 완벽히 마스터합니다.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button @click="askBookQuestion('도커 컨테이너와 가상머신(VM)의 차이점을 비유로 쉽게 설명해줘.')"
+                    class="px-5 py-3 bg-white hover:bg-slate-100 text-sky-950 font-extrabold text-sm rounded-xl transition shadow-md flex items-center gap-2">
+              <i class="fa-solid fa-comment-dots text-sky-700"></i> 🍄 도키에게 도커 핵심 질문하기
+            </button>
+            <span class="px-4 py-3 rounded-xl bg-sky-900/60 border border-white/30 text-white font-mono text-xs flex items-center gap-2">
+              <i class="fa-solid fa-cubes text-amber-300"></i> 10대 실전 랩 전수 연동 (STAGE 00 ~ 09)
+            </span>
+          </div>
+        </div>
+
+        <!-- Docker 10 Labs Cards -->
+        <div class="space-y-6">
+          <div v-for="lab in dockerLabsTrack" :key="lab.stage"
+               class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm hover:border-sky-300 transition">
+            
+            <!-- Card Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">{{ lab.emoji }}</span>
+                <div>
+                  <span class="eyebrow text-sky-700 font-bold">{{ lab.stage }}</span>
+                  <h3 class="text-lg sm:text-xl font-black text-slate-900">{{ lab.title }}</h3>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button @click="copyText(lab.commands)" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition flex items-center gap-1.5 border border-slate-300">
+                  <i class="fa-solid fa-copy text-xs"></i> 명령어 복사
+                </button>
+                <button @click="executeLiveCommand(lab.commands)" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                  <i class="fa-solid fa-play text-xs"></i> 터미널 실행
+                </button>
+              </div>
+            </div>
+
+            <!-- Pillar 1: Metaphor -->
+            <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200 space-y-1.5">
+              <span class="eyebrow text-amber-800 flex items-center gap-1.5">
+                <i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 1. 비전공자 1초 일상 비유 & 쉬운 원리
+              </span>
+              <p class="text-xs sm:text-sm font-medium text-amber-950 leading-relaxed">{{ lab.metaphor }}</p>
+            </div>
+
+            <!-- Pillar 2: Command & Code Breakdown -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="eyebrow text-emerald-700 flex items-center gap-1"><i class="fa-solid fa-terminal"></i> 💻 2. 터미널 실행 명령어 블록</span>
+              </div>
+              <pre class="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs text-emerald-400 leading-relaxed overflow-x-auto select-all"><code>{{ lab.commands }}</code></pre>
+              
+              <div class="space-y-2 pt-1">
+                <span class="eyebrow text-indigo-700 flex items-center gap-1.5">
+                  <i class="fa-solid fa-code text-indigo-600"></i> 🔍 라인별 초상세 코드 해설
+                </span>
+                <div class="space-y-2">
+                  <div v-for="(b, bIdx) in lab.breakdown" :key="bIdx"
+                       class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                    <div class="font-mono font-bold text-indigo-900 bg-indigo-50 px-2.5 py-1 rounded border border-indigo-200 inline-block">{{ b.code }}</div>
+                    <p class="text-slate-700 font-medium leading-relaxed pl-1">{{ b.desc }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pillar 3 & 4 Grid: Expected Output & Real-World Case -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div class="p-4 rounded-xl bg-sky-50 border border-sky-200 space-y-1.5">
+                <span class="eyebrow text-sky-800 flex items-center gap-1.5">
+                  <i class="fa-solid fa-eye text-sky-600"></i> 👀 3. 눈으로 확인하는 실제 결과
+                </span>
+                <p class="text-xs text-sky-950 font-mono font-bold leading-relaxed whitespace-pre-wrap">{{ lab.expectedOutput }}</p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-purple-50 border border-purple-200 space-y-1.5">
+                <span class="eyebrow text-purple-800 flex items-center gap-1.5">
+                  <i class="fa-solid fa-building-wheat text-purple-600"></i> 🏢 4. 네이버/쿠팡 현업 실무 적용 사례
+                </span>
+                <p class="text-xs text-purple-950 font-medium leading-relaxed">{{ lab.realWorldCase }}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
       <div v-else-if="currentView === 'k8s_master'" class="space-y-8">
         
         <!-- Header -->
@@ -423,12 +526,12 @@
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
-                  <span class="eyebrow text-amber-800 flex items-center gap-1"><i class="fa-solid fa-lightbulb text-amber-600"></i> 핵심 깨달음 (Key Takeaway)</span>
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1.5">
+                  <span class="eyebrow text-amber-800 flex items-center gap-1.5"><i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 핵심 깨달음 & 눈으로 보는 결과</span>
                   <p class="text-xs text-amber-950 font-medium leading-relaxed">{{ lab.takeaway }}</p>
                 </div>
-                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-1">
-                  <span class="eyebrow text-rose-800 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-rose-600"></i> 실무 트러블슈팅 (Troubleshooting)</span>
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-1.5">
+                  <span class="eyebrow text-rose-800 flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ⚠️ 현업 트러블슈팅 & 실전 주의사항</span>
                   <p class="text-xs text-rose-950 font-medium leading-relaxed">{{ lab.trouble }}</p>
                 </div>
               </div>
@@ -965,10 +1068,11 @@
         ];
 
         const mainMenus = [
-          { id: 'roadmap', title: '학습 로드맵', icon: 'fa-solid fa-route', color: '#0284c7' },
-          { id: 'k8s_master', title: '☸️ 쿠버네티스 완전 정복', icon: 'fa-solid fa-dharmachakra', color: '#7c3aed' },
+          { id: 'roadmap', title: '🗺️ 통합 로드맵', icon: 'fa-solid fa-route', color: '#0284c7' },
+          { id: 'docker_track', title: '🐳 도커 마스터 트랙 (10대 실습)', icon: 'fa-brands fa-docker', color: '#0284c7' },
+          { id: 'k8s_master', title: '☸️ 쿠버네티스 실전 (20대 실습)', icon: 'fa-solid fa-dharmachakra', color: '#7c3aed' },
           { id: 'ebooks', title: '📚 16대 전자책 도서관', icon: 'fa-solid fa-book-bookmark', color: '#d97706' },
-          { id: 'terminal_live', title: '🖥️ 실시간 터미널', icon: 'fa-solid fa-terminal', color: '#059669' },
+          { id: 'terminal_live', title: '🖥️ 실시간 웹 터미널', icon: 'fa-solid fa-terminal', color: '#059669' },
           { id: 'cheatsheet', title: '📖 명령어 대백과', icon: 'fa-solid fa-book', color: '#0891b2' }
         ];
 
@@ -1681,6 +1785,255 @@
             }
           ]
         };
+
+                const dockerLabsTrack = [
+  {
+    "stage": "STAGE 00",
+    "title": "초미니 Alpine Linux & Python 웹서버",
+    "emoji": "🐧",
+    "metaphor": "무거운 윈도우/우분투 전체(수 GB)를 깔지 않고, 딱 5MB짜리 초경량 리눅스 뼈대(알파인)에 파이썬을 얹어 0.1초 만에 실행되는 번개 웹서버를 만드는 원리입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/00_container_linux\ndocker build -t container-linux:1.2 .\ndocker run -d --name my-mini-web -p 8889:8080 container-linux:1.2\ncurl http://localhost:8889\ndocker rm -f my-mini-web",
+    "breakdown": [
+      {
+        "code": "docker build -t container-linux:1.2 .",
+        "desc": "현재 폴더의 Dockerfile을 읽어 초경량 알파인 리눅스 기반 웹서버 이미지를 1.2 버전 이름표로 빌드합니다."
+      },
+      {
+        "code": "docker run -d --name my-mini-web -p 8889:8080 ...",
+        "desc": "백그라운드(-d)로 실행하며, 내 컴퓨터 포트 8889를 컨테이너 내부 8080 포트로 연결(포트포워딩)합니다."
+      },
+      {
+        "code": "curl http://localhost:8889",
+        "desc": "브라우저나 터미널에서 접속하여 파이썬 웹서버가 리눅스 커널 위에서 정상 응답하는지 확인합니다."
+      },
+      {
+        "code": "docker rm -f my-mini-web",
+        "desc": "실습에 사용한 컨테이너를 강제 중지 및 삭제하여 리소스를 정리합니다."
+      }
+    ],
+    "expectedOutput": "HTTP 200 OK | 'Hello from Containerized Alpine Linux! (PID 1 자동기동 성공)'",
+    "realWorldCase": "AWS 람다(Lambda)나 서버리스 환경에서 콜드 스타트(기동 지연)를 0.05초로 줄이기 위해 배민, 넷플릭스 등에서 마이크로서비스를 만들 때 5MB짜리 Alpine 리눅스를 표준으로 사용합니다."
+  },
+  {
+    "stage": "STAGE 01",
+    "title": "첫 도커 컨테이너 기동 & 프로세스 격리",
+    "emoji": "📦",
+    "metaphor": "컴퓨터 안에 가상의 투명 방음 유리방(네임스페이스/cgroups)을 만들어서, 다른 프로그램의 방해를 전혀 받지 않는 독립된 일꾼을 세우는 것입니다.",
+    "commands": "docker run hello-world\ndocker run -d --name first-nginx -p 8081:80 nginx:alpine\ncurl http://localhost:8081\ndocker ps\ndocker rm -f first-nginx",
+    "breakdown": [
+      {
+        "code": "docker run hello-world",
+        "desc": "도커 데몬이 정상 작동하는지 전 세계 표준 테스트 이미지를 받아와 격리 실행합니다."
+      },
+      {
+        "code": "docker run -d --name first-nginx -p 8081:80 nginx:alpine",
+        "desc": "Nginx 웹서버를 first-nginx라는 이름으로 내 컴퓨터 8081 포트에 연결하여 띄웁니다."
+      },
+      {
+        "code": "docker ps",
+        "desc": "현재 내 컴퓨터에서 실제로 살아 숨 쉬고 있는 컨테이너 목록과 상태(UP)를 조회합니다."
+      },
+      {
+        "code": "docker rm -f first-nginx",
+        "desc": "컨테이너를 정리합니다."
+      }
+    ],
+    "expectedOutput": "CONTAINER ID ... IMAGE nginx:alpine ... STATUS Up 5 seconds ... PORTS 0.0.0.0:8081->80/tcp",
+    "realWorldCase": "같은 서버 컴퓨터에서 서로 다른 프로젝트가 '파이썬 2.7'과 '파이썬 3.12'를 동시에 써야 할 때, 충돌 없이 완벽히 격리하여 실행하는 기본 원리입니다."
+  },
+  {
+    "stage": "STAGE 02",
+    "title": "Nginx 웹서버 포트 매핑의 비밀 (-p)",
+    "emoji": "🚪",
+    "metaphor": "아파트 단지 주소(localhost)와 호수(8082번)를 누르면, 컨테이너라는 비밀 방 안의 80번 문으로 통과시켜 주는 현관 인터폰 파이프라인을 뚫는 것입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/02_nginx_webserver\ndocker build -t my-custom-nginx:1.0.0 .\ndocker run -d --name my-web -p 8082:80 my-custom-nginx:1.0.0\ncurl http://localhost:8082\ndocker rm -f my-web",
+    "breakdown": [
+      {
+        "code": "docker build -t my-custom-nginx:1.0.0 .",
+        "desc": "내가 만든 HTML 웹페이지를 Nginx의 기본 웹 문서 경로(/usr/share/nginx/html)에 넣은 커스텀 이미지를 굽습니다."
+      },
+      {
+        "code": "docker run -d --name my-web -p 8082:80 ...",
+        "desc": "-p 8082:80 옵션으로 내 컴퓨터 8082번 포트를 컨테이너 내부 80번 포트로 이어줍니다."
+      },
+      {
+        "code": "curl http://localhost:8082",
+        "desc": "내가 만든 커스텀 웹페이지 내용이 웹 브라우저/터미널에 예쁘게 나오는지 확인합니다."
+      }
+    ],
+    "expectedOutput": "<h1>SKALA Custom Nginx Web Server</h1> <p>안성민 4반 G124 정상 서빙 중</p>",
+    "realWorldCase": "쿠팡이나 토스에서 수백 개의 백엔드 서비스(결제, 주문, 회원)가 같은 서버 안에서 포트 번호 충돌 없이 안전하게 외부 트래픽을 나누어 받는 필수 기술입니다."
+  },
+  {
+    "stage": "STAGE 03",
+    "title": "커스텀 Dockerfile로 나만의 밀키트 만들기",
+    "emoji": "🍳",
+    "metaphor": "요리 레시피(Dockerfile)를 적어두면, 도커가 레시피대로 재료를 넣고 끓여서 완벽한 진공포장 밀키트(Docker Image)를 기계처럼 자동 생산하는 원리입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/03_custom_image\ncat Dockerfile\ndocker build -t skala-custom-app:1.0.0 .\ndocker run --rm skala-custom-app:1.0.0",
+    "breakdown": [
+      {
+        "code": "FROM, WORKDIR, COPY, RUN, CMD",
+        "desc": "기반 OS 선택(FROM) ➔ 작업실 폴더 생성(WORKDIR) ➔ 파일 복사(COPY) ➔ 패키지 설치(RUN) ➔ 기동 명령어(CMD) 5대 키워드를 작성합니다."
+      },
+      {
+        "code": "docker build -t skala-custom-app:1.0.0 .",
+        "desc": "Dockerfile 레시피를 읽어 1단계부터 차례대로 레이어(Layer)를 쌓아 이미지를 만듭니다."
+      },
+      {
+        "code": "docker run --rm skala-custom-app:1.0.0",
+        "desc": "1회성 실행(--rm)으로 결과만 확인하고 자동으로 컨테이너를 깔끔히 삭제합니다."
+      }
+    ],
+    "expectedOutput": "=== SKALA Custom Image Build Success! === Execution completed cleanly.",
+    "realWorldCase": "개발자가 신규 기능을 개발할 때마다 일일이 서버 설정을 손으로 하지 않고, Git에 Dockerfile만 올려두면 자동으로 이미지가 빌드되는 CI/CD의 출발점입니다."
+  },
+  {
+    "stage": "STAGE 04",
+    "title": "영구 볼륨(-v)과 데이터베이스 보존",
+    "emoji": "💾",
+    "metaphor": "컨테이너는 전원이 꺼지면 기억을 다 잃어버리는 일회용 냄비입니다. 볼륨(-v)은 냄비 바닥에 구멍을 뚫어 내 컴퓨터의 안전한 '외장 하드(Volume)'에 데이터를 실시간 저장하는 장치입니다.",
+    "commands": "docker volume create mariadb-study-data\ndocker run -d --name study-db -e MYSQL_ROOT_PASSWORD=pass123 -v mariadb-study-data:/var/lib/mysql -p 3307:3306 mariadb:11\ndocker exec -it study-db mariadb -u root -ppass123 -e 'CREATE DATABASE study_test; SHOW DATABASES;'\ndocker rm -f study-db\ndocker run -d --name study-db-reborn -e MYSQL_ROOT_PASSWORD=pass123 -v mariadb-study-data:/var/lib/mysql -p 3307:3306 mariadb:11\ndocker exec -it study-db-reborn mariadb -u root -ppass123 -e 'SHOW DATABASES;'\ndocker rm -f study-db-reborn && docker volume rm mariadb-study-data",
+    "breakdown": [
+      {
+        "code": "docker volume create mariadb-study-data",
+        "desc": "컨테이너가 죽어도 영구 보존되는 전용 볼륨 스토리지(외장 하드)를 만듭니다."
+      },
+      {
+        "code": "-v mariadb-study-data:/var/lib/mysql",
+        "desc": "DB 컨테이너 내부 데이터 폴더를 방금 만든 영구 볼륨과 실시간 동기화합니다."
+      },
+      {
+        "code": "docker rm -f study-db",
+        "desc": "DB 컨테이너를 가차 없이 폭파(삭제)합니다."
+      },
+      {
+        "code": "docker run ... study-db-reborn ...",
+        "desc": "완전히 새로운 DB 컨테이너를 띄우고 같은 볼륨을 연결합니다."
+      },
+      {
+        "code": "SHOW DATABASES;",
+        "desc": "이전에 만들었던 study_test 데이터베이스가 1바이트도 유실되지 않고 100% 보존된 것을 확인합니다!"
+      }
+    ],
+    "expectedOutput": "| Database |\n| study_test | (컨테이너를 죽이고 다시 띄워도 데이터 100% 보존 성공!)",
+    "realWorldCase": "은행, 결제, 쇼핑몰 DB 서버가 장애로 재부팅되더라도 고객의 결제 내역과 계좌 잔액이 100% 안전하게 유지되는 원리입니다."
+  },
+  {
+    "stage": "STAGE 05",
+    "title": "사내 중앙 물류창고 Harbor 레지스트리",
+    "emoji": "🏭",
+    "metaphor": "내 방(로컬)에만 있던 밀키트를 사내 전용 보안 물류센터(Harbor)에 사원증을 찍고 입고하여, 회사의 모든 클라우드 서버가 24시간 언제든 꺼내 쓸 수 있게 만드는 창고 시스템입니다.",
+    "commands": "docker login harbor.skala-gj.com -u skala-gj4 -p '9Yhi5ttZ4PIe2707'\ndocker tag container-linux:1.2 harbor.skala-gj.com/skala-gj4/skala-web:1.0.0\ndocker push harbor.skala-gj.com/skala-gj4/skala-web:1.0.0",
+    "breakdown": [
+      {
+        "code": "docker login harbor.skala-gj.com -u skala-gj4 ...",
+        "desc": "사내 보안 레지스트리에 4반 전용 계정으로 출입증을 인증받습니다."
+      },
+      {
+        "code": "docker tag ... harbor.skala-gj.com/skala-gj4/...",
+        "desc": "하버 도메인 / 4반 프로젝트 / 이미지이름:태그 규격으로 택배 송장 이름표를 부착합니다."
+      },
+      {
+        "code": "docker push ...",
+        "desc": "내 맥북의 이미지 레이어들을 사내 중앙 하버 창고로 초고속 업로드합니다."
+      }
+    ],
+    "expectedOutput": "The push refers to repository [harbor.skala-gj.com/skala-gj4/skala-web] ... Pushed | 1.0.0: digest: sha256:... size: 528",
+    "realWorldCase": "회사 기밀 소스코드가 깃허브나 공개 도커허브로 유출되지 않도록, 사내 폐쇄망 보안 레지스트리를 구축하여 안전하게 공유하는 엔터프라이즈 보안 표준입니다."
+  },
+  {
+    "stage": "STAGE 06",
+    "title": "수동 3-Tier 가상 네트워크 구축",
+    "emoji": "🌐",
+    "metaphor": "Web서버, WAS(자바)서버, DB서버 사이에 사설 보안 전용선(VLAN/Bridge)을 깔아서, 외부 해커가 DB에 직접 접속하지 못하게 3중 격리 통신망을 만드는 것입니다.",
+    "commands": "docker network create skala-study-net\ndocker run -d --name study-db --network skala-study-net -e POSTGRES_PASSWORD=pass postgres:16-alpine\ndocker run -d --name study-web --network skala-study-net -p 8083:80 nginx:alpine\ndocker exec -it study-web ping -c 2 study-db\ndocker rm -f study-web study-db && docker network rm skala-study-net",
+    "breakdown": [
+      {
+        "code": "docker network create skala-study-net",
+        "desc": "컨테이너들끼리 컨테이너 이름(DNS)으로 서로를 부를 수 있는 가상 사설 통신망을 만듭니다."
+      },
+      {
+        "code": "--network skala-study-net",
+        "desc": "Web과 DB를 동일한 사설 네트워크에 소속시켜 안전하게 연결합니다."
+      },
+      {
+        "code": "docker exec -it study-web ping -c 2 study-db",
+        "desc": "복잡한 IP 주소 대신 study-db라는 이름만으로 서로 통신(DNS 질의)이 되는 것을 확인합니다."
+      }
+    ],
+    "expectedOutput": "PING study-db (172.20.0.2): 56 data bytes\n64 bytes from 172.20.0.2: seq=0 ttl=64 time=0.123 ms (내부 DNS 통신 성공!)",
+    "realWorldCase": "금융권 및 대기업 아키텍처에서 데이터베이스는 인터넷에서 직접 접속을 아예 차단하고 오직 내부 WAS 서버만 접근할 수 있게 3-Tier 망분리를 구축하는 원리입니다."
+  },
+  {
+    "stage": "STAGE 07",
+    "title": "선언형 오케스트레이션 Docker Compose",
+    "emoji": "🎼",
+    "metaphor": "명령어 10줄을 사람이 일일이 치지 않고, compose.yaml 악보 한 장에 3대 서버(Web, WAS, DB)의 의존 관계와 헬스체크를 적어두면 오케스트라 지휘자처럼 1초 만에 일제히 연주를 시작하는 기술입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/07_3tier_compose\ndocker compose up -d\ndocker compose ps\ncurl http://localhost:8080/api/health\ndocker compose down",
+    "breakdown": [
+      {
+        "code": "docker compose up -d",
+        "desc": "compose.yaml에 선언된 Web, Spring WAS, Postgres 3대 컨테이너를 순서에 맞춰 백그라운드 1초 기동합니다."
+      },
+      {
+        "code": "docker compose ps",
+        "desc": "3대 컨테이너의 헬스체크(healthy) 상태와 포트 매핑 현황을 한눈에 점검합니다."
+      },
+      {
+        "code": "curl http://localhost:8080/api/health",
+        "desc": "Web ➔ WAS ➔ DB로 이어지는 3-Tier 전체 파이프라인이 정상 작동하는지 확인합니다."
+      },
+      {
+        "code": "docker compose down",
+        "desc": "컨테이너, 네트워크를 한 방에 깔끔하게 일괄 종료 및 정리합니다."
+      }
+    ],
+    "expectedOutput": "NAME STATUS PORTS\n07-web-1 Up (healthy) 0.0.0.0:8080->80/tcp\n07-was-1 Up (healthy) 8080/tcp\n07-db-1 Up (healthy) 5432/tcp",
+    "realWorldCase": "신규 개발자가 입사했을 때 개발 환경 세팅하느라 3일씩 고생하지 않고, docker compose up 딱 한 줄로 1분 만에 회사 전체 시스템을 내 노트북에 띄워 코딩을 시작합니다."
+  },
+  {
+    "stage": "STAGE 08",
+    "title": "Nginx 로드밸런싱 & WAS 3대 수평 스케일아웃",
+    "emoji": "⚖️",
+    "metaphor": "손님이 10배로 몰려올 때 주방장(WAS)을 1명에서 3명으로 복제(--scale was=3)하고, Nginx 교통경찰이 손님 주문을 1번, 2번, 3번 주방장에게 공평하게 n분의 1로 나눠주는 부하 분산 기술입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/08_scale_and_loadbalancing\ndocker compose up -d --scale was=3\nfor i in {1..6}; do curl -s http://localhost:8080/api/server-info | grep -o '\"container\":[^,]*'; done\ndocker compose down",
+    "breakdown": [
+      {
+        "code": "docker compose up -d --scale was=3",
+        "desc": "Spring WAS 컨테이너를 1대가 아니라 3대로 동시에 수평 확장(Scale-Out)하여 기동합니다."
+      },
+      {
+        "code": "for i in {1..6}; do curl ... done",
+        "desc": "요청을 6번 날렸을 때 Nginx가 라운드로빈 알고리즘으로 3대의 서로 다른 WAS 컨테이너로 번갈아가며 부하를 분산하는지 확인합니다."
+      }
+    ],
+    "expectedOutput": "\"container\":\"was-1\"\n\"container\":\"was-2\"\n\"container\":\"was-3\"\n\"container\":\"was-1\" (3대로 완벽한 부하 분산 확인!)",
+    "realWorldCase": "네이버 쇼핑 라이브나 쿠팡 타임세일 시 트래픽이 폭주해도 서버가 뻗지 않고 수십 대의 WAS로 트래픽을 골고루 쪼개어 무중단으로 버텨내는 핵심 원리입니다."
+  },
+  {
+    "stage": "STAGE 09",
+    "title": "멀티스테이지 빌드로 90% 이미지 다이어트",
+    "emoji": "🥗",
+    "metaphor": "요리할 때 쓴 무거운 조리도구(700MB 무거운 컴파일러 JDK)는 주방에 남겨두고, 손님 상에는 가벼운 완성 접시(137MB 런타임 JRE)만 쏙 담아 배달하는 특급 다이어트 비법입니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/09_image_diet\ndocker build -t diet-fat:single -f Dockerfile.single .\ndocker build -t diet-slim:multi -f Dockerfile.multi .\ndocker images | grep diet\ndocker rmi diet-fat:single diet-slim:multi",
+    "breakdown": [
+      {
+        "code": "docker build -t diet-fat:single ...",
+        "desc": "컴파일 도구(JDK)까지 통째로 들어간 무거운 싱글 스테이지 이미지를 만듭니다 (약 1.78GB)."
+      },
+      {
+        "code": "docker build -t diet-slim:multi ...",
+        "desc": "빌더 스테이지에서 컴파일 후 실행 파일(.jar)만 가벼운 JRE로 쏙 빼온 멀티스테이지 이미지를 만듭니다 (약 185MB)."
+      },
+      {
+        "code": "docker images | grep diet",
+        "desc": "두 이미지의 용량을 비교하여 90% 용량이 극적으로 다이어트된 실측 결과를 확인합니다!"
+      }
+    ],
+    "expectedOutput": "diet-fat    single    1.78GB\ndiet-slim   multi     185MB   (용량 90% 극적 절감 성공!)",
+    "realWorldCase": "서버가 100대로 스케일아웃될 때 1.78GB짜리는 다운로드에 5분 걸려 사이트가 뻗지만, 185MB짜리는 3초 만에 다운로드되어 즉각 트래픽을 방어합니다."
+  }
+];
 
         const k8sPhilosophyCards = [
           {
@@ -2543,6 +2896,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           wasContainer,
           k8sSubTab,
           k8sSubTabs,
+          dockerLabsTrack,
           k8sDevopsRoles,
           k8sLabWorkbook,
           k8sLabelSecurity,
