@@ -1767,16 +1767,17 @@
   {
     "num": 1,
     "day": "Day 1",
-    "title": "클러스터에 가기 전 — 로컬에서 먼저 돌려본다",
-    "chapter": "본과정 1, 2, 5장",
+    "title": "로컬에서 컨테이너 실행하기 (1인 푸드트럭 vs 전국 50개 지점 클러스터)",
+    "chapter": "본과정 1장",
     "page": "p.7~8",
-    "goal": "내 맥북에서 단위 테스트 7개 전수 통과, 137MB JRE 경량화 빌드, 메모리 1GB 제한 및 포트 8080/8081 분리 검증",
-    "deepExplanation": "쿠버네티스 클러스터로 가기 전에 내 컴퓨터(로컬)에서 자바 앱이 완벽하게 돌아가는지 먼저 검증합니다. 실제 클러스터의 리소스 제한(Limit 1GB)을 로컬에서 미리 흉내 내어보고, 고객용 비즈니스 포트(8080)와 내부 헬스체크용 관리 포트(8081)가 제대로 분리되어 있는지 확인합니다.",
-    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/01_docker_shop_api\nexport ME=g124 && export NS=skala-gj4\n./gradlew test\ndocker build --platform linux/amd64 -t shop-api:1.0.0 .\ndocker run -d --rm --name shop-local -p 8080:8080 -p 8081:8081 --memory=1g -e POD_NAME=local shop-api:1.0.0\ncurl -s localhost:8080/api/info | jq .\ncurl -s -o /dev/null -w '%{http_code}\\n' localhost:8080/actuator/health\ndocker rm -f shop-local",
+    "goal": "스프링부트 8080(비즈니스)/8081(관리) 포트 분리 및 137MB JRE 경량 컨테이너를 로컬에서 사전 검증",
+    "metaphor": "1인 배달 푸드트럭 1대(로컬 도커) vs 전국 50개 지점 체인망(쿠버네티스 클러스터). 전국 50개 지점에 신메뉴를 배포하기 전에, 본사 주방(내 맥북)에서 레시피(137MB JRE, 포트 8080/8081 분리)가 타지 않고 잘 익는지 1초 만에 직접 먹어보고 완벽히 검증하는 필수 절차입니다.",
+    "deepExplanation": "내 컴퓨터(로컬)에서 도커로 돌리는 것과 클라우드(EKS) 클러스터에서 돌리는 것의 결정적 차이를 이해합니다. 내 컴퓨터는 맥북 덮개를 닫으면 서버가 즉시 죽지만, 클러스터는 수십 대 서버가 그물망처럼 묶여 24시간 자율주행으로 돌아갑니다. 실습 1에서는 전국 클러스터로 쏘아 올리기 전 내 맥북에서 137MB JRE 경량화와 손님용 문(8080) / 관리자용 문(8081)의 404 보안 분리를 완벽히 사전 검증합니다.",
+    "commands": "cd /Users/seongminan/workspace/cloud-docker-intensive-labs/sandbox_study/01_local_app\n./gradlew test\ndocker build --platform linux/amd64 -t shop-api:1.0.0 .\ndocker run -d --rm --name shop-local -p 8080:8080 -p 8081:8081 --memory=1g shop-api:1.0.0\ncurl -s localhost:8080/api/info | jq .\ncurl -s -o /dev/null -w '%{http_code}\\n' localhost:8080/actuator/health\ndocker rm -f shop-local",
     "breakdown": [
       {
-        "code": "cd ... && export ME=g124 && export NS=skala-gj4",
-        "desc": "실습 프로젝트 폴더로 이동하고, 4반 성민님 고유 식별자(g124)와 네임스페이스(skala-gj4)를 환경변수로 등록합니다."
+        "code": "cd .../01_local_app",
+        "desc": "실습 1 전용 스프링부트 3.4 마이크로서비스 프로젝트 디렉토리로 이동합니다."
       },
       {
         "code": "./gradlew test",
@@ -1807,6 +1808,10 @@
     "realWorldStory": "배민이나 쿠팡에서는 외부 해커가 서버 내부 상태(메모리, DB 주소 등)를 엿보지 못하도록 손님용 문(8080)에서는 관리자 페이지(/actuator)를 아예 못 찾게(404 에러) 잠그고, 내부 시스템만 8081 전용 문으로 헬스체크를 수행합니다.",
     "terms": [
       {
+        "word": "로컬(내 맥북) vs 클러스터(Cluster)",
+        "meaning": "로컬은 내 컴퓨터 딱 1대(푸드트럭)이고, 클러스터는 수십 대 서버가 묶여 24시간 자가치유로 도는 거대 슈퍼컴퓨터 체인망."
+      },
+      {
         "word": "액추에이터 (Actuator)",
         "meaning": "스프링 앱이 '나 지금 건강해요'라고 상태를 외부에 알려주는 내부 진단 신호등."
       },
@@ -1821,11 +1826,12 @@
   {
     "num": 2,
     "day": "Day 1",
-    "title": "조정 루프와 술래잡기 — 지워도 지워도 세 개다",
+    "title": "조정 루프와 술래잡기 (무한 오뚝이 vs 쓰러지는 볼링핀)",
     "chapter": "본과정 1장",
     "page": "p.9~10",
-    "goal": "무한 삭제 루프 공격에도 1초 만에 부활하는 자가 치유(Self-Healing) 목격 및 --cascade=orphan 사슬 끊기 실험",
-    "deepExplanation": "쿠버네티스의 가장 위대한 심장인 '조정 루프(Reconciliation Loop)'를 온몸으로 체험합니다. 사람이 1초마다 파드를 무한 삭제해도 쿠버네티스가 왜 항상 3대를 이겨내는지, 그리고 Deployment ➔ ReplicaSet ➔ Pod 로 이어지는 소유권 사슬을 한 칸씩 끊었을 때 고아 파드가 어떻게 소멸하는지 증명합니다.",
+    "goal": "무한 삭제 공격에도 1초 만에 부활하는 자가 치유(Self-Healing) 목격 및 --cascade=orphan 사슬 끊기 실험",
+    "metaphor": "쓰러지면 끝인 일회용 볼링핀(도커 단독) vs 백 번을 밀쳐도 1초 만에 솟아오르는 무한 오뚝이(쿠버네티스 디플로이먼트). 에어컨에 희망온도 24도를 맞춰두면 방 온도가 올라갈 때마다 스스로 냉방을 켜듯, 파드 3대를 24시간 무조건 유지합니다.",
+    "deepExplanation": "쿠버네티스의 심장인 '조정 루프(Reconciliation Loop)'의 뇌 구조를 목격합니다. 'spec(목표: 3대)'과 'status(현재 상태)'를 1초도 쉬지 않고 비교하며, 사람이 1초마다 파드를 강제로 폭파해도 지휘관이 2초 만에 새 파드를 다시 낳아 항상 3대를 철통 방어합니다. 또한 Deployment ➔ ReplicaSet ➔ Pod 로 이어지는 소유권 사슬을 끊었을 때 고아 파드가 어떻게 소멸하는지 증명합니다.",
     "commands": "kubectl create deployment race-$ME --image=nginx:1.27 --replicas=3\nfor i in 1 2 3; do kubectl delete pod -l app=race-$ME --wait=false; sleep 3; kgp -l app=race-$ME; done\nkubectl delete deployment race-$ME --cascade=orphan\nkubectl delete rs -l app=race-$ME --cascade=orphan\nkubectl delete pod -l app=race-$ME",
     "breakdown": [
       {
@@ -1852,6 +1858,10 @@
     "expectedOutput": "pod \"race-g124-xxx\" deleted -> 2초 뒤 새로운 이름표 달고 3대 정상 READY (자가 치유 목격!)",
     "realWorldStory": "새벽 3시에 AWS 데이터센터에 정전이 나거나 물리 서버 1대가 벼락 맞아 터져도, 엔지니어가 잠에서 깰 필요 없이 쿠버네티스 컨트롤러가 1초 만에 살아있는 다른 서버에 똑같은 파드를 즉시 부활시켜 무중단 서비스를 유지합니다.",
     "terms": [
+      {
+        "word": "자가 치유 (Self-Healing)",
+        "meaning": "서버가 죽거나 컴퓨터가 고장 나도 사람이 손대지 않고 로봇 지휘자가 1초 만에 다시 살려내는 능력."
+      },
       {
         "word": "조정 루프 (Reconciliation Loop)",
         "meaning": "목표 상태(3대)와 현재 상태를 1초도 안 쉬고 비교하다가 부족하면 즉시 채워 넣는 쿠버네티스의 자동 치유 심장."
