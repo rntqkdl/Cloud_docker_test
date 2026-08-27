@@ -1375,17 +1375,145 @@
       </div>
 
       <!-- ========================================================
-           VIEW: CHEATSHEET (명령어 대백과)
+           VIEW: CHEATSHEET (명령어 대백과 & 쿠버네티스 약어 퀵보드)
            ======================================================== -->
-      <div v-else-if="currentView === 'cheatsheet'" class="space-y-6">
-        <div class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm">
+      <div v-else-if="currentView === 'cheatsheet'" class="space-y-8">
+        
+        <!-- Top Hero Card: kubectl 8대 핵심 명령어 & 19대 약어 퀵보드 (Based on Official SKALA Slide) -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 text-white shadow-xl border-2 border-indigo-500/40 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-indigo-500/30 pb-5">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-indigo-500 text-white font-mono text-xs font-black uppercase tracking-wider">
+                  SKALA Official Cheatsheet
+                </span>
+                <span class="text-xs font-bold text-amber-300 font-mono">kubectl 주요 명령어 & 19대 리소스 약어 대백과</span>
+              </div>
+              <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-white mt-1">
+                ⌨️ kubectl 주요 8대 명령어 & 19대 리소스 단축키(약어) 퀵보드
+              </h2>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-xs font-mono text-xs text-indigo-200 shrink-0 space-y-1">
+              <div class="text-amber-300 font-bold">💡 모든 K8s 리소스 & 약어 전수 보기:</div>
+              <div class="bg-black/40 px-3 py-1.5 rounded-lg text-emerald-400 font-bold select-all flex items-center justify-between gap-2">
+                <span>kubectl api-resources</span>
+                <button @click="copyText('kubectl api-resources')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-copy"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 19 K8s Resource Abbreviations Grid -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="eyebrow text-indigo-300 flex items-center gap-2 font-bold text-xs">
+                <i class="fa-solid fa-bolt text-amber-400"></i> 터미널에서 1초 만에 치는 19대 리소스 약어 (클릭 시 복사)
+              </span>
+              <span class="text-xs text-indigo-300">풀네임 대신 약어를 쓰면 타이핑 속도가 3배 빨라집니다!</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              <div v-for="item in k8sAbbreviationsList" :key="item.resource"
+                   @click="copyText(item.example)"
+                   class="p-3.5 rounded-xl bg-white/5 hover:bg-indigo-600/40 border border-white/10 hover:border-indigo-400 cursor-pointer transition flex flex-col justify-between space-y-2 group shadow-xs">
+                <div class="flex items-center justify-between">
+                  <span class="text-xl">{{ item.emoji }}</span>
+                  <span class="font-mono text-xs font-black px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40 group-hover:bg-amber-400 group-hover:text-slate-950 transition">
+                    {{ item.abbr }}
+                  </span>
+                </div>
+                <div>
+                  <div class="font-bold text-sm text-white group-hover:text-amber-300 transition">{{ item.name }}</div>
+                  <div class="font-mono text-[11px] text-slate-400 truncate">{{ item.resource }}</div>
+                </div>
+                <div class="text-[10px] text-indigo-200 line-clamp-1 pt-1 border-t border-white/10 font-medium">
+                  {{ item.desc }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Master-Worker-Registry Architecture Relay Box (From Image 2 Diagram) -->
+          <div class="p-5 rounded-2xl bg-black/40 border border-indigo-500/30 space-y-3">
+            <span class="eyebrow text-amber-300 font-bold text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-diagram-project"></i> kubectl 명령어가 실제로 클러스터를 움직이는 3단계 흐름도
+            </span>
+            <div class="p-4 rounded-xl bg-slate-950 font-mono text-xs text-sky-300 leading-relaxed overflow-x-auto select-all">
+[ 개발자 터미널: kubectl + YAML ] ──( 1. 명령 전송 )──➔ [ Master Node: API Server ]
+                                                                   │
+                                                                   ▼ ( 2. 스케줄링 & 생성 지시 )
+                                                  [ Worker Node들 (Pod2, Pod3, Pod) ]
+                                                                   │
+                                                                   ▼ ( 3. 리소스 생성 & 이미지 다운 )
+                                                  [ 사내 보안 레지스트리 (Harbor Registry) ]
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 Core kubectl Commands Cards Grid -->
+        <div class="p-8 rounded-3xl bg-white border-2 border-slate-200 space-y-6 shadow-sm">
+          <div class="space-y-1 border-b border-slate-200 pb-4">
+            <span class="eyebrow text-sky-700 font-bold">8 Essential Master Commands</span>
+            <h3 class="text-2xl font-black text-slate-900">☸️ 쿠버네티스 실무 8대 핵심 명령어 완전 정복</h3>
+            <p class="text-sm text-slate-600 font-medium">실제 현업에서 매일 쓰는 8개 명령어의 문법, 필수 옵션(-o wide, -A, --show-labels), 실무 꿀팁</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div v-for="cmd in kubectl8CoreCommands" :key="cmd.num"
+                 class="p-6 sm:p-7 rounded-2xl bg-slate-50 border-2 border-slate-200 hover:border-sky-400 space-y-4 transition shadow-xs flex flex-col justify-between">
+              
+              <div class="space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-7 h-7 rounded-lg bg-sky-600 text-white font-mono font-black text-xs flex items-center justify-center">
+                      {{ cmd.num }}
+                    </span>
+                    <h4 class="text-base sm:text-lg font-black text-slate-900">{{ cmd.title }}</h4>
+                  </div>
+                </div>
+
+                <!-- Command Code Box -->
+                <div class="p-3.5 rounded-xl bg-slate-900 font-mono text-xs sm:text-sm text-amber-300 font-bold flex items-center justify-between gap-2 select-all">
+                  <span class="overflow-x-auto">{{ cmd.cmd }}</span>
+                  <button @click="copyText(cmd.example)" class="text-slate-400 hover:text-white text-xs shrink-0" title="예제 복사">
+                    <i class="fa-solid fa-copy"></i>
+                  </button>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">{{ cmd.desc }}</p>
+
+                <!-- Tips List -->
+                <div class="space-y-1.5 pt-1">
+                  <div v-for="(tip, tIdx) in cmd.tips" :key="tIdx"
+                       class="text-xs text-slate-600 font-medium flex items-start gap-1.5 leading-relaxed">
+                    <span class="text-sky-600 font-bold shrink-0">›</span>
+                    <span v-html="tip"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Example Box -->
+              <div class="pt-3 border-t border-slate-200/80">
+                <div class="flex items-center justify-between text-[11px] text-slate-500 font-bold mb-1">
+                  <span>실전 실행 예시</span>
+                  <span class="text-emerald-700 font-mono">click to copy</span>
+                </div>
+                <div @click="copyText(cmd.example)" class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 font-mono text-xs text-emerald-900 font-bold cursor-pointer hover:bg-emerald-100 transition truncate">
+                  $ {{ cmd.example }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Docker Encyclopedia Section (Original) -->
+        <div class="p-7 rounded-3xl bg-white border-2 border-slate-200 space-y-5 shadow-sm">
           <div class="space-y-1.5 border-b border-slate-200 pb-4">
-            <span class="eyebrow text-sky-700">Deep Encyclopedia</span>
-            <h2 class="font-black text-slate-900 text-2xl">도커 명령어 & Dockerfile 마스터 대백과</h2>
+            <span class="eyebrow text-sky-700">Docker Deep Encyclopedia</span>
+            <h3 class="font-black text-slate-900 text-2xl">🐳 도커 명령어 & Dockerfile 마스터 대백과</h3>
             <p class="text-sm text-slate-600 font-medium">모든 명령어의 어원, 옵션 글자 하나하나의 뜻(-a, -d, -p, -it), 실제 작동 원리, 대표적 실수 처방전</p>
           </div>
 
-          <input type="text" v-model="searchQuery" placeholder="명령어나 키워드 검색 (예: volume, run, compose, scale)..."
+          <input type="text" v-model="searchQuery" placeholder="명령어나 키워드 검색 (예: volume, run, compose, scale, prune)..."
                  class="w-full px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-sky-500 font-medium">
 
           <div class="space-y-4">
@@ -1403,9 +1531,9 @@
             </div>
           </div>
         </div>
-      </div>
 
-    </main>
+      </div>
+</main>
 
     <!-- 5. Floating AI Pet "Docky" Widget (Bright Friendly Pill) -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
@@ -2846,6 +2974,253 @@
     "whyLearn": "단순 명령어를 아는 초보를 넘어, 대형 서비스 장애를 막고 회사 돈을 아껴주는 대체 불가능한 에이스 엔지니어로 완성됩니다."
   }
 ];
+        
+        const k8sAbbreviationsList = [
+  {
+    "resource": "pods",
+    "abbr": "po",
+    "name": "파드",
+    "desc": "가장 작은 실행 단위 (컨테이너 담는 방)",
+    "emoji": "📦",
+    "example": "kubectl get po -n skala-gj4"
+  },
+  {
+    "resource": "deployments",
+    "abbr": "deploy",
+    "name": "디플로이먼트",
+    "desc": "파드 개수 유지 & 무중단 배포/롤백 지휘관",
+    "emoji": "🚀",
+    "example": "kubectl get deploy -n skala-gj4"
+  },
+  {
+    "resource": "services",
+    "abbr": "svc",
+    "name": "서비스",
+    "desc": "변하지 않는 고정 가상 IP & L4 부하 분산",
+    "emoji": "🔌",
+    "example": "kubectl get svc -n skala-gj4"
+  },
+  {
+    "resource": "ingress",
+    "abbr": "ing",
+    "name": "인그레스",
+    "desc": "도메인 주소로 길 찾아주는 L7 스마트 현관문",
+    "emoji": "🚪",
+    "example": "kubectl get ing -n skala-gj4"
+  },
+  {
+    "resource": "namespaces",
+    "abbr": "ns",
+    "name": "네임스페이스",
+    "desc": "우리 반/부서별 격리된 가상 공간",
+    "emoji": "🏷️",
+    "example": "kubectl get ns"
+  },
+  {
+    "resource": "nodes",
+    "abbr": "no / node",
+    "name": "노드",
+    "desc": "실제 일하는 물리/가상 서버 컴퓨터",
+    "emoji": "🖥️",
+    "example": "kubectl get no -o wide"
+  },
+  {
+    "resource": "configmaps",
+    "abbr": "cm",
+    "name": "컨피그맵",
+    "desc": "일반 설정값(포트, 환경변수) 모음집",
+    "emoji": "📄",
+    "example": "kubectl get cm -n skala-gj4"
+  },
+  {
+    "resource": "secrets",
+    "abbr": "secret",
+    "name": "시크릿",
+    "desc": "비밀번호, DB 암호, 사원증(Secret)",
+    "emoji": "🔒",
+    "example": "kubectl get secret -n skala-gj4"
+  },
+  {
+    "resource": "persistentvolumeclaims",
+    "abbr": "pvc",
+    "name": "PVC",
+    "desc": "영구 외장하드 사용 신청서",
+    "emoji": "💾",
+    "example": "kubectl get pvc -n skala-gj4"
+  },
+  {
+    "resource": "persistentvolumes",
+    "abbr": "pv",
+    "name": "PV",
+    "desc": "클러스터에 꽂힌 실제 영구 외장하드",
+    "emoji": "🗄️",
+    "example": "kubectl get pv"
+  },
+  {
+    "resource": "storageclasses",
+    "abbr": "sc",
+    "name": "스토리지클래스",
+    "desc": "외장하드 자동 생성기 (EBS, EFS)",
+    "emoji": "⚙️",
+    "example": "kubectl get sc"
+  },
+  {
+    "resource": "statefulsets",
+    "abbr": "sts",
+    "name": "스테이트풀셋",
+    "desc": "DB처럼 고유 번호(0,1,2)가 필요한 파드 묶음",
+    "emoji": "🏰",
+    "example": "kubectl get sts -n skala-gj4"
+  },
+  {
+    "resource": "daemonsets",
+    "abbr": "ds",
+    "name": "데몬셋",
+    "desc": "모든 컴퓨터마다 무조건 1개씩 뜨는 청소/경비원",
+    "emoji": "🛡️",
+    "example": "kubectl get ds -A"
+  },
+  {
+    "resource": "serviceaccounts",
+    "abbr": "sa",
+    "name": "서비스어카운트",
+    "desc": "파드가 API 서버에 접속할 때 쓰는 신분증",
+    "emoji": "🪪",
+    "example": "kubectl get sa -n skala-gj4"
+  },
+  {
+    "resource": "roles",
+    "abbr": "role",
+    "name": "롤 (권한)",
+    "desc": "우리 반 방 안에서만 통하는 허가증",
+    "emoji": "📜",
+    "example": "kubectl get role -n skala-gj4"
+  },
+  {
+    "resource": "rolebindings",
+    "abbr": "rb",
+    "name": "롤바인딩",
+    "desc": "사람(유저)과 권한(Role)을 이어주는 끈",
+    "emoji": "🔗",
+    "example": "kubectl get rolebinding -n skala-gj4"
+  },
+  {
+    "resource": "clusterrolebindings",
+    "abbr": "crb",
+    "name": "클러스터롤바인딩",
+    "desc": "학교 전체(클러스터)에서 통하는 전역 권한 끈",
+    "emoji": "🌐",
+    "example": "kubectl get clusterrolebinding"
+  },
+  {
+    "resource": "horizontalpodautoscalers",
+    "abbr": "hpa",
+    "name": "HPA (오토스케일러)",
+    "desc": "손님 많아지면 파드를 3대 ➔ 10대로 자동 증설",
+    "emoji": "📈",
+    "example": "kubectl get hpa -n skala-gj4"
+  },
+  {
+    "resource": "jobs / cronjobs",
+    "abbr": "job / cj",
+    "name": "잡 & 크론잡",
+    "desc": "한 번만 실행하고 끝나는 작업 & 정기 스케줄러",
+    "emoji": "⏱️",
+    "example": "kubectl get cj,job -n skala-gj4"
+  }
+];
+        const kubectl8CoreCommands = [
+  {
+    "num": "1",
+    "title": "객체 생성 (선언서 적용)",
+    "cmd": "kubectl apply -f <yaml> [-n <namespace>]",
+    "desc": "YAML 파일의 내용을 읽어 서버에 생성하거나 즉시 수정(Update)합니다.",
+    "tips": [
+      "YAML 변경 후 업데이트할 때도 똑같이 `kubectl apply`를 씁니다.",
+      "과거의 `create`나 `replace` 대신 항상 `apply` 사용을 강력 권장합니다.",
+      "로컬 파일 대신 인터넷 URL 주소(예: `https://.../deploy.yaml`)를 직접 넣어도 됩니다."
+    ],
+    "example": "kubectl apply -f shop-deploy.yaml -n skala-gj4"
+  },
+  {
+    "num": "2",
+    "title": "객체 조회 (상태 목록 보기)",
+    "cmd": "kubectl get <리소스종류> <객체명> [-n <namespace>] [<options>]",
+    "desc": "현재 살아있는 파드, 서비스, 디플로이먼트의 목록과 상태를 한눈에 봅니다.",
+    "tips": [
+      "<code>-o wide</code> : 파드의 실제 IP 주소와 어느 컴퓨터(Node)에 떴는지 상세 정보 확인",
+      "<code>-o yaml</code> : 화면에 뜬 설정을 YAML로 덤프 (<code>-o yaml > backup.yaml</code> 로 저장 후 재활용)",
+      "<code>-A</code> (또는 <code>--all-namespaces</code>) : 모든 방(네임스페이스)의 파드를 한 방에 검색",
+      "<code>--show-labels</code> : 파드에 붙은 라벨 스티커(app=shop)를 함께 표시",
+      "<code>kubectl get all</code> : 현재 방의 파드, 서비스, 디플로이먼트, RS를 몽땅 조회"
+    ],
+    "example": "kubectl get po,svc,deploy -n skala-gj4 -o wide --show-labels"
+  },
+  {
+    "num": "3",
+    "title": "객체 상세 정보 & 사건 기록 보기",
+    "cmd": "kubectl describe <리소스종류> <객체명> [-n <namespace>]",
+    "desc": "파드가 왜 안 뜨는지(ImagePullBackOff, CrashLoopBackOff 등) 맨 아래 'Events(사건 일지)'를 수술합니다.",
+    "tips": [
+      "파드가 빨간 불(Error/Pending)일 때 가장 먼저 쳐야 하는 1순위 진단 명령어입니다."
+    ],
+    "example": "kubectl describe pod shop-g124-7f8d9b -n skala-gj4"
+  },
+  {
+    "num": "4",
+    "title": "실시간 로그 읽기 (Log Read)",
+    "cmd": "kubectl logs -f <pod명> [-c <container명>] [-n <namespace>]",
+    "desc": "파드 안에서 돌아가는 자바(Spring)나 파이썬 프로그램의 실시간 콘솔 출력을 봅니다.",
+    "tips": [
+      "<code>-f</code> (follow) : 새 로그가 올라올 때마다 실시간으로 화면에 스트리밍",
+      "<code>--previous</code> : 파드가 방금 죽고 재부팅되었을 때 '직전에 죽은 녀석의 유언 로그' 보기",
+      "한 파드에 컨테이너가 2개(사이드카) 있을 때는 <code>-c 컨테이너이름</code> 지정 필수"
+    ],
+    "example": "kubectl logs -f deploy/shop-g124 -n skala-gj4 --tail=100"
+  },
+  {
+    "num": "5",
+    "title": "파드 내부로 들어가서 명령 내리기 (Exec)",
+    "cmd": "kubectl exec <pod명> [-n <namespace>] -it -- <명령>",
+    "desc": "실행 중인 파드 방 안으로 직접 SSH처럼 들어가서 쉘 터미널을 열고 디버깅합니다.",
+    "tips": [
+      "<code>kubectl exec <pod> -it -- sh</code> (또는 bash)로 파드 안 터미널에 직접 접속하여 curl 테스트할 때 많이 사용합니다."
+    ],
+    "example": "kubectl exec -it pod/shop-g124-abc -n skala-gj4 -- sh"
+  },
+  {
+    "num": "6",
+    "title": "실시간 실시간 객체 수정 (Edit)",
+    "cmd": "kubectl edit <리소스종류> <객체명>",
+    "desc": "명령을 실행하면 vi 편집기가 열리며, YAML을 고치고 저장(:wq)하면 즉시 클러스터에 실시간 반영됩니다.",
+    "tips": [
+      "임시 긴급 조치 때 유용하지만, Git 설정과 어긋날 수 있으므로 실무에서는 YAML 파일을 고쳐 `kubectl apply`를 권장합니다."
+    ],
+    "example": "kubectl edit deploy shop-g124 -n skala-gj4"
+  },
+  {
+    "num": "7",
+    "title": "객체 삭제 (Delete)",
+    "cmd": "kubectl delete <리소스종류> <객체명> [-n <namespace>]",
+    "desc": "원하지 않는 파드나 서비스를 삭제합니다.",
+    "tips": [
+      "<code>kubectl delete pod --all -n <ns></code> : 해당 방의 파드를 한꺼번에 몽땅 삭제 (디플로이먼트가 있으면 즉시 부활함)",
+      "<code>kubectl delete -f <yaml 또는 url></code> : YAML 파일에 적힌 리소스들을 한 방에 깔끔하게 청소"
+    ],
+    "example": "kubectl delete -f shop-deploy.yaml -n skala-gj4"
+  },
+  {
+    "num": "8",
+    "title": "스케일 조절 (Scale - 대수 늘리기/줄이기)",
+    "cmd": "kubectl scale <워크로드유형> <이름> --replicas={개수}",
+    "desc": "서버 대수를 3대에서 10대로 1초 만에 늘리거나 0대로 줄입니다.",
+    "tips": [
+      "<code>kubectl scale deploy shop-g124 --replicas=5 -n skala-gj4</code>"
+    ],
+    "example": "kubectl scale deploy shop-g124 --replicas=5 -n skala-gj4"
+  }
+];
+
         const curriculumDockerBook = [
   {
     "chapter": "제1장",
@@ -4059,6 +4434,8 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           curriculumDockerBook,
           curriculumK8sBook,
           curriculumLabsMapping,
+          k8sAbbreviationsList,
+          kubectl8CoreCommands,
           curriculumTab: ref('docker'),
           masterStoryboard,
           dockerLabsTrack,
