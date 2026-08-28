@@ -52,8 +52,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Vue 3 CDN -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Vue 3 Local Bundle -->
+  <script src="/js/vue.global.prod.js"></script>
 
   <!-- Prism.js Syntax Highlighting (Bright / Tomorrow Night clean) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -124,6 +124,9 @@
       background: linear-gradient(to right, #7c3aed, #0284c7);
       padding: 1px;
       border-radius: 16px;
+    }
+    [v-cloak] {
+      display: none !important;
     }
   </style>
 </head>
@@ -607,9 +610,6 @@
           </div>
         </div>
 
-      </div>
-
-      
         <!-- TAB 4: COMPUTER SCIENCE & OSI 7 LAYERS -->
         <div v-else-if="curriculumTab === 'osi7'" class="space-y-8">
           <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/30 text-white space-y-4 shadow-md">
