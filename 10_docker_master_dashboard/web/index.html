@@ -1412,44 +1412,213 @@
 
       </div>
 
-      <!-- ========================================================
-           VIEW: LIVE TERMINAL (실시간 터미널)
+            <!-- ========================================================
+           VIEW: COMPUTER SCIENCE & SYSTEM DEEP DIVE (CS 심층 지식관)
            ======================================================== -->
-      <div v-else-if="currentView === 'terminal_live'" class="space-y-6">
-        <div class="p-7 rounded-2xl bg-white border-2 border-slate-200 space-y-5 shadow-sm">
-          <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+      <div v-else-if="currentView === 'cs_knowledge'" class="space-y-8">
+        
+        <!-- Header -->
+        <div class="rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 p-8 sm:p-12 text-white shadow-xl space-y-4 border-2 border-emerald-500/30">
+          <div class="flex items-center gap-2">
+            <span class="eyebrow bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
+              Operating Systems & Computer Networks
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-bold font-mono">
+              비전공자 눈높이 100% CS 지식
+            </span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            🏛️ 컴퓨터 공학(CS) 심층 원리 & 시스템 아키텍처 대백과
+          </h1>
+          <p class="text-base sm:text-lg text-emerald-100 max-w-4xl leading-relaxed font-medium">
+            단순히 컨테이너 명령어를 외우는 것을 넘어, <strong>리눅스 커널의 네임스페이스 6총사, WAS(주방장) vs Web(카운터)의 분업, 택배 배송으로 이해하는 네트워크 OSI 7계층, 쿠버네티스 8대 리소스의 필연적 존재 이유</strong>를 비전공자/중학생 눈높이에서 완벽히 마스터합니다.
+          </p>
+        </div>
+
+        <!-- 1. 리눅스 커널 네임스페이스 6총사 (VR 안대 이야기) -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
-              <span class="eyebrow text-sky-700">Live Daemon Execution</span>
-              <h2 class="font-extrabold text-slate-900 text-xl">실제 Docker 데몬 연동 웹 터미널</h2>
+              <span class="eyebrow text-emerald-800 font-bold">Linux Kernel Namespaces Isolation</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🎭 1. 리눅스 네임스페이스 6총사 — "프로그램에게 씌운 6개의 VR 가상현실 안경"
+              </h2>
             </div>
-            <span class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">실행 시간: {{ terminalResultTime || '대기 중' }}</span>
+            <span class="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-mono text-xs font-bold border border-emerald-300">
+              도커가 VM보다 100배 빠른 핵심 비밀
+            </span>
           </div>
 
-          <!-- Presets -->
-          <div class="flex flex-wrap gap-2">
-            <button v-for="p in quickTerminalPresets" :key="p.cmd"
-                    @click="runPresetCommand(p.cmd)"
-                    class="px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-800 hover:border-sky-300 border border-slate-300 text-xs text-slate-800 font-mono font-bold transition">
-              {{ p.label }}
-            </button>
+          <div class="p-5 rounded-2xl bg-amber-50 border border-amber-300 space-y-2">
+            <span class="eyebrow text-amber-900 font-black flex items-center gap-2 text-xs sm:text-sm">
+              <i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 중학생 1초 핵심 비유: 《영화 트루먼 쇼》
+            </span>
+            <p class="text-sm sm:text-base text-amber-950 font-semibold leading-relaxed">
+              도커 컨테이너는 진짜 컴퓨터를 새로 산 게 아닙니다! 원래 내 컴퓨터에서 돌아가던 평범한 프로그램에게 <strong>리눅스 커널이 6개의 투명 방음 안경(네임스페이스)을 씌워서 "이 세상에 너 혼자 살고 있다"고 완벽하게 속여놓은 눈속임 방</strong>입니다!
+            </p>
           </div>
 
-          <!-- Input -->
-          <div class="flex gap-2.5">
-            <input type="text" v-model="customCommandInput" @keyup.enter="executeLiveCommand(customCommandInput)"
-                   placeholder="실행할 도커 명령어 입력 (예: docker ps, docker volume ls)..."
-                   class="flex-1 px-4 py-3 rounded-xl bg-slate-50 border-2 border-slate-300 text-slate-900 font-mono text-sm focus:outline-none focus:border-sky-500 font-bold">
-            <button @click="executeLiveCommand(customCommandInput)"
-                    class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-sm transition shadow-sm">
-              실행
-            </button>
-          </div>
+          <!-- 6 Namespaces Cards Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">🪪</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800">PID Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">1. 주민등록번호 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                실제로는 14,208번째 프로그램이지만, 안경을 쓰면 다른 프로그램이 안 보여서 <strong>"내가 1번 대장이다!"</strong>라고 믿습니다. 다른 프로그램을 실수로 강제 종료(kill)시키는 사고를 원천 방지합니다.
+              </p>
+            </div>
 
-          <!-- Console Output -->
-          <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 font-mono text-xs sm:text-sm text-emerald-400 min-h-[16rem] max-h-96 overflow-y-auto whitespace-pre-wrap select-all leading-relaxed">
-{{ terminalOutput || '터미널 명령어를 실행하면 실제 로컬 Docker 데몬의 출력이 여기에 나타납니다.' }}
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">☎️</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">NET Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">2. 전용 전화선 & 포트 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                프로그램마다 <strong>자기만의 가상 랜카드와 전용 사설 IP</strong>가 따로 지급됩니다. 같은 컴퓨터에서 스프링 서버 10대가 똑같이 <code>8080</code> 포트를 써도 전혀 충돌하지 않습니다.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">📁</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">MNT Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">3. 내 서랍장만 보이는 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                호스트 컴퓨터의 C드라이브가 안 보이고, <strong>자신에게 허락된 폴더(/app)만 전체 세상인 것처럼</strong> 보입니다. 해커가 침투해도 서버 비밀 파일(/etc/shadow)을 훔쳐볼 수 없습니다.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">🍪</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">IPC Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">4. 식탁 공유 차단 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                다른 프로그램이 내 메모리 공간(식탁 위의 과자)을 훔쳐먹거나 간섭하지 못하도록 <strong>프로세스 간 메모리 통로(공유 메모리/세마포어)를 완벽 차단</strong>합니다.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">🏷️</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">UTS Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">5. 컴퓨터 이름표 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                내 컴퓨터의 진짜 이름이 <code>MacBook-Pro</code>여도, 컨테이너는 자기 이름이 <code>shop-backend-01</code>이라고 믿고 고유한 호스트명을 독립적으로 유지합니다.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl">👑</span>
+                <span class="font-mono text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">USER Namespace</span>
+              </div>
+              <h4 class="font-black text-slate-900 text-base">6. 가짜 왕관 안경</h4>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                컨테이너 안에서는 <strong>최고 관리자(root)</strong> 행세를 하지만, 컴퓨터 밖으로 나오면 <strong>일반 평민(nobody)</strong>으로 취급되어 호스트 시스템 파괴를 원천 방어합니다.
+              </p>
+            </div>
           </div>
         </div>
+
+        <!-- 2. WAS(웹 애플리케이션 서버) vs Web Server vs DB 3-Tier 아키텍처 -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-sky-400 shadow-md space-y-6 transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <span class="eyebrow text-sky-800 font-bold">3-Tier Enterprise Architecture</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🍳 2. WAS(웹 애플리케이션 서버)의 본질 — "식당 카운터 vs 주방장 vs 식자재 창고"
+              </h2>
+            </div>
+            <span class="px-3.5 py-1 rounded-full bg-sky-100 text-sky-900 font-mono text-xs font-bold border border-sky-300">
+              Spring Boot & Nginx 분업의 원리
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Web Server -->
+            <div class="p-6 rounded-2xl bg-sky-50/80 border-2 border-sky-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">🏢</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-sky-200 text-sky-900 text-xs font-mono font-black">Nginx / Apache</span>
+              </div>
+              <h3 class="text-lg font-black text-sky-950">1. Web Server (카운터 알바)</h3>
+              <p class="text-xs sm:text-sm text-sky-900 font-medium leading-relaxed">
+                <strong>정적(Static) 파일 전담:</strong> 메뉴판 사진, 가게 간판, 인테리어(HTML, CSS, JS, 이미지)를 손님에게 0.001초 만에 빛의 속도로 건넵니다. 복잡한 계산이나 요리는 못 합니다.
+              </p>
+            </div>
+
+            <!-- WAS -->
+            <div class="p-6 rounded-2xl bg-indigo-50/80 border-2 border-indigo-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">👨‍🍳</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-200 text-indigo-900 text-xs font-mono font-black">Spring Boot / Tomcat</span>
+              </div>
+              <h3 class="text-lg font-black text-indigo-950">2. WAS (진짜 두뇌 주방장) 🌟</h3>
+              <p class="text-xs sm:text-sm text-indigo-900 font-medium leading-relaxed">
+                <strong>동적(Dynamic) 로직 전담:</strong> 프로그래머가 짠 진짜 자바 코드가 돌아가는 곳입니다. 손님마다 다른 로그인 비밀번호 검사, 장바구니 할인율 계산, 결제 승인을 실시간으로 요리합니다.
+              </p>
+            </div>
+
+            <!-- DB -->
+            <div class="p-6 rounded-2xl bg-emerald-50/80 border-2 border-emerald-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl">❄️</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-xs font-mono font-black">PostgreSQL / MariaDB</span>
+              </div>
+              <h3 class="text-lg font-black text-emerald-950">3. DB (식자재 냉장고 & 금고)</h3>
+              <p class="text-xs sm:text-sm text-emerald-900 font-medium leading-relaxed">
+                <strong>영구 데이터 보관:</strong> 회원 명부, 잔여 포인트, 통장 잔고, 상품 재고를 안전하게 저장합니다. 주방장(WAS)이 SQL 주문서를 보낼 때만 문을 열어 데이터를 건넵니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 컴퓨터 네트워크 OSI 7계층 & 쿠팡 택배 배송 7단계 -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-purple-400 shadow-md space-y-6 transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <span class="eyebrow text-purple-800 font-bold">OSI 7 Layers Network Stack</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                📦 3. 네트워크 OSI 7계층 — "쿠팡 택배 배송 7단계와 K8s 실전 매핑"
+              </h2>
+            </div>
+            <span class="px-3.5 py-1 rounded-full bg-purple-100 text-purple-900 font-mono text-xs font-bold border border-purple-300">
+              택배 상자가 포장되어 전달되는 과정
+            </span>
+          </div>
+
+          <div class="space-y-4">
+            <div v-for="(layer, lIdx) in osi7LayersData" :key="lIdx"
+                 class="p-5 sm:p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 hover:border-purple-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition shadow-xs">
+              <div class="space-y-1 max-w-2xl">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-2xl">{{ layer.emoji }}</span>
+                  <h4 class="text-base sm:text-lg font-black text-slate-900">{{ layer.layer }}</h4>
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">{{ layer.protocol }}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-amber-900 font-semibold leading-relaxed">
+                  💡 <strong>1초 비유:</strong> {{ layer.metaphor }}
+                </p>
+                <p class="text-xs text-slate-600 font-medium leading-relaxed">
+                  🔬 <strong>시스템 원리:</strong> {{ layer.csPrinciple }}
+                </p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-semibold text-indigo-950 max-w-md shrink-0 space-y-1">
+                <span class="eyebrow text-indigo-800 block text-[10px]">☸️ K8s 실전 구현체</span>
+                <span v-html="layer.k8sRole"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- ========================================================
@@ -1620,7 +1789,7 @@
                  class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-4 hover:border-sky-300 transition shadow-xs">
               <div class="flex items-center justify-between">
                 <span class="font-mono text-sm font-extrabold text-sky-800 bg-sky-100 px-3 py-1.5 rounded-lg border border-sky-200">{{ item.cmd }}</span>
-                <button @click="executeLiveCommand(item.cmd)" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs">실제 실행</button>
+                <button @click="copyText(item.cmd)" class="px-3 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold shadow-xs transition flex items-center gap-1.5"><i class="fa-solid fa-copy"></i> 복사</button>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div class="space-y-1"><strong class="text-slate-900 font-bold">기능 & 왜 쓰는가?</strong><p class="text-slate-700 leading-relaxed font-medium" v-html="item.desc"></p></div>
@@ -1764,7 +1933,7 @@
           { id: 'docker_track', title: '🐳 도커 마스터 (10대 실습)', icon: 'fa-brands fa-docker', color: '#0284c7' },
           { id: 'k8s_master', title: '☸️ 쿠버네티스 실전 (20대 실습)', icon: 'fa-solid fa-dharmachakra', color: '#7c3aed' },
           { id: 'roadmap', title: '🗺️ 전체 로드맵', icon: 'fa-solid fa-route', color: '#0284c7' },
-          { id: 'terminal_live', title: '🖥️ 웹 터미널 실행기', icon: 'fa-solid fa-terminal', color: '#059669' },
+          { id: 'cs_knowledge', title: '🏛️ 컴퓨터 공학(CS) 심층 지식관', icon: 'fa-solid fa-microchip', color: '#059669' },
           { id: 'ebooks', title: '📚 16대 전자책 도서관', icon: 'fa-solid fa-book-bookmark', color: '#d97706' },
           { id: 'cheatsheet', title: '📖 단축키 대백과', icon: 'fa-solid fa-book', color: '#0891b2' }
         ];
