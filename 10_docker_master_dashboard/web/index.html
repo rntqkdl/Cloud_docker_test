@@ -373,7 +373,7 @@
           </div>
         </div>
 
-        <!-- 3-Book Tab Switcher -->
+        <!-- 4-Book & CS Tab Switcher -->
         <div class="flex items-center gap-3 border-b-2 border-slate-200 pb-3 overflow-x-auto">
           <button @click="curriculumTab = 'docker'"
                   :class="curriculumTab === 'docker' ? 'bg-sky-600 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold'"
@@ -393,7 +393,14 @@
                   :class="curriculumTab === 'labs' ? 'bg-emerald-600 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold'"
                   class="px-5 py-3 rounded-xl text-sm sm:text-base transition flex items-center gap-2.5 shrink-0">
             <i class="fa-solid fa-map-location-dot text-lg"></i>
-            <span>📗 3권: 실습 교재 전체 흐름도 연계 맵 (33쪽)</span>
+            <span>📗 3권: 실습 연계 맵 (33쪽)</span>
+          </button>
+
+          <button @click="curriculumTab = 'osi7'"
+                  :class="curriculumTab === 'osi7' ? 'bg-indigo-700 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-indigo-800 border border-indigo-300 font-bold'"
+                  class="px-5 py-3 rounded-xl text-sm sm:text-base transition flex items-center gap-2.5 shrink-0">
+            <i class="fa-solid fa-network-wired text-lg"></i>
+            <span>🌐 4관: 컴퓨터 공학 & 네트워크 OSI 7계층 실전 완전정복관</span>
           </button>
         </div>
 
@@ -596,6 +603,77 @@
               <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs text-slate-800 leading-relaxed">
                 {{ map.mapping }}
               </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      
+        <!-- TAB 4: COMPUTER SCIENCE & OSI 7 LAYERS -->
+        <div v-else-if="curriculumTab === 'osi7'" class="space-y-8">
+          <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/30 text-white space-y-4 shadow-md">
+            <div class="flex items-center gap-2">
+              <span class="eyebrow bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
+                Computer Network Architecture
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-bold font-mono">
+                OSI 7계층 ➔ 도커/쿠버네티스 1대1 매핑
+              </span>
+            </div>
+            <h3 class="text-2xl sm:text-4xl font-black tracking-tight">
+              🌐 컴퓨터 네트워크 OSI 7계층 & 쿠버네티스 실전 연계 대백과
+            </h3>
+            <p class="text-sm sm:text-base text-indigo-200 max-w-4xl leading-relaxed font-medium">
+              비전공자도 1초 만에 이해하는 <strong>택배 배송 7단계 비유</strong>부터 리눅스 커널의 <code>veth pair</code>, <code>iptables L4 DNAT</code>, <code>Ingress L7 라우팅</code>까지 컴퓨터 공학 지식을 마스터합니다.
+            </p>
+          </div>
+
+          <!-- OSI 7 Layers Cards Grid -->
+          <div class="space-y-6">
+            <div v-for="(layer, lIdx) in osi7LayersData" :key="lIdx"
+                 class="p-7 sm:p-8 rounded-3xl bg-white border-2 border-slate-200 hover:border-indigo-400 space-y-5 shadow-sm transition">
+              
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+                <div class="flex items-center gap-3">
+                  <span class="text-3xl">{{ layer.emoji }}</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">{{ layer.layer }}</h4>
+                    <span class="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200 mt-1 inline-block">
+                      주요 프로토콜: {{ layer.protocol }}
+                    </span>
+                  </div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 font-mono text-xs text-amber-300 font-bold select-all shrink-0">
+                  {{ layer.example }}
+                </div>
+              </div>
+
+              <!-- 1-sec Metaphor -->
+              <div class="p-4 rounded-xl bg-amber-50 border border-amber-300 space-y-1.5">
+                <span class="eyebrow text-amber-900 flex items-center gap-1.5 font-bold text-xs">
+                  <i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 중학생 1초 일상 비유
+                </span>
+                <p class="text-xs sm:text-sm font-semibold text-amber-950 leading-relaxed">{{ layer.metaphor }}</p>
+              </div>
+
+              <!-- CS Principle & K8s Role 2-Column Grid -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                  <span class="eyebrow text-slate-700 font-bold flex items-center gap-1.5 text-xs">
+                    <i class="fa-solid fa-microchip text-slate-600"></i> 🔬 컴퓨터 공학(CS) 시스템 원리
+                  </span>
+                  <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">{{ layer.csPrinciple }}</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-indigo-50/70 border border-indigo-200 space-y-2">
+                  <span class="eyebrow text-indigo-800 font-bold flex items-center gap-1.5 text-xs">
+                    <i class="fa-solid fa-dharmachakra text-indigo-600"></i> ☸️ 도커 / 쿠버네티스 실전 구현체
+                  </span>
+                  <p class="text-xs sm:text-sm text-indigo-950 leading-relaxed font-medium" v-html="layer.k8sRole"></p>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -3015,6 +3093,72 @@
     "whyLearn": "단순 명령어를 아는 초보를 넘어, 대형 서비스 장애를 막고 회사 돈을 아껴주는 대체 불가능한 에이스 엔지니어로 완성됩니다."
   }
 ];
+        
+        const osi7LayersData = [
+  {
+    "layer": "7계층: 응용 계층 (Application Layer)",
+    "protocol": "HTTP, HTTPS, gRPC, DNS, WebSocket",
+    "emoji": "🌐",
+    "metaphor": "손님이 식당 카운터에서 \"짜장면 1그릇 주세요\"라고 주문하는 최종 대화 언어",
+    "csPrinciple": "사용자 또는 소프트웨어 프로세스가 네트워크와 직접 상호작용하여 데이터를 생성하고 소비하는 최상위 소프트웨어 계층.",
+    "k8sRole": "🌐 Ingress (Nginx / ALB): Host 헤더(shop.skala-gj.com)와 URL 경로(/api)를 읽어서 내부 Service로 길을 찾아주는 L7 스마트 안내소. CoreDNS 도메인 해석.",
+    "example": "curl http://skala-gj4-shop.skala-gj.com/api/info"
+  },
+  {
+    "layer": "6계층: 표현 계층 (Presentation Layer)",
+    "protocol": "TLS/SSL, JSON, UTF-8, Base64, gzip, brotli",
+    "emoji": "🔒",
+    "metaphor": "외국인 손님과 대화하기 위해 한국어로 번역하고, 편지를 암호문으로 포장하는 번역가",
+    "csPrinciple": "서로 다른 컴퓨터 시스템 간에 데이터 형식의 차이를 변환(Encoding/Decoding), 보안 암호화(Encryption), 데이터 압축(Compression)하는 계층.",
+    "k8sRole": "🔑 Secret (Base64 인코딩 및 etcd KMS 저장 암호화), Ingress TLS 인증서 종단(HTTPS SSL Termination), Spring Boot JSON 직렬화.",
+    "example": "echo \"cGFzc3dvcmQ=\" | base64 -d"
+  },
+  {
+    "layer": "5계층: 세션 계층 (Session Layer)",
+    "protocol": "TCP Session, TLS Session, Keep-Alive, RPC",
+    "emoji": "⏱️",
+    "metaphor": "전화 통화가 중간에 안 끊기게 연결을 유지하고, 통화가 다 끝나면 \"안녕히 계세요\" 하고 끊는 통화 매니저",
+    "csPrinciple": "양 끝단의 응용 프로세스 간에 세션(대화 통로)을 수립(Establish), 유지(Maintain), 동기화하고 안전하게 종료(Terminate)하는 계층.",
+    "k8sRole": "⏳ Graceful Shutdown: 파드 종료 시 preStop 훅(sleep 5)과 SIGTERM 신호로 기존에 연결된 결제/HTTP 세션이 완료될 때까지 40초간 대기 후 안전 종료.",
+    "example": "terminationGracePeriodSeconds: 40"
+  },
+  {
+    "layer": "4계층: 전송 계층 (Transport Layer)",
+    "protocol": "TCP (신뢰성 3-Way Handshake / 포트), UDP (고속 패킷)",
+    "emoji": "🔌",
+    "metaphor": "아파트 몇 호(포트 번호 8080)로 갈지 방 번호를 적고, 편지가 찢어지면 다시 보내주는 등기우편",
+    "csPrinciple": "종단 간(End-to-End) 프로세스 간의 신뢰성 있는 데이터 전송(TCP 흐름 제어, 혼잡 제어, 패킷 순서 보장)과 포트(Port) 멀티플렉싱을 담당.",
+    "k8sRole": "⚡ Service (ClusterIP, NodePort, LoadBalancer): 리눅스 커널 iptables/IPVS를 통해 80번 포트로 들어온 TCP 트래픽을 파드 8080 포트로 나노초 단위 L4 로드밸런싱.",
+    "example": "kubectl get svc shop-g124 (Port: 80/TCP -> 8080)"
+  },
+  {
+    "layer": "3계층: 네트워크 계층 (Network Layer)",
+    "protocol": "IP (IPv4, IPv6), ICMP (ping), 패킷 라우팅",
+    "emoji": "🗺️",
+    "metaphor": "전 세계 어디로 갈지 도시 우편번호와 아파트 주소(IP 주소)를 적어 길을 찾아주는 내비게이션",
+    "csPrinciple": "서로 다른 네트워크 망 간에 패킷(Packet)을 최적의 경로로 라우팅하고 논리적 IP 주소를 부여하여 목적지 호스트까지 전달.",
+    "k8sRole": "📡 CNI (Container Network Interface - AWS VPC CNI, Calico): 모든 파드마다 유일한 사설 IP(192.168.x.x)를 부여하고, 노드 간 오버레이 터널링(VXLAN) 라우팅 수행.",
+    "example": "kubectl get pod -o wide (Pod IP: 192.168.116.188)"
+  },
+  {
+    "layer": "2계층: 데이터 링크 계층 (Data Link Layer)",
+    "protocol": "Ethernet, MAC 주소, ARP, VLAN, 가상 브릿지",
+    "emoji": "🌉",
+    "metaphor": "같은 아파트 복도 안에서 옆집에 물건을 직접 손으로 건네주는 물리적 이름표(MAC 주소)",
+    "csPrinciple": "동일한 로컬 네트워크(LAN) 상의 물리적 인접 장비 간에 프레임(Frame) 전송, 물리 MAC 주소 식별, 오류 검출(CRC) 및 스위칭을 담당.",
+    "k8sRole": "🔗 docker0 브릿지 & veth pair (가상 이더넷 페어): 컨테이너 내부 eth0과 호스트 OS를 연결하는 양방향 가상 랜선 파이프. ARP 브로드캐스트 통신.",
+    "example": "ip link show veth... (가상 이더넷 페어)"
+  },
+  {
+    "layer": "1계층: 물리 계층 (Physical Layer)",
+    "protocol": "광케이블, UTP 랜선, 전기 신호, 전압, 광 펄스",
+    "emoji": "🖥️",
+    "metaphor": "편지와 사람이 실제로 지나다니는 아스팔트 도로와 전봇대 전선 그 자체",
+    "csPrinciple": "디지털 0과 1의 비트열을 물리 매체(구리선, 광섬유, 무선 전파)를 통해 전기적/광학적 신호로 변환하여 물리적으로 전송하는 최하위 계층.",
+    "k8sRole": "🏗️ 실제 워커 노드 물리 서버: AWS 데이터센터에 꽂혀있는 EC2 쇳덩이 컴퓨터, 100Gbps 고속 물리 광케이블 네트워크 카드, CPU/RAM 반도체.",
+    "example": "AWS Nitro 시스템 & 100Gbps 물리 네트워크 인터페이스"
+  }
+];
         const curriculumDockerBook = [
   {
     "chapter": "제1장",
@@ -3024,6 +3168,11 @@
     "coreQuestion": "도커는 어떻게 내 컴퓨터 안에 가상의 투명 방음 유리방을 만드는가?",
     "metaphor": "친구 1명을 재우려고 10층짜리 호텔 건물 전체(가상머신 VM)를 새로 짓는 것은 바보 같은 짓입니다. 이미 튼튼하게 지어진 큰 아파트(호스트 커널)의 방 하나에 방음벽(Namespace)을 치고 에어컨 사용량(cgroups)만 딱 정해줘서 0.05초 만에 입주시키는 것이 바로 도커입니다.",
     "narrative": "가상머신(VM)은 윈도우나 우분투 같은 무거운 운영체제를 통째로 새로 켜느라 켜지는 데 3분이 걸리고 컴퓨터 메모리를 4GB씩 낭비합니다. 하지만 <strong>도커(Docker)</strong>는 새로운 컴퓨터를 만드는 게 아니라, <strong>리눅스 커널에 원래 있던 방음벽 기술(네임스페이스)</strong>로 프로세스의 눈을 가려 '너 혼자 이 컴퓨터를 쓰고 있다'고 속여서 0.05초 만에 켜지는 초고속 투명 방입니다.",
+    "csDeepDive": {
+      "topic": "Linux Kernel Namespace (VR 안대) & cgroups (자원 계량기)",
+      "csPrinciple": "리눅스 커널 시스템 콜 `clone(CLONE_NEWPID | CLONE_NEWNET | CLONE_NEWNS)`를 호출하여 프로세스의 뷰(View)를 격리. `cgroups` 서브시스템을 통해 `/sys/fs/cgroup/memory`에 물리 메모리 한계치(Limit)를 강제.",
+      "metaphor": "프로그램에게 '세상에 나 혼자 산다'는 VR 안경(Namespace)을 씌우고, 밥을 최대 512MB만 먹으라는 배식 제한표(cgroups)를 붙인 것."
+    },
     "diagram": "[ 내 컴퓨터 (호스트 리눅스 커널) ]\n  ├── 방음벽 1 (PID 네임스페이스) ➔ \"내 방 안에서는 내가 1번 대장이다!\"\n  ├── 방음벽 2 (NET 네임스페이스) ➔ 컨테이너 전용 가상 랜카드와 방 번호(포트) 부여\n  ├── 방음벽 3 (MNT 네임스페이스) ➔ 다른 사람의 폴더를 훔쳐보지 못하게 격리\n  └── 자원 계량기 (cgroups)      ➔ \"너는 메모리 512MB 넘기면 얄짤없이 꺼진다!\"\n        └── [ 도커 컨테이너 = 메모리 낭비 0%의 초고속 격리 프로그램! ]",
     "terms": [
       {
@@ -3046,6 +3195,11 @@
     "coreQuestion": "100개의 컨테이너를 띄워도 왜 하드디스크 용량이 100배로 늘어나지 않을까?",
     "metaphor": "포토샵에서 [배경 필름 + 캐릭터 필름 + 글씨 필름] 3장을 투명하게 겹쳐서 하나의 완성된 그림을 보듯, 도커도 기본 부품들을 투명 필름처럼 겹쳐놓고 맨 위에 종이 한 장 두께의 메모장만 얹어서 씁니다.",
     "narrative": "도커 이미지는 수정할 수 없는 단단한 <strong>읽기 전용(Read-Only) 투명 필름들의 탑</strong>입니다. 같은 Nginx 이미지를 쓰는 컨테이너가 100대 떠도, 무거운 5MB 기본 OS와 137MB 자바 부품은 1개만 딱 저장해 두고 100대가 다 함께 공유합니다. 그리고 각 컨테이너는 맨 위에 깃털처럼 가벼운 <strong>쓰기 메모장(Copy-on-Write)</strong>만 얹어서 쓰기 때문에 하드디스크가 1도 낭비되지 않습니다.",
+    "csDeepDive": {
+      "topic": "Overlay2 Union Mount & Copy-on-Write (CoW)",
+      "csPrinciple": "여러 읽기 전용 계층(`lowerdir`)을 가상으로 하나의 마운트 포인트로 합치고, 변경 발생 시에만 상위 쓰기 계층(`upperdir`)으로 블록을 복사(CoW)하는 파일시스템 추상화.",
+      "metaphor": "도서관 책(lowerdir) 원본은 건드리지 않고, 수정하고 싶은 페이지만 복사기(CoW)로 복사해 와서 내 메모장(upperdir)에서 고치는 것."
+    },
     "diagram": "[ 컨테이너 1번 메모장 (1MB) ]   [ 컨테이너 2번 메모장 (2MB) ]  <-- 각자 자기가 바꾼 파일만 적음\n────────────────────────────────────────────────────────────────────────\n[ 3층 필름: 내 자바 프로그램 (15MB) ]    <-- 수정 불가! (100개 컨테이너가 100% 함께 공유)\n[ 2층 필름: 자바 실행기 JRE (137MB) ]    <-- 수정 불가! (100개 컨테이너가 100% 함께 공유)\n[ 1층 필름: 초미니 리눅스 OS (5MB) ]     <-- 수정 불가! (100개 컨테이너가 100% 함께 공유)\n────────────────────────────────────────────────────────────────────────\n[ 내 컴퓨터 하드디스크 드라이버가 위에서 아래로 겹쳐서 하나의 완성된 방으로 보여줌! ]",
     "terms": [
       {
@@ -3068,6 +3222,11 @@
     "coreQuestion": "Web서버와 DB서버는 어떻게 사설망 안에서 안전하게 통신하고 도둑을 막는가?",
     "metaphor": "아파트 정문 로비에만 배달 기사님이 누르는 인터폰(-p 8080:80)을 달아두고, 집 안의 방들(Web, WAS, DB) 사이에는 외부 도로에서는 보이지 않는 우리 가족 전용 비밀 인터폰 선을 깔아 통신하는 것입니다.",
     "narrative": "도커는 컨테이너마다 가상의 랜카드를 꽂아주고 내부 전용 통신선(네트워크)으로 묶어줍니다. 우리가 만든 사설 네트워크(`skala-study-net`) 안에서는 복잡한 숫자 IP 주소를 외울 필요 없이 <strong>컨테이너 이름(`study-db`)</strong>만 부르면 도커의 내장 전화번호부(DNS)가 0.001초 만에 연결해 줍니다. 특히 소중한 고객 데이터가 담긴 DB 컨테이너에는 외부 출입문(`-p`)을 아예 안 뚫어서 해커가 접근조차 못 하게 원천 차단합니다.",
+    "csDeepDive": {
+      "topic": "veth pair (가상 이더넷) & Linux Bridge & Embedded DNS",
+      "csPrinciple": "호스트 OS에 가상 스위치(`docker0` 브릿지)를 생성하고, 양 끝단이 연결된 가상 파이프(`veth pair`)의 한쪽은 컨테이너(`eth0`), 다른 쪽은 브릿지에 연결. `127.0.0.11` 도커 내장 DNS로 이름 해석.",
+      "metaphor": "종이컵 두 개를 실로 연결한 실전화기(veth pair)로 컨테이너와 호스트가 직접 대화하는 것."
+    },
     "diagram": "[ 외부 공용 도로 (인터넷) ] ──( -p 8080:80 정문 인터폰 통과 )──┐\n                                                              │\n┌──────────────────────── [ 우리 집 내부 전용선: skala-study-net ] ─▼──────┐\n│  [ 웹서버: Nginx (80) ] ──( 전화번호부: \"study-was\" )──➔ [ WAS 서버: Spring ] │\n│                                                                  │        │\n│  [ DB 서버: Postgres (5432) ] ◀──( 외부 출입문 없음 / 내부에서만 대화 )──┘        │\n└───────────────────────────────────────────────────────────────────────────┘",
     "terms": [
       {
@@ -3090,6 +3249,11 @@
     "coreQuestion": "컨테이너를 폭파하고 다시 띄워도 내 게임 세이브 데이터는 어디에 살아있는가?",
     "metaphor": "컨테이너는 전원이 꺼지면 기억을 싹 잃어버리는 일회용 냄비입니다. 볼륨(-v)은 냄비 바닥에 구멍을 뚫어 내 컴퓨터의 튼튼한 '외장 하드디스크 보물상자'에 데이터를 실시간 기록하는 장치입니다.",
     "narrative": "컨테이너 내부 쓰기 메모장에 적힌 파일은 컨테이너를 삭제(`docker rm`)하는 순간 불꽃놀이처럼 영원히 사라집니다. 웹 화면이나 WAS처럼 데이터 저장이 필요 없는 프로그램은 언제든 죽이고 새로 만들 수 있게 가볍게 두고(Stateless), 고객 결제 장부나 회원 명부처럼 절대 날아가면 안 되는 DB는 내 컴퓨터 하드디스크에 연결된 <strong>도커 볼륨(`-v mariadb-data:/var/lib/mysql`)</strong>에 영구 보존합니다.",
+    "csDeepDive": {
+      "topic": "Linux VFS (가상 파일시스템) & Bind Mount",
+      "csPrinciple": "호스트의 물리 경로(`/var/lib/docker/volumes/...`)를 컨테이너의 특정 디렉토리(`/var/lib/mysql`)에 `mount --bind` 시스템 콜로 결합하여 OverlayFS를 우회(Bypass)하고 호스트 네이티브 I/O 성능 제공.",
+      "metaphor": "일회용 종이컵 바닥에 구멍을 뚫고 튼튼한 쇠 파이프를 지하 금고에 연결해 둔 것."
+    },
     "diagram": "[ 일회용 DB 컨테이너 ] ──( docker rm -f 폭파 명령! )──➔ 컨테이너 완전 소멸 💥\n          │\n          ▼ (실시간 자동 복제: -v mariadb-data:/var/lib/mysql)\n[ 도커 볼륨 (외장 하드 보물상자) ] ──➔ 내 컴퓨터 디스크에 영구 보존 🛡️ (데이터 유실 0%!)\n          ▲\n          │ (새 DB 컨테이너 켤 때 동일한 보물상자 연결)\n[ 새로 부활한 DB 컨테이너 ] ──────────➔ 이전 고객 결제 장부 100% 그대로 즉시 복구! ✨",
     "terms": [
       {
@@ -3112,6 +3276,11 @@
     "coreQuestion": "회사 기밀 코드가 담긴 도커 이미지를 어떻게 사내망에서 안전하게 공유하는가?",
     "metaphor": "회사에서 만든 극비 신제품 밀키트를 누구나 들어오는 동네 마트에 진열하지 않고, 사원증을 찍어야만 들어갈 수 있는 '사내 전용 중앙 물류센터(Harbor)'에 입고하여 통제하는 것입니다.",
     "narrative": "공개 도커 허브(Docker Hub)에 이미지를 올리면 전 세계 누구나 우리 회사 소스코드를 다운받아 볼 수 있습니다. <strong>Harbor(하버)</strong>는 사내 폐쇄망에 구축하는 기업 전용 보안 창고로, 사원증(Secret)이 있는 사람만 들어오게 하고 이미지에 바이러스(CVE 취약점)가 없는지 자동으로 검사합니다. 또한 맥북(ARM 칩)에서 이미지를 만들 때는 EKS 클라우드 서버(인텔/AMD 칩)에서 뻗지 않도록 `--platform linux/amd64`로 규격을 맞춰 구워줘야 합니다.",
+    "csDeepDive": {
+      "topic": "CPU 아키텍처 ABI (ARM vs x86_64) & QEMU 크로스 에뮬레이션",
+      "csPrinciple": "CPU 명령어 세트(Instruction Set)가 다르면 바이너리 호환성(ABI)이 깨져 `exec format error` 발생. Docker Buildx는 QEMU 바이너리 변환기를 통해 호스트가 ARM이어도 x86_64 ELF 바이너리로 에뮬레이션 빌드.",
+      "metaphor": "한국어만 아는 로봇(ARM)에게 미국어 책(x86)을 주면 고장 나므로, 번역기(buildx)를 돌려 미국어 책으로 번역해 주는 것."
+    },
     "diagram": "[ 개발자 맥북 (M시리즈 칩) ]\n  └── docker buildx build --platform linux/amd64 -t harbor.skala-gj.com/skala-gj4/shop:1.0.0 --push .\n        │ (사원증 찍고 입고!)\n        ▼\n┌────────────────── [ 사내 보안 창고: Harbor ] ──────────────────────┐\n│  • 우리 반(skala-gj4) 전용 창고로 다른 반 침입 차단                   │\n│  • 악성코드 및 보안 구멍 자동 검사 (Trivy 스캐너)                    │\n└──────────────────────────────┬──────────────────────────────────────┘\n                               │ (전자 열쇠 imagePullSecrets 로 안전하게 꺼내기)\n                               ▼\n                    [ AWS EKS 클라우드 서버 컴퓨터들 ]",
     "terms": [
       {
@@ -3134,6 +3303,11 @@
     "coreQuestion": "명령어 10줄을 치지 않고 compose.yaml 한 장으로 3대 서버를 1초 만에 띄우는 법",
     "metaphor": "라면을 끓일 때 물이 끓기도 전에 면을 넣으면 설익듯이, DB가 켜지기도 전에 WAS 서버를 켜면 에러가 납니다. Compose는 완벽한 순서가 적힌 '오케스트라 악보' 한 장으로 모든 서버를 찰떡궁합 타이밍에 켜줍니다.",
     "narrative": "Web, WAS, DB 3대 서버를 사람이 터미널에서 하나씩 손으로 켜면 반드시 실수가 생깁니다. `Docker Compose`는 'DB가 완전히 켜져서 준비가 끝날 때까지 기다렸다가(`healthcheck`), 그 다음에 WAS를 켜라(`depends_on`)'라는 규칙을 YAML 문서 한 장에 적어두고, `docker compose up -d` 명령어 딱 한 줄로 3대 서버를 1초 만에 완전 자동 가동합니다.",
+    "csDeepDive": {
+      "topic": "DAG (방향성 비순환 그래프) 기반 의존성 오케스트레이션",
+      "csPrinciple": "서비스 간의 `depends_on` 관계를 DAG 자료구조로 모델링하여 기동 순서 결정. `healthcheck` 주기적 프로빙(TCP 소켓, 프로세스 종료 코드)으로 Liveness를 감지한 뒤 후속 컨테이너 Fork/Exec.",
+      "metaphor": "도미노를 차례대로 쓰러뜨리듯, 앞 도미노가 완벽히 쓰러졌는지 센서로 확인하고 다음 도미노를 건드리는 스마트 기계."
+    },
     "diagram": "[ compose.yaml 오케스트라 악보 ]\n  ├── 1. db:     postgres (healthcheck: \"나 진짜 준비 끝났어!\" 신호 보냄)\n  ├── 2. was:    spring   (depends_on: db가 준비 끝날 때까지 자동 대기하다가 쨘! 켜짐)\n  └── 3. web:    nginx    (depends_on: was가 켜지면 마지막으로 손님 대문 오픈!)\n        │\n        ▼ (docker compose up -d 실행)\n[ 3대 서버가 1초의 오차도 없이 완벽한 순서로 동시 자동 가동! ]",
     "terms": [
       {
@@ -3156,6 +3330,11 @@
     "coreQuestion": "1.78GB짜리 무거운 이미지를 어떻게 185MB로 90% 쏙 빼는 다이어트를 하는가?",
     "metaphor": "주방에서 요리할 때 썼던 무거운 프라이팬, 식칼, 도마(700MB JDK 컴파일러)는 주방에 두고 가고, 손님 상에는 가벼운 완성 접시(137MB JRE와 15MB 실행파일)만 배달하는 특급 다이어트 비법입니다.",
     "narrative": "옛날 방식(싱글 스테이지)으로 이미지를 만들면 소스코드를 굽느라 썼던 무거운 JDK 컴파일러와 찌꺼기 파일들이 최종 이미지에 다 들어가서 1.78GB나 됩니다. <strong>멀티스테이지(Multi-stage) 빌드</strong>는 1단계 주방(Builder)에서 빵을 다 굽고 나면, 2단계 배달 상자(Runtime)에는 가벼운 실행기(JRE 137MB)와 완성된 빵(app.jar 15MB) 딱 1개만 쏙 담아서 최종 이미지를 185MB로 90% 압축합니다.",
+    "csDeepDive": {
+      "topic": "빌드 타임 컴파일러와 런타임 인터프리터의 바이너리 분리",
+      "csPrinciple": "컴파일 단계(`javac`, `gradle`)는 정적 분석과 바이트코드 생성을 위해 수많은 라이브러리가 필요하지만, 실행 단계는 오직 JVM 바이트코드 인터프리터(JRE)만 필요. 불필요한 빌드 도구와 쉘(sh/bash)을 제거하여 공격 표면(Attack Surface) 최소화.",
+      "metaphor": "공사장에서 쓰던 포클레인과 크레인을 완성된 아파트 방 안에 넣어두지 않고 밖으로 빼는 것."
+    },
     "diagram": "[ 1단계: 주방 컨테이너 (gradle:8-jdk) ] ──( 요리 완료 후 무거운 조리도구는 주방에 버림! )\n                                              │\n                                              ▼ (완성된 app.jar 딱 1개만 쏙 복사!)\n[ 2단계: 손님 상 컨테이너 (eclipse-temurin:17-jre) ] ➔ [ 최종 이미지: 185MB ] (90% 다이어트 대성공!)",
     "terms": [
       {
@@ -3180,6 +3359,11 @@
     "coreQuestion": "도커가 있는데 왜 전 세계 대기업들은 쿠버네티스로 넘어갔을까?",
     "metaphor": "장난감 차 1대는 리모컨(docker run)으로 직접 조종할 수 있지만, 도로 위에 수백 대의 자율주행 차량이 달릴 때는 인공지능 중앙 관제 센터(쿠버네티스)가 신호등을 켜고 사고 난 차를 1초 만에 견인해야 하는 것과 같습니다.",
     "narrative": "컨테이너가 3개일 때는 사람이 터미널에서 명령어를 칠 수 있지만, 컨테이너가 30개, 300개가 되면 사람이 관리할 수 없습니다. 서버 컴퓨터가 고장 나서 꺼졌을 때 다른 컴퓨터에 다시 띄우기, 손님 트래픽 3등분 나누기, 새 버전 무중단 교체, 1초 롤백 등 <strong>운영자가 손으로 하던 20가지 판단과 조치를 기계 코드로 옮겨 24시간 자율주행하게 만든 것이 바로 쿠버네티스</strong>입니다.",
+    "csDeepDive": {
+      "topic": "분산 시스템의 오케스트레이션 & 자율주행 루프",
+      "csPrinciple": "노드 장애 감지(Node Controller), 파드 스케줄링(Scheduler), 복제본 감시(ReplicaSet Controller)가 비동기 이벤트 큐와 분산 트랜잭션 기반으로 상시 실행되어 시스템 붕괴를 막음.",
+      "metaphor": "사람이 24시간 모니터 앞에 앉아 껐다 켜는 대신, AI 로봇 비서에게 규칙을 적어주고 자율주행시키는 것."
+    },
     "diagram": "[ docker run 만 쓸 때의 비극 ]\n  ➔ 새벽 3시 서버 컴퓨터 고장 ➔ 알람 울림 ➔ 엔지니어가 잠에서 깨어 터미널 접속 ➔ 2시간 서비스 중단 😱\n[ 쿠버네티스를 쓸 때의 평화 ]\n  ➔ 새벽 3시 서버 컴퓨터 고장 ➔ 쿠버네티스가 1초 만에 다른 서버에 파드 부활 ➔ 무중단 자가치유 (엔지니어 숙면) 😊",
     "terms": [
       {
@@ -3202,6 +3386,11 @@
     "coreQuestion": "쿠버네티스는 어떻게 사람이 명령하지 않아도 스스로 상태를 고치는가?",
     "metaphor": "에어컨에 '희망 온도 24도'를 맞춰두면 방 온도가 30도로 올라갈 때마다 사람이 리모컨을 누르지 않아도 에어컨이 스스로 냉방을 돌려 24도를 맞추는 원리와 똑같습니다.",
     "narrative": "개발자가 종이(YAML)에 적는 것은 오직 <strong>내가 원하는 희망 상태(spec: 서버 3대)</strong>뿐입니다. <strong>실제 클러스터 상태(status: 현재 2대)</strong>는 시스템이 세어서 채워 넣습니다. 쿠버네티스의 심장인 <strong>조정 루프(Reconciliation Loop)</strong>는 '어? 3대여야 하는데 2대네? 1대 더 만들자!'라며 `status`를 `spec`에 일치시키는 일을 1초도 쉬지 않고 24시간 무한 반복합니다.",
+    "csDeepDive": {
+      "topic": "Level Trigger vs Edge Trigger & 멱등적 조정 루프",
+      "csPrinciple": "신호가 올 때만 반응하는 Edge Trigger 대신, 상시 상태(Level)를 관측하여 diff를 0으로 수렴시키는 제어 이론(Control Theory) 피드백 루프 구현.",
+      "metaphor": "알람이 울릴 때만 일어나는 것이 아니라, 시계를 계속 보며 지각하지 않게 스스로 속도를 조절하는 것."
+    },
     "diagram": "[ 내가 낸 희망 주문서 (spec: 3대 유지해줘) ] ────┐\n                                                   │ (1초마다 끊임없이 비교 & 일치 작업)\n[ 실제 살아있는 현재 상태 (status: 현재 2대) ] ──┴──➔ [ 지휘관: \"1대 부족하네? 즉시 1대 생성!\" ]",
     "terms": [
       {
@@ -3224,6 +3413,11 @@
     "coreQuestion": "수십 가지 리소스 중 실무에서 앱을 띄울 때 진짜 쓰는 8개는 무엇인가?",
     "metaphor": "집을 지을 때 [기둥, 벽, 지붕, 문] 4개가 집을 '돌아가게' 만든다면, [수도관, 전기선, 금고, 가스밸브] 4개는 집이 '제대로 안전하게 돌아가게' 만드는 것과 같습니다.",
     "narrative": "쿠버네티스 리소스는 많지만, 실제 앱을 서비스하는 데 쓰는 것은 딱 8개입니다. <strong>앞의 4개(Pod, Deployment, Service, Ingress)는 앱을 '돌아가게'</strong> 만들고, <strong>뒤의 4개(ConfigMap, Secret, PVC, StatefulSet)는 앱이 '제대로 안전하게 돌아가게'</strong> 만듭니다.",
+    "csDeepDive": {
+      "topic": "오브젝트 모델링과 계층적 리소스 의존성 그래프",
+      "csPrinciple": "컴퓨트(Pod), 워크로드(Deployment), 네트워크(Service/Ingress), 스토리지(PV/PVC), 구성/보안(ConfigMap/Secret)으로 분리된 직교적(Orthogonal) 시스템 아키텍처.",
+      "metaphor": "레고 블록 8개 종류를 조합하여 견고하고 안전한 성을 쌓아 올리는 것."
+    },
     "diagram": "[ 외부에서 들어오는 정문: Ingress (L7 스마트 안내소) ]\n                        │\n                        ▼\n[ 고정 가상 전화번호 & 부하분산: Service (ClusterIP) ]\n                        │\n┌───────────────────────┴─── [ Deployment (배포 총사령관) ] ────────────────────┐\n│  [ ReplicaSet (인원수 감시) ] ──➔ [ Pod (최소 실행 단위) ➔ Container (Spring) ] │\n└───────────────────────────────────────────────────────────────────────────────┘\n  붙는 것들 ➔ [ ConfigMap (일반설정) ] [ Secret (암호화 비밀번호) ] [ PVC (영구 외장하드) ]",
     "terms": [
       {
@@ -3246,6 +3440,11 @@
     "coreQuestion": "파드 안의 컨테이너들은 왜 서로 localhost로 번개처럼 대화할 수 있는가?",
     "metaphor": "아파트 1동(노드) 안에 101호 집(파드)이 있고, 101호 안의 거실과 안방에 사는 가족들(컨테이너들)이 같은 집 주소(Pod IP)를 쓰고 방문만 열면(localhost) 바로 대화하는 것과 같습니다.",
     "narrative": "쿠버네티스는 3개 층으로 이루어져 있습니다. <strong>노드(Node)</strong>는 서버 컴퓨터 1대이고, <strong>파드(Pod)</strong>는 방이며, <strong>컨테이너</strong>는 실제 프로세스입니다. 같은 파드 안의 컨테이너들은 <strong>단 하나의 Pod IP와 네트워크 방을 공유</strong>하므로 `localhost`로 빛의 속도로 통신합니다. 메인 자바 프로그램 옆에 로그 수집기 보조 컨테이너를 붙이는 것이 바로 '사이드카 패턴'입니다.",
+    "csDeepDive": {
+      "topic": "Pause Container & Network/IPC Namespace 공유",
+      "csPrinciple": "파드 생성 시 인프라 Pause 컨테이너가 NET/IPC 네임스페이스를 선점하고, 후속 컨테이너들이 `container:pause` 네임스페이스에 조인하여 동일한 루프백(`lo`) 및 네트워크 스택 공유.",
+      "metaphor": "한 방에 먼저 들어가서 전등을 켜둔 친구(Pause)의 방으로 들어가서 식탁과 와이파이를 같이 쓰는 것."
+    },
     "diagram": "[ 워커 노드 (서버 컴퓨터 IP: 10.0.1.50) ]\n  └── [ 파드 (101호 집 IP: 10.244.1.20) ] ── (단 하나의 Pod IP를 공유!)\n        ├── [ 메인 비즈니스 컨테이너 (Spring Boot 포트 8080) ]\n        └── [ 보조 사이드카 컨테이너 (로그 수집기) ] ──( localhost:8080 으로 직접 통신! )",
     "terms": [
       {
@@ -3264,6 +3463,11 @@
     "coreQuestion": "kubectl apply를 쳤을 때 클러스터 내부에서는 어떤 릴레이가 일어나는가?",
     "metaphor": "본사 사장님(API 서버)이 결재 서류(etcd)를 승인하면, 인사팀장(스케줄러)이 가장 한가한 공장(노드)을 찍어주고, 공장 현장소장(kubelet)이 일꾼(containerd)에게 작업을 시키는 것과 같습니다.",
     "narrative": "① `kubectl`이 요청을 보내면 유일한 현관문인 **API 서버**가 etcd 데이터베이스에 기록합니다. ② **스케줄러**가 노드의 남은 CPU/메모리를 보고 가장 적합한 워커 노드를 점찍습니다. ③ 해당 노드의 **kubelet(반장)**이 containerd에게 컨테이너를 띄우라고 명령하고, ④ **kube-proxy**가 네트워크 통신로를 엽니다.",
+    "csDeepDive": {
+      "topic": "Raft 분산 합의 알고리즘 & etcd Watcher 메커니즘",
+      "csPrinciple": "etcd는 Raft 합의 알고리즘으로 분산 데이터 정합성 보장. API 서버는 gRPC 스트리밍 기반의 `Watch` API를 통해 리소스 변경 이벤트를 스케줄러와 컨트롤러에 논블로킹 푸시.",
+      "metaphor": "사장님이 결재 서류에 도장을 찍으면, 대기하고 있던 부서장들의 스마트폰에 푸시 알림이 0.001초 만에 띵동 울리는 것."
+    },
     "diagram": "[ 개발자 ] ──➔ [ kube-apiserver (유일한 현관문 사장님) ] ──➔ [ etcd (결재 장부 DB) ]\n                                    │\n             ┌──────────────────────┴──────────────────────┐\n             ▼                                             ▼\n      [ kube-scheduler ]                       [ kube-controller-manager ]\n      (어느 공장이 한가한지 점찍기)                 (3대 개수 맞추기 자율주행 감시)\n             │\n             ▼ (작업 지시서 전달)\n      [ Worker Node: kubelet (공장 반장) ➔ containerd (실제 도커 컨테이너 기동) ]\n             │\n             ▼ (통신 도로 오픈)\n      [ kube-proxy (교통정리 iptables 부하분산 규칙 반영) ]",
     "terms": [
       {
@@ -3290,6 +3494,11 @@
     "coreQuestion": "죽여야 할 때(재부팅)와 손님만 잠깐 막아야 할 때를 어떻게 구별하는가?",
     "metaphor": "식당에서 요리사가 요리를 준비 중일 땐 기다려주고(Startup), 요리사가 쓰러지면 교체하고(Liveness), 주문이 밀려 잠깐 렉이 걸리면 손님 줄만 잠깐 세우는(Readiness) 것과 같습니다.",
     "narrative": "스프링 앱이 켜질 때까지 기다려주는 **Startup**, 완전히 뻗었을 때 강제 재부팅시키는 **Liveness**, 과부하나 렉이 걸렸을 때 파드를 죽이지 않고 손님 트래픽만 일시 제외시키는 **Readiness** 3대 프로브의 역할을 정확히 분리해야 합니다.",
+    "csDeepDive": {
+      "topic": "Circuit Breaker 패턴과 상태 기반 트래픽 라우팅",
+      "csPrinciple": "Readiness 실패 시 엔드포인트 컨트롤러가 `Endpoints/EndpointSlice`에서 파드 IP를 제거하여 트래픽 유입 차단. Liveness 실패 시 kubelet이 CRI API로 `SIGKILL`을 날리고 컨테이너 재시작.",
+      "metaphor": "아픈 환자에게 강제로 밥을 먹이지 않고 링거를 꽂아두듯, 준비될 때까지 손님 줄에서 잠깐 빼두는 것."
+    },
     "diagram": "[ 1. 기동 초기 (30초) ] ──➔ Startup Probe 성공할 때까지 Liveness 체크를 일시 대기!\n[ 2. 정상 운영 중 ]     ──➔ Liveness Probe (실패 시 파드 강제 재부팅!)\n[ 3. 일시 렉/과부하 ]   ──➔ Readiness Probe (실패 시 파드 살려두고 손님 줄만 잠시 차단!)",
     "terms": [
       {
@@ -3312,6 +3521,11 @@
     "coreQuestion": "새 버전을 배포하다가 치명적인 버그를 발견했을 때 어떻게 1초 만에 복구하는가?",
     "metaphor": "비행기가 날아가는 도중에 승객을 떨어뜨리지 않고 엔진 1개씩 순차적으로 새 엔진으로 교체하고, 새 엔진에 이상이 있으면 1초 만에 옛날 엔진으로 원상 복구하는 것과 같습니다.",
     "narrative": "Deployment는 새 버전 배포 시 새 ReplicaSet을 만들어 1대씩 순차 교체(Rolling Update)합니다. 만약 새 버전에 치명적인 버그가 있으면 `kubectl rollout undo` 명령어 한 줄로 이전 ReplicaSet을 1초 만에 다시 가동하여 즉각 롤백합니다.",
+    "csDeepDive": {
+      "topic": "Atomic Pointer Swap & 점진적 롤링 상태 천이",
+      "csPrinciple": "Deployment는 기존 ReplicaSet과 신규 ReplicaSet의 `replicas` 값을 `maxSurge`와 `maxUnavailable` 제약 조건 하에서 점진적으로 가감. 롤백 시 revision 번호를 역추적하여 포인터만 즉시 스왑.",
+      "metaphor": "옛날 레코드판으로 바늘을 0.1초 만에 톡 옮겨서 정상 음악을 즉시 다시 트는 것."
+    },
     "diagram": "[ 구버전 RS v1 (3대) ] ──➔ 2대 ➔ 1대 ➔ 0대 (순차 축소)\n[ 신버전 RS v2 (0대) ] ──➔ 1대 ➔ 2대 ➔ 3대 (순차 확대)\n                               │ (신버전 결제 버그 발견 시!)\n                               ▼ (kubectl rollout undo deploy/shop)\n[ 구버전 RS v1 즉시 3대 재가동! ] (단 1초 만에 완벽한 무중단 롤백 완료)",
     "terms": [
       {
@@ -3334,6 +3548,11 @@
     "coreQuestion": "Service는 실제로 존재하는 서버인가, 아니면 가상의 번호표 규칙인가?",
     "metaphor": "은행에 가면 상담원 얼굴을 몰라도 창구 번호판(Service VIP)만 보고 번호표를 뽑으면, 비어있는 상담원(Endpoints 파드 IP)에게 손님을 번갈아가며 배정해 주는 번호표 시스템과 같습니다.",
     "narrative": "쿠버네티스 Service는 실제 하드웨어나 프로세스가 아닙니다. 워커 노드의 리눅스 커널에 새겨진 **iptables 라우팅 규칙**일 뿐입니다. 서비스로 들어오는 트래픽은 이 규칙에 따라 실시간 살아있는 파드들의 IP 목록인 **Endpoints**로 빛의 속도로 분배됩니다.",
+    "csDeepDive": {
+      "topic": "Linux Netfilter DNAT & IPVS L4 커널 로드밸런싱",
+      "csPrinciple": "가상 IP(ClusterIP)로 유입된 TCP 패킷을 유저 스페이스를 거치지 않고 리눅스 커널의 `PREROUTING` 체인에서 목적지 IP를 파드 IP로 즉시 덮어쓰기(DNAT)하여 L4 포워딩.",
+      "metaphor": "편지 봉투 겉면에 적힌 '대표 사서함' 주소를 우체부(커널)가 '철수네 집' 주소로 빛의 속도로 고쳐 적어 배달하는 것."
+    },
     "diagram": "[ 손님 요청 ➔ Service 가상 IP (ClusterIP: 10.96.0.1) ]\n                  │\n                  ▼ (리눅스 커널 iptables 부하분산 규칙)\n       ┌──────────┴──────────┐\n       ▼                     ▼\n[ Pod A (10.244.1.5) ]  [ Pod B (10.244.2.8) ]  (실시간 Endpoints 목록)",
     "terms": [
       {
@@ -3349,6 +3568,7 @@
     "realWorldPoint": "Pod가 수시로 죽고 살아나며 IP가 바뀌어도 클라이언트 접속이 1초도 안 끊기는 근본 원리입니다."
   }
 ];
+
         const curriculumLabsMapping = [
   {
     "track": "도커 9대 집중 실습",
@@ -4511,6 +4731,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           wasContainer,
           k8sSubTab,
           k8sSubTabs,
+          osi7LayersData,
           curriculumDockerBook,
           curriculumK8sBook,
           curriculumLabsMapping,
