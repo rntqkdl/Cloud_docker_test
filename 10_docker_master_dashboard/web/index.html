@@ -1412,7 +1412,7 @@
 
       </div>
 
-                  <!-- ========================================================
+                              <!-- ========================================================
            VIEW: COMPUTER SCIENCE & SYSTEM DEEP DIVE (CS 심층 지식관)
            ======================================================== -->
       <div v-else-if="currentView === 'cs_knowledge'" class="space-y-8">
@@ -1421,21 +1421,21 @@
         <div class="rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 p-8 sm:p-12 text-white shadow-xl space-y-4 border-2 border-emerald-500/30">
           <div class="flex items-center gap-2">
             <span class="eyebrow bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
-              Operating Systems & System Architecture
+              Operating Systems & Mermaid Vector Architecture
             </span>
             <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-bold font-mono">
-              비전공자 눈높이 100% CS 아키텍처 다이어그램 완비
+              비전공자 눈높이 100% 그래픽 다이어그램
             </span>
           </div>
           <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            🏛️ 컴퓨터 공학(CS) 심층 원리 & 4대 시스템 아키텍처 대백과
+            🏛️ 컴퓨터 공학(CS) 심층 원리 & 4대 그래픽 아키텍처 대백과
           </h1>
           <p class="text-base sm:text-lg text-emerald-100 max-w-4xl leading-relaxed font-medium">
-            단순 명령어가 아닌, <strong>리눅스 커널 네임스페이스 6총사 격리도, WAS 3-Tier 요청 처리 플로우, OSI 7계층 택배 캡슐화, 쿠버네티스 8대 리소스 상호작용 지도</strong>까지 4대 아키텍처 그림으로 시스템의 본질을 완벽히 꿰뚫어 봅니다.
+            일자로 깨지는 텍스트가 아닌, <strong>위에서 아래로 완벽하게 흐르는 Mermaid 그래픽 벡터 다이어그램</strong>으로 리눅스 커널 네임스페이스 6총사, WAS 3-Tier 요청 플로우, OSI 7계층 택배 캡슐화, K8s 8대 리소스 상호작용을 완벽히 마스터합니다.
           </p>
         </div>
 
-        <!-- 1. 리눅스 커널 네임스페이스 6총사 (VR 안대 이야기 + 아키텍처 다이어그램) -->
+        <!-- 1. 리눅스 커널 네임스페이스 6총사 -->
         <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
@@ -1458,36 +1458,20 @@
             </p>
           </div>
 
-          <!-- Architecture Diagram 1: Linux Kernel Namespaces -->
-          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+          <!-- Mermaid Diagram 1 -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner border border-slate-800">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
               <span class="eyebrow text-sky-400 font-mono text-xs font-bold flex items-center gap-2">
-                <i class="fa-solid fa-sitemap"></i> 📐 [아키텍처 도해 1] 리눅스 커널 네임스페이스 6총사 프로세스 격리 구조도
+                <i class="fa-solid fa-sitemap"></i> 📐 [머메이드 다이어그램 1] 리눅스 커널 네임스페이스 6총사 프로세스 격리 구조도
               </span>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">Kernel Isolation Flow</span>
+              <button @click="copyText(mermaidCode1)" class="text-xs font-mono px-3 py-1 rounded bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-800 transition flex items-center gap-1.5 font-bold">
+                <i class="fa-solid fa-copy"></i> Mermaid 코드 복사
+              </button>
             </div>
-            <div class="font-mono text-xs sm:text-sm text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre p-2">
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                          🖥️ 물리 호스트 컴퓨터 (Linux Host Kernel)                     │
-│  • 실제 물리 CPU / RAM (cgroups로 상한선 계량)                                          │
-│  • 실제 물리 파일시스템 (ext4 / XFS / NVMe SSD)                                         │
-│  • 실제 물리 랜카드 (eth0, IP: 192.168.1.100)                                           │
-└───────────────────────────────────────────┬────────────────────────────────────────────┘
-                                            │
-               ┌────────────────────────────┴────────────────────────────┐
-               ▼ (clone() 시스템 콜: 6개의 VR 안경 장착)                  ▼
-┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐
-│  📦 도커 컨테이너 #1 (Spring WAS)             │  │  📦 도커 컨테이너 #2 (PostgreSQL DB)          │
-│ ┌──────────────────────────────────────────┐ │  │ ┌──────────────────────────────────────────┐ │
-│ │ 🪪 PID Namespace: "난 PID 1번 대장!"      │ │  │ │ 🪪 PID Namespace: "난 PID 1번 대장!"      │ │
-│ │ ☎️ NET Namespace: veth0, IP 172.17.0.2   │ │  │ │ ☎️ NET Namespace: veth1, IP 172.17.0.3   │ │
-│ │    - 독립 포트: 8080 (충돌 0%)           │ │  │ │    - 독립 포트: 5432 (충돌 0%)           │ │
-│ │ 📁 MNT Namespace: 가상 루트 / (격리)     │ │  │ │ 📁 MNT Namespace: 가상 루트 / (격리)     │ │
-│ │ 🍪 IPC Namespace: 전용 공유 메모리       │ │  │ │ 🍪 IPC Namespace: 전용 공유 메모리       │ │
-│ │ 🏷️ UTS Namespace: hostname="spring-was"  │ │  │ │ 🏷️ UTS Namespace: hostname="postgres-db" │ │
-│ │ 👑 USER Namespace: root (외부선 nobody)   │ │  │ │ 👑 USER Namespace: root (외부선 nobody)   │ │
-│ └──────────────────────────────────────────┘ │  │ └──────────────────────────────────────────┘ │
-└──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘</div>
+            
+            <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
+              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCode1 }}</pre>
+            </div>
           </div>
 
           <!-- 6 Namespaces Cards Grid -->
@@ -1574,38 +1558,20 @@
             </span>
           </div>
 
-          <!-- Architecture Diagram 2: 3-Tier Request/Response Flow -->
-          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+          <!-- Mermaid Diagram 2 -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner border border-slate-800">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
               <span class="eyebrow text-amber-300 font-mono text-xs font-bold flex items-center gap-2">
-                <i class="fa-solid fa-diagram-project"></i> 📐 [아키텍처 도해 2] Web - WAS - DB 3-Tier 요청/응답 데이터 플로우
+                <i class="fa-solid fa-diagram-project"></i> 📐 [머메이드 다이어그램 2] Web - WAS - DB 3-Tier 요청/응답 데이터 플로우
               </span>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">3-Tier Traffic Routing</span>
+              <button @click="copyText(mermaidCode2)" class="text-xs font-mono px-3 py-1 rounded bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-800 transition flex items-center gap-1.5 font-bold">
+                <i class="fa-solid fa-copy"></i> Mermaid 코드 복사
+              </button>
             </div>
-            <div class="font-mono text-xs sm:text-sm text-amber-200 leading-relaxed overflow-x-auto whitespace-pre p-2">
-[ 손님 (스마트폰 브라우저) ]
-       │
-       ▼ (1) HTTP GET /index.html (메뉴판 요청)
-┌────────────────────────────────────────────────────────┐
-│  🏢 Tier 1: Web Server (Nginx, 포트 80)                │ ──(2) HTML, CSS, JS, 이미지 즉시 응답 (0.001초) ➔ [ 손님 ]
-│  • 정적(Static) 파일 전담 캐싱 / SSL 암호화 종단        │
-└──────────────────────────┬─────────────────────────────┘
-                           │ (3) HTTP POST /api/order (주문/결제 동적 계산 요청 전달: Reverse Proxy)
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│  👨‍🍳 Tier 2: WAS (Spring Boot / Tomcat, 포트 8080)     │
-│  • 동적(Dynamic) 비즈니스 로직 계산 (주방장)           │
-│  • 1. 회원 로그인 토큰(JWT) 위변조 검사                │
-│  • 2. 10% 할인 쿠폰 & 카드 포인트 계산                 │
-│  • 3. 트랜잭션(@Transactional) 제어                     │
-└──────────────────────────┬─────────────────────────────┘
-                           │ (4) SQL 쿼리: SELECT balance FROM accounts WHERE user_id = 'g124';
-                           ▼
-┌────────────────────────────────────────────────────────┐
-│  ❄️ Tier 3: Database (PostgreSQL, 포트 5432)          │
-│  • 영구 스토리지 (식자재 냉장고 & 금고 장부)            │
-│  • ACID 원자성 트랜잭션 보장 & 잔액 차감 업데이트      │
-└────────────────────────────────────────────────────────┘</div>
+
+            <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
+              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCode2 }}</pre>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1661,31 +1627,20 @@
             </span>
           </div>
 
-          <!-- Architecture Diagram 3: OSI 7 Layer Packet Encapsulation -->
-          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+          <!-- Mermaid Diagram 3 -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner border border-slate-800">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
               <span class="eyebrow text-purple-300 font-mono text-xs font-bold flex items-center gap-2">
-                <i class="fa-solid fa-network-wired"></i> 📐 [아키텍처 도해 3] 패킷 캡슐화 & 쿠팡 택배 7단계 1대1 매핑 구조도
+                <i class="fa-solid fa-network-wired"></i> 📐 [머메이드 다이어그램 3] 패킷 캡슐화 & 쿠팡 택배 7단계 1대1 매핑 구조도
               </span>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">7-Layer Encapsulation</span>
+              <button @click="copyText(mermaidCode3)" class="text-xs font-mono px-3 py-1 rounded bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-800 transition flex items-center gap-1.5 font-bold">
+                <i class="fa-solid fa-copy"></i> Mermaid 코드 복사
+              </button>
             </div>
-            <div class="font-mono text-xs sm:text-sm text-sky-200 leading-relaxed overflow-x-auto whitespace-pre p-2">
-[ 송신자: 손님이 짜장면 주문 ]                                              [ 수신자: 서버에서 주문 접수 ]
-┌─────────────────────────────────────────────────────────────────────────┐
-│ 7층 응용 (App)      : HTTP GET /order ➔ "짜장면 1그릇 주문"               │ ➔ Ingress (URL 라우팅)
-├─────────────────────────────────────────────────────────────────────────┤
-│ 6층 표현 (Present)  : [JSON 변환 + TLS 암호화] ➔ 🔒 비밀 편지 포장       │ ➔ Secret / TLS 복호화
-├─────────────────────────────────────────────────────────────────────────┤
-│ 5층 세션 (Session)  : [TCP 커넥션 유지] ➔ 전화 통화 끊김 방지 유지       │ ➔ Graceful Shutdown
-├─────────────────────────────────────────────────────────────────────────┤
-│ 4층 전송 (Transport): [TCP 포트 8080 헤더] ➔ 아파트 방 번호 8080 적기    │ ➔ Service (iptables L4 DNAT)
-├─────────────────────────────────────────────────────────────────────────┤
-│ 3층 네트워크 (Net)  : [IP 패킷 헤더: 192.168.1.50] ➔ 서울시 강남구 주소 │ ➔ Pod CNI IP 라우팅
-├─────────────────────────────────────────────────────────────────────────┤
-│ 2층 데이터링크(Link): [이더넷 프레임 + MAC 주소] ➔ 아파트 복도 손전달    │ ➔ veth pair / docker0
-├─────────────────────────────────────────────────────────────────────────┤
-│ 1층 물리 (Physical) : [01010101 전기 신호 / 광 펄스] ➔ 아스팔트 고속도로│ ➔ AWS EC2 쇳덩이 광케이블
-└─────────────────────────────────────────────────────────────────────────┘</div>
+
+            <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
+              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCode3 }}</pre>
+            </div>
           </div>
 
           <div class="space-y-4">
@@ -1693,15 +1648,15 @@
                  class="p-5 sm:p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 hover:border-purple-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition shadow-xs">
               <div class="space-y-1 max-w-2xl">
                 <div class="flex items-center gap-2.5">
-                  <span class="text-2xl">{{ layer.emoji }}</span>
-                  <h4 class="text-base sm:text-lg font-black text-slate-900">{{ layer.layer }}</h4>
-                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">{{ layer.protocol }}</span>
+                  <span class="text-2xl">{ layer.emoji }</span>
+                  <h4 class="text-base sm:text-lg font-black text-slate-900">{ layer.layer }</h4>
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">{ layer.protocol }</span>
                 </div>
                 <p class="text-xs sm:text-sm text-amber-900 font-semibold leading-relaxed">
-                  💡 <strong>1초 비유:</strong> {{ layer.metaphor }}
+                  💡 <strong>1초 비유:</strong> { layer.metaphor }
                 </p>
                 <p class="text-xs text-slate-600 font-medium leading-relaxed">
-                  🔬 <strong>시스템 원리:</strong> {{ layer.csPrinciple }}
+                  🔬 <strong>시스템 원리:</strong> { layer.csPrinciple }
                 </p>
               </div>
               <div class="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-semibold text-indigo-950 max-w-md shrink-0 space-y-1">
@@ -1712,7 +1667,7 @@
           </div>
         </div>
 
-        <!-- 4. 쿠버네티스 8대 리소스 상호작용 전체 아키텍처 지도 (스마트 아파트 마을) -->
+        <!-- 4. 쿠버네티스 8대 리소스 상호작용 전체 아키텍처 지도 -->
         <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-indigo-400 shadow-md space-y-6 transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
@@ -1726,43 +1681,20 @@
             </span>
           </div>
 
-          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+          <!-- Mermaid Diagram 4 -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner border border-slate-800">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
               <span class="eyebrow text-indigo-300 font-mono text-xs font-bold flex items-center gap-2">
-                <i class="fa-solid fa-dharmachakra"></i> 📐 [아키텍처 도해 4] 쿠버네티스 8대 리소스 전체 연결 및 트래픽 경로도
+                <i class="fa-solid fa-dharmachakra"></i> 📐 [머메이드 다이어그램 4] 쿠버네티스 8대 리소스 전체 연결 및 트래픽 경로도
               </span>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">K8s Resource Map</span>
+              <button @click="copyText(mermaidCode4)" class="text-xs font-mono px-3 py-1 rounded bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 transition flex items-center gap-1.5 font-bold">
+                <i class="fa-solid fa-copy"></i> Mermaid 코드 복사
+              </button>
             </div>
-            <div class="font-mono text-xs sm:text-sm text-cyan-300 leading-relaxed overflow-x-auto whitespace-pre p-2">
-[ 인터넷 사용자 트래픽 ]
-            │
-            ▼ (도메인 기반 L7 라우팅: shop.skala-gj.com)
-┌───────────────────────────────────────────────────────────────────────────────────────┐
-│  🌐 Ingress (L7 스마트 정문 안내소)                                                    │
-└───────────────────────────────────────────┬───────────────────────────────────────────┘
-                                            │
-                                            ▼ (L4 가상 IP 부하분산: ClusterIP)
-┌───────────────────────────────────────────────────────────────────────────────────────┐
-│  ☎️ 3. Service (정문 대표 인터폰 101번)                                               │
-└───────────────────────────────────────────┬───────────────────────────────────────────┘
-                                            │ (Endpoints 파드 IP로 트래픽 전달)
-                                            ▼
-┌─────────────────────────────────── [ 7. Namespace: 4반 전용 구역 (skala-gj4) ] ───────┐
-│                                                                                       │
-│  ┌───────────────────────────── [ 2. Deployment (관리소장) ] ──────────────────────┐  │
-│  │                                                                                 │  │
-│  │    ┌─────────────────────────── [ 1. Pod (경비원 초소) ] ───────────────────┐   │  │
-│  │    │                                                                        │   │  │
-│  │    │  [ 메인 컨테이너: Spring WAS ] ◀──( localhost )──▶ [ 사이드카: 로깅 ]  │   │  │
-│  │    │           │                                                            │   │  │
-│  │    │           ├──( 볼륨 마운트 )──▶ 🔒 8. Secret (비밀번호 특급 금고: tmpfs)│   │  │
-│  │    │           └──( 스토리지 연결 )─▶ 📝 5. PVC (외장하드 대여 신청서)        │   │  │
-│  │    └──────────────────────────────────────────┬─────────────────────────────┘   │  │
-│  └───────────────────────────────────────────────┼─────────────────────────────────┘  │
-│                                                  │ (런타임 동적 바인딩)               │
-│                                                  ▼                                    │
-│                       🗄️ 4. PV (실제 영구 외장하드) ◀── ⚙️ 6. StorageClass (자동 발급기)│
-└───────────────────────────────────────────────────────────────────────────────────────┘</div>
+
+            <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
+              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCode4 }}</pre>
+            </div>
           </div>
         </div>
 
@@ -2055,6 +1987,24 @@
 
     createApp({
       setup() {
+
+        const mermaidCode1 = 'graph TD\n    classDef host fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;\n    classDef container fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    classDef ns fill:#334155,stroke:#64748b,stroke-width:1px,color:#f8fafc;\n\n    Host["🖥️ 물리 호스트 컴퓨터 (Linux Host Kernel)<br/>• 물리 CPU / RAM (cgroups 자원 계량기)<br/>• 물리 파일시스템 (NVMe SSD)<br/>• 물리 랜카드 (eth0, IP: 192.168.1.100)"]:::host\n\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C1["📦 도커 컨테이너 #1 (Spring WAS)"]:::container\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C2["📦 도커 컨테이너 #2 (PostgreSQL DB)"]:::container\n\n    subgraph C1_Box ["📦 도커 컨테이너 #1 (Spring WAS)"]\n        N1_PID["🪪 PID: \'난 PID 1번 대장!\' (spring-boot)"]:::ns\n        N1_NET["☎️ NET: veth0 (IP 172.17.0.2, Port 8080)"]:::ns\n        N1_MNT["📁 MNT: 독립된 가상 루트 /app"]:::ns\n        N1_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N1_UTS["🏷️ UTS: hostname=\'spring-was\'"]:::ns\n        N1_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end\n\n    subgraph C2_Box ["📦 도커 컨테이너 #2 (PostgreSQL DB)"]\n        N2_PID["🪪 PID: \'난 PID 1번 대장!\' (postgres)"]:::ns\n        N2_NET["☎️ NET: veth1 (IP 172.17.0.3, Port 5432)"]:::ns\n        N2_MNT["📁 MNT: 독립된 가상 루트 /var/lib/postgresql"]:::ns\n        N2_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N2_UTS["🏷️ UTS: hostname=\'postgres-db\'"]:::ns\n        N2_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end';
+        const mermaidCode2 = 'flowchart TD\n    classDef client fill:#f8fafc,stroke:#0284c7,stroke-width:2px,color:#0f172a,font-weight:bold;\n    classDef web fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0369a1,font-weight:bold;\n    classDef was fill:#e0e7ff,stroke:#4338ca,stroke-width:2px,color:#3730a3,font-weight:bold;\n    classDef db fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#166534,font-weight:bold;\n\n    Client["📱 손님 (스마트폰 브라우저)"]:::client\n    Web["🏢 Tier 1: Web Server (Nginx, Port 80)<br/>• 정적 파일(HTML/CSS/JS/이미지) 0.001초 응답<br/>• HTTPS SSL 암호화 종단 및 Reverse Proxy"]:::web\n    WAS["👨\u200d🍳 Tier 2: WAS (Spring Boot / Tomcat, Port 8080)<br/>• 동적 비즈니스 로직 계산 (진짜 두뇌 주방장)<br/>• JWT 로그인 검증 / 10% 쿠폰 & 결제 계산"]:::was\n    DB["❄️ Tier 3: Database (PostgreSQL, Port 5432)<br/>• 영구 보관 금고 (회원 명부 & 잔액 장부)<br/>• ACID 원자성 트랜잭션 보장"]:::db\n\n    Client -->|"(1) HTTP GET / (메뉴판 요청)"| Web\n    Web -.->|"(2) 정적 HTML/CSS 즉시 전송 (0.001초)"| Client\n    Web -->|"(3) HTTP POST /api/order (주문/결제 동적 전달)"| WAS\n    WAS -->|"(4) SQL: SELECT balance FROM accounts"| DB\n    DB -->|"(5) SQL Result: 잔액 50,000원 확인"| WAS\n    WAS -.->|"(6) JSON: { status: \'SUCCESS\', orderId: 101 }"| Web\n    Web -.->|"(7) 최종 결제 완료 화면 표시"| Client';
+        const mermaidCode3 = 'flowchart TD\n    classDef l7 fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#4c1d95,font-weight:bold;\n    classDef l6 fill:#fdf4ff,stroke:#c026d3,stroke-width:2px,color:#701a75,font-weight:bold;\n    classDef l5 fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold;\n    classDef l4 fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#312e81,font-weight:bold;\n    classDef l3 fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0c4a6e,font-weight:bold;\n    classDef l2 fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d,font-weight:bold;\n    classDef l1 fill:#f1f5f9,stroke:#475569,stroke-width:2px,color:#0f172a,font-weight:bold;\n\n    L7["🌐 7층 응용 (Application): HTTP GET /order ➔ \'짜장면 1그릇 주문\' | K8s: Ingress (URL 라우팅)"]:::l7\n    L6["🔒 6층 표현 (Presentation): JSON 직렬화 & TLS 암호화 ➔ 비밀 편지 포장 | K8s: Secret / HTTPS"]:::l6\n    L5["⏱️ 5층 세션 (Session): TCP 세션 연결 유지 ➔ 통화 끊김 방지 | K8s: Graceful Shutdown (preStop)"]:::l5\n    L4["🔌 4층 전송 (Transport): TCP 포트 8080 헤더 ➔ 아파트 방 번호 8080 | K8s: Service (L4 커널 DNAT)"]:::l4\n    L3["🗺️ 3층 네트워크 (Network): IP 패킷 헤더 (192.168.1.50) ➔ 도시 우편번호 | K8s: Pod CNI 사설 IP"]:::l3\n    L2["🌉 2층 데이터링크 (Data Link): 이더넷 프레임 & MAC 주소 ➔ 복도 손전달 | K8s: veth pair / docker0"]:::l2\n    L1["🖥️ 1층 물리 (Physical): 01010101 전기 신호 / 광 펄스 ➔ 아스팔트 도로 | K8s: AWS EC2 광케이블"]:::l1\n\n    L7 --> L6 --> L5 --> L4 --> L3 --> L2 --> L1';
+        const mermaidCode4 = 'flowchart TD\n    classDef ing fill:#faf5ff,stroke:#a855f7,stroke-width:2px,color:#581c87,font-weight:bold;\n    classDef svc fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a,font-weight:bold;\n    classDef deploy fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#14532d,font-weight:bold;\n    classDef pod fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a,font-weight:bold;\n    classDef storage fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f,font-weight:bold;\n    classDef secret fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#881337,font-weight:bold;\n\n    User["🌍 외부 인터넷 손님 트래픽"]\n    Ingress["🌐 Ingress (L7 스마트 정문 안내소)<br/>Host: shop.skala-gj.com / Path: /api"]:::ing\n    Service["☎️ 3. Service (정문 대표 인터폰 101번)<br/>ClusterIP: 10.100.154.24 (L4 커널 부하분산)"]:::svc\n\n    User --> Ingress --> Service\n\n    subgraph NS ["🏷️ 7. Namespace (우리 4반 전용 방: skala-gj4)"]\n        Deployment["👔 2. Deployment (관리소장: 24시간 2대 상주 지시)"]:::deploy\n        \n        subgraph Pods ["📦 1. Pod (경비원 초소)"]\n            App["🌱 Main Container: Spring WAS"]:::pod\n            Sidecar["🛠️ Sidecar Container: Log Agent"]:::pod\n            App <-->|"localhost (0ms 초고속 통신)"| Sidecar\n        end\n\n        Deployment --> Pods\n        Service -->|"Endpoints IP 전달"| App\n\n        Secret["🔒 8. Secret (비밀 금고: tmpfs)"]:::secret\n        PVC["📝 5. PVC (외장하드 대여 신청서)"]:::storage\n        PV["🗄️ 4. PV (실제 AWS EBS 영구 외장하드)"]:::storage\n        SC["⚙️ 6. StorageClass (외장하드 자동 자판기)"]:::storage\n\n        App -.->|"비밀번호 마운트"| Secret\n        App -.->|"볼륨 마운트"| PVC\n        PVC <-->|"런타임 동적 바인딩"| PV\n        SC -.->|"EBS 볼륨 0.5초 자동 생성"| PV\n    end';
+
+        function renderMermaid() {
+          nextTick(() => {
+            if (window.mermaid) {
+              try {
+                mermaid.run({
+                  nodes: document.querySelectorAll('.mermaid')
+                });
+              } catch (e) {}
+            }
+          });
+        }
+
         const currentView = ref('curriculum_reader');
         const activeStep = ref(1);
         const searchQuery = ref('');
@@ -5028,9 +4978,14 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
         nextTick(() => {
           checkLiveHealth();
           if (window.Prism) Prism.highlightAll();
+          renderMermaid();
         });
 
         return {
+          mermaidCode1,
+          mermaidCode2,
+          mermaidCode3,
+          mermaidCode4,
           currentView,
           activeStep,
           stepTitles,
