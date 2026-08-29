@@ -1412,7 +1412,7 @@
 
       </div>
 
-            <!-- ========================================================
+                  <!-- ========================================================
            VIEW: COMPUTER SCIENCE & SYSTEM DEEP DIVE (CS 심층 지식관)
            ======================================================== -->
       <div v-else-if="currentView === 'cs_knowledge'" class="space-y-8">
@@ -1421,25 +1421,25 @@
         <div class="rounded-3xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 p-8 sm:p-12 text-white shadow-xl space-y-4 border-2 border-emerald-500/30">
           <div class="flex items-center gap-2">
             <span class="eyebrow bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
-              Operating Systems & Computer Networks
+              Operating Systems & System Architecture
             </span>
             <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-bold font-mono">
-              비전공자 눈높이 100% CS 지식
+              비전공자 눈높이 100% CS 아키텍처 다이어그램 완비
             </span>
           </div>
           <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            🏛️ 컴퓨터 공학(CS) 심층 원리 & 시스템 아키텍처 대백과
+            🏛️ 컴퓨터 공학(CS) 심층 원리 & 4대 시스템 아키텍처 대백과
           </h1>
           <p class="text-base sm:text-lg text-emerald-100 max-w-4xl leading-relaxed font-medium">
-            단순히 컨테이너 명령어를 외우는 것을 넘어, <strong>리눅스 커널의 네임스페이스 6총사, WAS(주방장) vs Web(카운터)의 분업, 택배 배송으로 이해하는 네트워크 OSI 7계층, 쿠버네티스 8대 리소스의 필연적 존재 이유</strong>를 비전공자/중학생 눈높이에서 완벽히 마스터합니다.
+            단순 명령어가 아닌, <strong>리눅스 커널 네임스페이스 6총사 격리도, WAS 3-Tier 요청 처리 플로우, OSI 7계층 택배 캡슐화, 쿠버네티스 8대 리소스 상호작용 지도</strong>까지 4대 아키텍처 그림으로 시스템의 본질을 완벽히 꿰뚫어 봅니다.
           </p>
         </div>
 
-        <!-- 1. 리눅스 커널 네임스페이스 6총사 (VR 안대 이야기) -->
+        <!-- 1. 리눅스 커널 네임스페이스 6총사 (VR 안대 이야기 + 아키텍처 다이어그램) -->
         <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
-              <span class="eyebrow text-emerald-800 font-bold">Linux Kernel Namespaces Isolation</span>
+              <span class="eyebrow text-emerald-800 font-bold">Linux Kernel Namespaces Isolation Architecture</span>
               <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
                 🎭 1. 리눅스 네임스페이스 6총사 — "프로그램에게 씌운 6개의 VR 가상현실 안경"
               </h2>
@@ -1456,6 +1456,38 @@
             <p class="text-sm sm:text-base text-amber-950 font-semibold leading-relaxed">
               도커 컨테이너는 진짜 컴퓨터를 새로 산 게 아닙니다! 원래 내 컴퓨터에서 돌아가던 평범한 프로그램에게 <strong>리눅스 커널이 6개의 투명 방음 안경(네임스페이스)을 씌워서 "이 세상에 너 혼자 살고 있다"고 완벽하게 속여놓은 눈속임 방</strong>입니다!
             </p>
+          </div>
+
+          <!-- Architecture Diagram 1: Linux Kernel Namespaces -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="eyebrow text-sky-400 font-mono text-xs font-bold flex items-center gap-2">
+                <i class="fa-solid fa-sitemap"></i> 📐 [아키텍처 도해 1] 리눅스 커널 네임스페이스 6총사 프로세스 격리 구조도
+              </span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800">Kernel Isolation Flow</span>
+            </div>
+            <div class="font-mono text-xs sm:text-sm text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre p-2">
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                          🖥️ 물리 호스트 컴퓨터 (Linux Host Kernel)                     │
+│  • 실제 물리 CPU / RAM (cgroups로 상한선 계량)                                          │
+│  • 실제 물리 파일시스템 (ext4 / XFS / NVMe SSD)                                         │
+│  • 실제 물리 랜카드 (eth0, IP: 192.168.1.100)                                           │
+└───────────────────────────────────────────┬────────────────────────────────────────────┘
+                                            │
+               ┌────────────────────────────┴────────────────────────────┐
+               ▼ (clone() 시스템 콜: 6개의 VR 안경 장착)                  ▼
+┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐
+│  📦 도커 컨테이너 #1 (Spring WAS)             │  │  📦 도커 컨테이너 #2 (PostgreSQL DB)          │
+│ ┌──────────────────────────────────────────┐ │  │ ┌──────────────────────────────────────────┐ │
+│ │ 🪪 PID Namespace: "난 PID 1번 대장!"      │ │  │ │ 🪪 PID Namespace: "난 PID 1번 대장!"      │ │
+│ │ ☎️ NET Namespace: veth0, IP 172.17.0.2   │ │  │ │ ☎️ NET Namespace: veth1, IP 172.17.0.3   │ │
+│ │    - 독립 포트: 8080 (충돌 0%)           │ │  │ │    - 독립 포트: 5432 (충돌 0%)           │ │
+│ │ 📁 MNT Namespace: 가상 루트 / (격리)     │ │  │ │ 📁 MNT Namespace: 가상 루트 / (격리)     │ │
+│ │ 🍪 IPC Namespace: 전용 공유 메모리       │ │  │ │ 🍪 IPC Namespace: 전용 공유 메모리       │ │
+│ │ 🏷️ UTS Namespace: hostname="spring-was"  │ │  │ │ 🏷️ UTS Namespace: hostname="postgres-db" │ │
+│ │ 👑 USER Namespace: root (외부선 nobody)   │ │  │ │ 👑 USER Namespace: root (외부선 nobody)   │ │
+│ └──────────────────────────────────────────┘ │  │ └──────────────────────────────────────────┘ │
+└──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘</div>
           </div>
 
           <!-- 6 Namespaces Cards Grid -->
@@ -1532,14 +1564,48 @@
         <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-sky-400 shadow-md space-y-6 transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
-              <span class="eyebrow text-sky-800 font-bold">3-Tier Enterprise Architecture</span>
+              <span class="eyebrow text-sky-800 font-bold">3-Tier Enterprise Request/Response Architecture</span>
               <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                🍳 2. WAS(웹 애플리케이션 서버)의 본질 — "식당 카운터 vs 주방장 vs 식자재 창고"
+                🍳 2. WAS(웹 애플리케이션 서버) 3-Tier 흐름도 — "카운터 알바 vs 주방장 vs 식자재 창고"
               </h2>
             </div>
             <span class="px-3.5 py-1 rounded-full bg-sky-100 text-sky-900 font-mono text-xs font-bold border border-sky-300">
               Spring Boot & Nginx 분업의 원리
             </span>
+          </div>
+
+          <!-- Architecture Diagram 2: 3-Tier Request/Response Flow -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="eyebrow text-amber-300 font-mono text-xs font-bold flex items-center gap-2">
+                <i class="fa-solid fa-diagram-project"></i> 📐 [아키텍처 도해 2] Web - WAS - DB 3-Tier 요청/응답 데이터 플로우
+              </span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">3-Tier Traffic Routing</span>
+            </div>
+            <div class="font-mono text-xs sm:text-sm text-amber-200 leading-relaxed overflow-x-auto whitespace-pre p-2">
+[ 손님 (스마트폰 브라우저) ]
+       │
+       ▼ (1) HTTP GET /index.html (메뉴판 요청)
+┌────────────────────────────────────────────────────────┐
+│  🏢 Tier 1: Web Server (Nginx, 포트 80)                │ ──(2) HTML, CSS, JS, 이미지 즉시 응답 (0.001초) ➔ [ 손님 ]
+│  • 정적(Static) 파일 전담 캐싱 / SSL 암호화 종단        │
+└──────────────────────────┬─────────────────────────────┘
+                           │ (3) HTTP POST /api/order (주문/결제 동적 계산 요청 전달: Reverse Proxy)
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│  👨‍🍳 Tier 2: WAS (Spring Boot / Tomcat, 포트 8080)     │
+│  • 동적(Dynamic) 비즈니스 로직 계산 (주방장)           │
+│  • 1. 회원 로그인 토큰(JWT) 위변조 검사                │
+│  • 2. 10% 할인 쿠폰 & 카드 포인트 계산                 │
+│  • 3. 트랜잭션(@Transactional) 제어                     │
+└──────────────────────────┬─────────────────────────────┘
+                           │ (4) SQL 쿼리: SELECT balance FROM accounts WHERE user_id = 'g124';
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│  ❄️ Tier 3: Database (PostgreSQL, 포트 5432)          │
+│  • 영구 스토리지 (식자재 냉장고 & 금고 장부)            │
+│  • ACID 원자성 트랜잭션 보장 & 잔액 차감 업데이트      │
+└────────────────────────────────────────────────────────┘</div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1585,14 +1651,41 @@
         <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-purple-400 shadow-md space-y-6 transition">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
-              <span class="eyebrow text-purple-800 font-bold">OSI 7 Layers Network Stack</span>
+              <span class="eyebrow text-purple-800 font-bold">OSI 7 Layers Packet Encapsulation Architecture</span>
               <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                📦 3. 네트워크 OSI 7계층 — "쿠팡 택배 배송 7단계와 K8s 실전 매핑"
+                📦 3. 네트워크 OSI 7계층 패킷 흐름도 — "쿠팡 택배 배송 7단계와 K8s 실전 매핑"
               </h2>
             </div>
             <span class="px-3.5 py-1 rounded-full bg-purple-100 text-purple-900 font-mono text-xs font-bold border border-purple-300">
               택배 상자가 포장되어 전달되는 과정
             </span>
+          </div>
+
+          <!-- Architecture Diagram 3: OSI 7 Layer Packet Encapsulation -->
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="eyebrow text-purple-300 font-mono text-xs font-bold flex items-center gap-2">
+                <i class="fa-solid fa-network-wired"></i> 📐 [아키텍처 도해 3] 패킷 캡슐화 & 쿠팡 택배 7단계 1대1 매핑 구조도
+              </span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">7-Layer Encapsulation</span>
+            </div>
+            <div class="font-mono text-xs sm:text-sm text-sky-200 leading-relaxed overflow-x-auto whitespace-pre p-2">
+[ 송신자: 손님이 짜장면 주문 ]                                              [ 수신자: 서버에서 주문 접수 ]
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 7층 응용 (App)      : HTTP GET /order ➔ "짜장면 1그릇 주문"               │ ➔ Ingress (URL 라우팅)
+├─────────────────────────────────────────────────────────────────────────┤
+│ 6층 표현 (Present)  : [JSON 변환 + TLS 암호화] ➔ 🔒 비밀 편지 포장       │ ➔ Secret / TLS 복호화
+├─────────────────────────────────────────────────────────────────────────┤
+│ 5층 세션 (Session)  : [TCP 커넥션 유지] ➔ 전화 통화 끊김 방지 유지       │ ➔ Graceful Shutdown
+├─────────────────────────────────────────────────────────────────────────┤
+│ 4층 전송 (Transport): [TCP 포트 8080 헤더] ➔ 아파트 방 번호 8080 적기    │ ➔ Service (iptables L4 DNAT)
+├─────────────────────────────────────────────────────────────────────────┤
+│ 3층 네트워크 (Net)  : [IP 패킷 헤더: 192.168.1.50] ➔ 서울시 강남구 주소 │ ➔ Pod CNI IP 라우팅
+├─────────────────────────────────────────────────────────────────────────┤
+│ 2층 데이터링크(Link): [이더넷 프레임 + MAC 주소] ➔ 아파트 복도 손전달    │ ➔ veth pair / docker0
+├─────────────────────────────────────────────────────────────────────────┤
+│ 1층 물리 (Physical) : [01010101 전기 신호 / 광 펄스] ➔ 아스팔트 고속도로│ ➔ AWS EC2 쇳덩이 광케이블
+└─────────────────────────────────────────────────────────────────────────┘</div>
           </div>
 
           <div class="space-y-4">
@@ -1616,6 +1709,60 @@
                 <span v-html="layer.k8sRole"></span>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- 4. 쿠버네티스 8대 리소스 상호작용 전체 아키텍처 지도 (스마트 아파트 마을) -->
+        <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-indigo-400 shadow-md space-y-6 transition">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+            <div>
+              <span class="eyebrow text-indigo-800 font-bold">Kubernetes 8 Core Resources Interconnection</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🏛️ 4. 쿠버네티스 8대 리소스 상호작용 아키텍처 지도 — "스마트 아파트 마을"
+              </h2>
+            </div>
+            <span class="px-3.5 py-1 rounded-full bg-indigo-100 text-indigo-900 font-mono text-xs font-bold border border-indigo-300">
+              엔터프라이즈 K8s 운영 표준
+            </span>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-3 shadow-inner border border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span class="eyebrow text-indigo-300 font-mono text-xs font-bold flex items-center gap-2">
+                <i class="fa-solid fa-dharmachakra"></i> 📐 [아키텍처 도해 4] 쿠버네티스 8대 리소스 전체 연결 및 트래픽 경로도
+              </span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">K8s Resource Map</span>
+            </div>
+            <div class="font-mono text-xs sm:text-sm text-cyan-300 leading-relaxed overflow-x-auto whitespace-pre p-2">
+[ 인터넷 사용자 트래픽 ]
+            │
+            ▼ (도메인 기반 L7 라우팅: shop.skala-gj.com)
+┌───────────────────────────────────────────────────────────────────────────────────────┐
+│  🌐 Ingress (L7 스마트 정문 안내소)                                                    │
+└───────────────────────────────────────────┬───────────────────────────────────────────┘
+                                            │
+                                            ▼ (L4 가상 IP 부하분산: ClusterIP)
+┌───────────────────────────────────────────────────────────────────────────────────────┐
+│  ☎️ 3. Service (정문 대표 인터폰 101번)                                               │
+└───────────────────────────────────────────┬───────────────────────────────────────────┘
+                                            │ (Endpoints 파드 IP로 트래픽 전달)
+                                            ▼
+┌─────────────────────────────────── [ 7. Namespace: 4반 전용 구역 (skala-gj4) ] ───────┐
+│                                                                                       │
+│  ┌───────────────────────────── [ 2. Deployment (관리소장) ] ──────────────────────┐  │
+│  │                                                                                 │  │
+│  │    ┌─────────────────────────── [ 1. Pod (경비원 초소) ] ───────────────────┐   │  │
+│  │    │                                                                        │   │  │
+│  │    │  [ 메인 컨테이너: Spring WAS ] ◀──( localhost )──▶ [ 사이드카: 로깅 ]  │   │  │
+│  │    │           │                                                            │   │  │
+│  │    │           ├──( 볼륨 마운트 )──▶ 🔒 8. Secret (비밀번호 특급 금고: tmpfs)│   │  │
+│  │    │           └──( 스토리지 연결 )─▶ 📝 5. PVC (외장하드 대여 신청서)        │   │  │
+│  │    └──────────────────────────────────────────┬─────────────────────────────┘   │  │
+│  └───────────────────────────────────────────────┼─────────────────────────────────┘  │
+│                                                  │ (런타임 동적 바인딩)               │
+│                                                  ▼                                    │
+│                       🗄️ 4. PV (실제 영구 외장하드) ◀── ⚙️ 6. StorageClass (자동 발급기)│
+└───────────────────────────────────────────────────────────────────────────────────────┘</div>
           </div>
         </div>
 
