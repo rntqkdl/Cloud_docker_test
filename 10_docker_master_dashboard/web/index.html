@@ -190,10 +190,682 @@
     <!-- 4. Main Content Area -->
     <main class="flex-1 p-4 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
 
+            <!-- ========================================================
+           VIEW: BACKEND MASTER (Java · Spring Boot · JPA · SOLID)
+           ======================================================== -->
+      <div v-if="currentView === 'backend_master'" class="space-y-8">
+        
+        <!-- Header -->
+        <div class="rounded-3xl bg-gradient-to-r from-amber-700 via-orange-700 to-slate-900 p-8 sm:p-12 text-white shadow-xl space-y-4 border-2 border-amber-500/30">
+          <div class="flex items-center gap-2">
+            <span class="eyebrow bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold font-mono">
+              SKALA Enterprise Backend Engineering
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-yellow-400 text-slate-950 text-xs font-bold font-mono">
+              7대 백엔드 교재 + 성민님 실무 코드 100% 집대성
+            </span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            ☕ 백엔드 마스터: Java · Spring Boot · JPA · SOLID 완전 정복
+          </h1>
+          <p class="text-base sm:text-lg text-amber-100 max-w-4xl leading-relaxed font-medium">
+            비전공자도 1초 만에 무릎을 치는 <strong>레고 블록 OOP 비유와 SOLID 5원칙, IoC/DI 스마트 주방, JPA 4대 기적, 그리고 성민님의 실제 워크스페이스(<code>SKALA-DELIVERY-API</code>) 배달방 & N빵 정산 코드 해부</strong>까지 모든 개념과 실전을 하나의 페이지로 완벽하게 마스터합니다.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button @click="askBookQuestion('Spring Boot에서 IoC와 DI가 왜 필요한지 비유로 쉽게 설명해줘.')"
+                    class="px-5 py-3 bg-white hover:bg-slate-100 text-amber-950 font-extrabold text-sm rounded-xl transition shadow-md flex items-center gap-2">
+              <i class="fa-solid fa-comment-dots text-amber-700"></i> 🍄 도키에게 백엔드 질문하기
+            </button>
+            <span class="px-4 py-3 rounded-xl bg-amber-900/60 border border-white/30 text-white font-mono text-xs flex items-center gap-2">
+              <i class="fa-solid fa-database text-yellow-300"></i> 7대 정규 교재 전수 RAG 연동 완료
+            </span>
+          </div>
+        </div>
+
+        <!-- Sub Tabs (6 Master Sections) -->
+        <div class="flex items-center gap-2 border-b-2 border-slate-200 pb-3 overflow-x-auto">
+          <button v-for="tab in backendSubTabs" :key="tab.id"
+                  @click="setBackendSubTab(tab.id)"
+                  :class="backendSubTab === tab.id ? 'bg-amber-700 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold'"
+                  class="px-4 py-2.5 rounded-xl text-xs sm:text-sm transition flex items-center gap-2 shrink-0">
+            <i :class="tab.icon"></i>
+            <span>{{ tab.title }}</span>
+          </button>
+        </div>
+
+        <!-- SUB-TAB 1: OOP & SOLID -->
+        <div v-if="backendSubTab === 'oop_solid'" class="space-y-8">
+          
+          <!-- OOP 4 Pillars -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-amber-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-amber-800 font-bold">1. Four Pillars of OOP</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  💎 객체지향 프로그래밍(OOP) 4대 핵심 특성
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">
+                절차지향 스파게티에서 레고 블록 협력으로
+              </span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-300 space-y-1.5">
+              <span class="eyebrow text-amber-900 font-black flex items-center gap-2 text-xs">
+                <i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 비전공자 1초 핵심 비유
+              </span>
+              <p class="text-sm font-semibold text-amber-950 leading-relaxed">
+                옛날 방식(절차지향)은 라면 끓이기 레시피처럼 위에서 아래로 순서대로 실행되어 변수 하나만 고쳐도 전체가 꼬였습니다. 객체지향은 <strong>'라면 끓이는 로봇', '결제 로봇', '배달 로봇' 각자가 자기 일을 스스로 알아서 하고 메시지(메서드)만 주고받는 자율 협력 시스템</strong>입니다!
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div class="p-5 rounded-2xl bg-amber-50/80 border-2 border-amber-200 space-y-3">
+                <span class="text-3xl">🔒</span>
+                <h3 class="text-base font-black text-amber-950">1. 캡슐화 (Encapsulation)</h3>
+                <p class="text-xs text-amber-900 font-semibold leading-relaxed">
+                  <strong>💡 은행 금고 & 창구 직원:</strong> 통장 잔액은 <code>private</code>으로 숨기고, 오직 창구 직원(<code>Getter/Setter</code>, <code>withdraw()</code>)을 통해서만 안전하게 입출금하도록 통제합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-sky-50/80 border-2 border-sky-200 space-y-3">
+                <span class="text-3xl">👨‍👦</span>
+                <h3 class="text-base font-black text-sky-950">2. 상속 (Inheritance)</h3>
+                <p class="text-xs text-sky-900 font-semibold leading-relaxed">
+                  <strong>💡 부모님의 스마트 유산:</strong> 부모 클래스(<code>extends</code>)의 변수와 메서드를 물려받아 중복 코드를 없애고, 각 자식은 고유한 특수 기능만 추가 개발합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-purple-50/80 border-2 border-purple-200 space-y-3">
+                <span class="text-3xl">🎨</span>
+                <h3 class="text-base font-black text-purple-950">3. 추상화 (Abstraction)</h3>
+                <p class="text-xs text-purple-900 font-semibold leading-relaxed">
+                  <strong>💡 자동차 핸들과 페달:</strong> 복잡한 엔진 내부 폭발 원리는 가리고, 운전자에게 꼭 필요한 조작 인터페이스(<code>accelerate()</code>, <code>brake()</code>)만 제공합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-emerald-50/80 border-2 border-emerald-200 space-y-3">
+                <span class="text-3xl">🎭</span>
+                <h3 class="text-base font-black text-emerald-950">4. 다형성 (Polymorphism) 🌟</h3>
+                <p class="text-xs text-emerald-900 font-semibold leading-relaxed">
+                  <strong>💡 만능 220V 콘센트:</strong> 규격(인터페이스)만 같으면 선풍기든 드라이기든 꽂아서 쓰듯, 하나의 인터페이스로 수십 개의 구현체를 0초 만에 갈아 끼웁니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SOLID 5 Rules Matrix -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-sky-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-sky-800 font-bold">2. Clean Architecture Rules</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  📐 SOLID 5대 객체지향 설계 원칙 대백과
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-sky-100 text-sky-900 font-mono text-xs font-bold border border-sky-300">
+                1년 뒤에 코드를 고쳐도 버그 0건의 비밀
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span class="font-mono font-black text-xl text-sky-600">SRP</span>
+                  <span class="text-xs font-bold text-slate-500">단일 책임 원칙</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">카운터 알바는 주문만 받고 요리는 주방장에게</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">클래스는 오직 하나의 변경 이유만 가져야 합니다. Controller는 요청 파싱만, Service는 비즈니스 로직만 전담합니다.</p>
+                <div class="p-2.5 rounded-lg bg-sky-50 border border-sky-200 text-sky-950 font-mono text-[11px]">
+                  위반 시: 주문서 양식 바꿨는데 가스레인지 고장 남
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span class="font-mono font-black text-xl text-emerald-600">OCP</span>
+                  <span class="text-xs font-bold text-slate-500">개방 폐쇄 원칙</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">새 결제 수단 추가 시 기존 결제 코드 손대지 마라</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">확장(새 기능 추가)에는 열려 있고, 수정(기존 코드 변경)에는 닫혀 있어야 합니다.</p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 font-mono text-[11px]">
+                  위반 시: 카카오페이 추가하다 신용카드 결제 먹통
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span class="font-mono font-black text-xl text-purple-600">LSP</span>
+                  <span class="text-xs font-bold text-slate-500">리스코프 치환 원칙</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">자식은 부모의 약속 규약을 깨뜨리지 않는다</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">하위 클래스는 상위 클래스의 책임을 온전히 수행할 수 있어야 합니다.</p>
+                <div class="p-2.5 rounded-lg bg-purple-50 border border-purple-200 text-purple-950 font-mono text-[11px]">
+                  위반 시: 전기차 엑셀 밟았더니 후진해서 사고 남
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span class="font-mono font-black text-xl text-amber-600">ISP</span>
+                  <span class="text-xs font-bold text-slate-500">인터페이스 분리 원칙</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">안 쓰는 버튼 100개 달린 리모컨 강요 금지</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">자신이 사용하지 않는 메서드에 의존하지 않도록 작고 특화된 인터페이스로 쪼갭니다.</p>
+                <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-950 font-mono text-[11px]">
+                  위반 시: 스마트폰 충전기 꽂는데 프린터 드라이버 요구
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3 md:col-span-2">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span class="font-mono font-black text-xl text-rose-600">DIP</span>
+                  <span class="text-xs font-bold text-slate-500">의존 역전 원칙 🌟</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">구체적인 기계(삼성 에어컨)가 아닌 리모컨 규격에 의존하라</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">구현 클래스에 직접 의존하지 않고 인터페이스(추상화)에 의존하여 유연성을 극대화합니다.</p>
+                <div class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 font-mono text-[11px]">
+                  위반 시: LG 에어컨으로 바꿨더니 집 벽을 통째로 뜯어냄
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-TAB 2: SPRING CORE (IoC / DI) -->
+        <div v-else-if="backendSubTab === 'spring_core'" class="space-y-8">
+          
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-emerald-800 font-bold">Spring Inversion of Control & Dependency Injection</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  🌱 Spring Boot & IoC/DI 스마트 주방 도구 대여소
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-mono text-xs font-bold border border-emerald-300">
+                new 키워드의 종말과 싱글톤 컨테이너
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-600 font-black text-base">
+                  <i class="fa-solid fa-xmark"></i> 옛날 개발 방식 (내가 직접 객체 생성)
+                </div>
+                <div class="p-3 rounded-lg bg-slate-900 text-rose-300 font-mono text-xs leading-relaxed">
+// 주방장이 대장간 가서 직접 칼과 냄비를 만들어 씀 (강한 결합!)
+DeliveryRoomRepository repo = new DeliveryRoomRepositoryImpl();
+DeliveryRoomService service = new DeliveryRoomService(repo);</div>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">칼을 다른 칼로 바꿀 때마다 주방장 코드 전체를 뜯어고쳐야 하는 재앙 발생.</p>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-emerald-50/80 border-2 border-emerald-300 space-y-3">
+                <div class="flex items-center gap-2 text-emerald-700 font-black text-base">
+                  <i class="fa-solid fa-check"></i> 스프링 IoC / DI 방식 (스프링이 알아서 주입)
+                </div>
+                <div class="p-3 rounded-lg bg-slate-900 text-emerald-300 font-mono text-xs leading-relaxed">
+@Service
+@RequiredArgsConstructor // 🌟 final 변수를 스프링이 알아서 손에 쥐여줌!
+public class DeliveryRoomService {
+    private final DeliveryRoomRepository deliveryRoomRepository;
+}</div>
+                <p class="text-xs text-emerald-950 leading-relaxed font-bold">스프링 컨테이너가 서버 부팅 시 객체(Bean)를 딱 1개만 만들어 두고 주방장 손에 착 꽂아줍니다.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-TAB 3: SPRING MVC & REST API -->
+        <div v-else-if="backendSubTab === 'mvc_rest'" class="space-y-8">
+          
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-indigo-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-indigo-800 font-bold">Spring MVC 3-Tier Lifecycle</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  🌐 Spring MVC 3계층 요청 처리 플로우
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-indigo-100 text-indigo-900 font-mono text-xs font-bold border border-indigo-300">
+                DispatcherServlet ➔ Controller ➔ Service ➔ Repository
+              </span>
+            </div>
+
+            <!-- Mermaid Diagram -->
+            <div class="p-6 rounded-2xl bg-slate-900 text-white space-y-4 shadow-inner border border-slate-800">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span class="eyebrow text-indigo-300 font-mono text-xs font-bold flex items-center gap-2">
+                  <i class="fa-solid fa-diagram-project"></i> 📐 [머메이드 다이어그램] Spring MVC 3계층 요청 및 응답 생명주기
+                </span>
+                <button @click="copyText(mermaidCodeBackendMvc)" class="text-xs font-mono px-3 py-1 rounded bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 transition flex items-center gap-1.5 font-bold">
+                  <i class="fa-solid fa-copy"></i> Mermaid 코드 복사
+                </button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
+                <pre class="mermaid text-xs sm:text-sm">{{ mermaidCodeBackendMvc }}</pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-TAB 4: JPA DATABASE -->
+        <div v-else-if="backendSubTab === 'jpa_database'" class="space-y-8">
+          
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-emerald-800 font-bold">JPA & Hibernate Persistence Context</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  🗄️ JPA 영속성 컨텍스트 4대 기적
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-mono text-xs font-bold border border-emerald-300">
+                자바 객체와 DB 테이블의 완벽한 1대1 통역
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">⚡</span>
+                  <h4 class="font-black text-slate-900 text-base">1. 1차 캐시 (First-Level Cache)</h4>
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  같은 트랜잭션 안에서 동일한 ID의 엔티티를 여러 번 조회하면, DB에 쿼리를 다시 날리지 않고 <strong>메모리 1차 캐시에서 0ms 만에 즉시 반환</strong>합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">📦</span>
+                  <h4 class="font-black text-slate-900 text-base">2. 쓰기 지연 (Write-Behind Buffering)</h4>
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  <code>save()</code>를 호출할 때마다 DB에 INSERT를 치지 않고 쓰기 지연 저장소에 모아두었다가, <strong>트랜잭션이 끝나는 순간(commit) 한 번에 모아서 실행(FLUSH)</strong>합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🔍</span>
+                  <h4 class="font-black text-slate-900 text-base">3. 변경 감지 (Dirty Checking) 🌟</h4>
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  <code>update()</code> 메서드를 부를 필요가 없습니다! 자바 객체의 필드값만 <code>room.setRoomStatus(RoomStatus.ORDERED)</code>로 변경하면, <strong>JPA가 스스로 알아채고 자동으로 UPDATE SQL을 전송</strong>합니다.
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">⏳</span>
+                  <h4 class="font-black text-slate-900 text-base">4. 지연 로딩 (Lazy Loading)</h4>
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  <code>@ManyToOne(fetch = FetchType.LAZY)</code>로 설정하여, 연관된 객체가 진짜 필요한 시점까지 불필요한 DB 조회를 미뤄 <strong>서버 성능을 극대화</strong>합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-TAB 5: REAL WORKSPACE CODE -->
+        <div v-else-if="backendSubTab === 'workspace_code'" class="space-y-8">
+          
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-rose-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-rose-800 font-bold">5. Real Workspace Code Anatomy</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  💻 성민님의 실제 워크스페이스 코드 100% 전수 해부 (<code>SKALA-DELIVERY-API</code>)
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-rose-100 text-rose-900 font-mono text-xs font-bold border border-rose-300">
+                실제 배달방 & N빵 정산 엔터프라이즈 코드
+              </span>
+            </div>
+
+            <!-- 6 Code Cards Grid -->
+            <div class="space-y-6">
+              
+              <!-- 1. DeliveryRoom.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-sky-600 text-white font-mono text-xs font-bold">Entity & Lock</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">1. DeliveryRoom.java — 엔티티 & @Version 낙관적 락</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.data.table</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <code>@Entity</code>로 DB의 <code>delivery_room</code> 테이블과 매핑하고, <code>@Version private Long version;</code>으로 <strong>동시에 여러 손님이 참가 버튼을 눌렀을 때 정원 초과 충돌을 방어하는 낙관적 락</strong>을 구축했습니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-amber-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@Entity
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "delivery_room")
+public class DeliveryRoom {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+    private Long storeId;
+    private String zoneId;
+    private String hostCustomerId;
+    private Double deliveryFee;
+    private Double minOrderAmount;
+    private Double currentTotalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private RoomStatus roomStatus;
+
+    @Version // 🌟 낙관적 락: 동시 참가 충돌 방어 버전 번호
+    private Long version;
+}</div>
+              </div>
+
+              <!-- 2. RoomParticipant.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-purple-600 text-white font-mono text-xs font-bold">Relationship</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">2. RoomParticipant.java — N:1 연관관계 매핑</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.data.table</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <code>@ManyToOne(fetch = FetchType.LAZY)</code>로 배달방(<code>DeliveryRoom</code>)과 손님(<code>Customer</code>)의 외래키(FK)를 연결하여 <strong>N분의 1 배달비 분담 내역</strong>을 기록합니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-purple-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@Entity
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "room_participant")
+public class RoomParticipant {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private DeliveryRoom deliveryRoom;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    private Double participantOrderAmount;  // 내가 시킨 음식값
+    private Double calculatedDeliveryFee;   // N분의 1로 계산된 배달비
+    private Double totalPayAmount;          // 최종 총 결제액
+}</div>
+              </div>
+
+              <!-- 3. DeliveryRoomService.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-mono text-xs font-bold">Service & Trans</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">3. DeliveryRoomService.java — @Transactional & N빵 정산</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.service</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <code>@Transactional</code>로 묶여 방 참가, 최소 주문액 달성 시 상태 변경, 그리고 <strong>참여자 수에 맞춘 배달비 N분의 1 자동 재계산</strong>을 원자적으로 완벽하게 수행합니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-emerald-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@Service
+@RequiredArgsConstructor // 스프링 생성자 주입 (DI)
+public class DeliveryRoomService {
+
+    private final DeliveryRoomRepository deliveryRoomRepository;
+    private final RoomParticipantRepository roomParticipantRepository;
+
+    @Transactional // 원자성 보장: 실패 시 0.001초 롤백
+    public Response joinRoom(Long roomId, RoomJoinRequest request) {
+        DeliveryRoom room = deliveryRoomRepository.findById(roomId)
+                .orElseThrow(() -> new ResponseException(Error.DATA_NOT_FOUND, "Delivery room not found"));
+
+        // 최소 주문 금액 달성 시 상태 변경 (Dirty Checking)
+        room.setCurrentTotalAmount(room.getCurrentTotalAmount() + itemTotal);
+        if (room.getCurrentTotalAmount() >= room.getMinOrderAmount()) {
+            room.setRoomStatus(RoomStatus.ORDERED);
+        }
+        deliveryRoomRepository.save(room);
+
+        // 🌟 핵심 비즈니스 로직: 배달비 N분의 1 자동 재정산!
+        List<RoomParticipant> participants = roomParticipantRepository.findByDeliveryRoom(room);
+        double feeShare = room.getDeliveryFee() / participants.size();
+        for (RoomParticipant p : participants) {
+            p.setCalculatedDeliveryFee(feeShare);
+            p.setTotalPayAmount(p.getParticipantOrderAmount() + feeShare);
+            roomParticipantRepository.save(p);
+        }
+
+        return Response.ok(room);
+    }
+}</div>
+              </div>
+
+              <!-- 4. DeliveryRoomController.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-indigo-600 text-white font-mono text-xs font-bold">Controller</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">4. DeliveryRoomController.java — RESTful API 엔드포인트</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.controller</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <code>@RestController</code>로 모든 응답을 JSON으로 변환하며, <code>@PathVariable</code>과 <code>@RequestBody</code>로 손님의 주문 데이터를 받아 주방장(Service)에게 전달합니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-sky-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@RestController
+@RequiredArgsConstructor
+public class DeliveryRoomController {
+
+    private final DeliveryRoomService deliveryRoomService;
+
+    @PostMapping("/api/rooms")
+    public Response createRoom(@RequestBody RoomRequest request) {
+        return deliveryRoomService.createRoom(request);
+    }
+
+    @PostMapping("/api/rooms/{roomId}/join")
+    public Response joinRoom(@PathVariable Long roomId, @RequestBody RoomJoinRequest request) {
+        return deliveryRoomService.joinRoom(roomId, request);
+    }
+
+    @GetMapping("/api/rooms/{roomId}/settlement")
+    public Response getSettlement(@PathVariable Long roomId) {
+        return deliveryRoomService.getSettlement(roomId);
+    }
+}</div>
+              </div>
+
+              <!-- 5. GlobalExceptionHandler.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-rose-600 text-white font-mono text-xs font-bold">Exception Advice</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">5. GlobalExceptionHandler.java — @RestControllerAdvice 전역 예외 처리</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.exception</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  서버에서 예외가 터져도 500 에러로 죽지 않고, <code>@ExceptionHandler</code>로 낚아채서 <strong>표준화된 에러 JSON(<code>Response.error(...)</code>)</strong>을 반환합니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-rose-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<Response> handleResponseException(ResponseException ex) {
+        Error error = ex.getError();
+        return ResponseEntity.status(error.getStatus())
+                .body(Response.error(error.getCode(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Response> handleOptimisticLockException(ObjectOptimisticLockingFailureException ex) {
+        Error error = Error.CONCURRENCY_LOCK_FAILED;
+        return ResponseEntity.status(error.getStatus())
+                .body(Response.error(error.getCode(), "동시 요청 충돌이 발생했습니다. 다시 시도해 주세요."));
+    }
+}</div>
+              </div>
+
+              <!-- 6. LoggingAspect.java -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded bg-teal-600 text-white font-mono text-xs font-bold">AOP Aspect</span>
+                    <h4 class="font-black text-slate-900 text-base sm:text-lg">6. LoggingAspect.java — @Aspect AOP 실행 시간 자동 측정</h4>
+                  </div>
+                  <span class="text-xs font-mono text-slate-500">com.sk.skala.shopapi.config</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <code>@Aspect</code>와 <code>@Around</code>로 모든 컨트롤러와 서비스 메서드의 <strong>시작/종료 및 실행 소요 시간(ms)을 비즈니스 코드 침범 없이 자동으로 로깅</strong>합니다.
+                </p>
+                <div class="p-4 rounded-xl bg-slate-900 text-teal-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre">
+@Slf4j
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Pointcut("within(com.sk.skala.shopapi.controller..*) || within(com.sk.skala.shopapi.service..*)")
+    public void applicationPackagePointcut() {}
+
+    @Around("applicationPackagePointcut()")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        log.info("[AOP 시작] 메서드: {}.{}()", 
+                joinPoint.getSignature().getDeclaringTypeName(), 
+                joinPoint.getSignature().getName());
+
+        Object result = joinPoint.proceed(); // 실제 메서드 실행
+
+        long elapsedTime = System.currentTimeMillis() - start;
+        log.info("[AOP 종료] 실행 완료: {}.{}() - 소요 시간: {} ms", 
+                joinPoint.getSignature().getDeclaringTypeName(), 
+                joinPoint.getSignature().getName(), 
+                elapsedTime);
+
+        return result;
+    }
+}</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-TAB 6: TROUBLESHOOTING -->
+        <div v-else-if="backendSubTab === 'troubleshooting'" class="space-y-8">
+          
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-rose-400 shadow-md space-y-6 transition">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+              <div>
+                <span class="eyebrow text-rose-800 font-bold">Production Troubleshooting Playbook</span>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                  🚨 현업 백엔드 6대 장애 & 트러블슈팅 대백과
+                </h2>
+              </div>
+              <span class="px-3.5 py-1 rounded-full bg-rose-100 text-rose-900 font-mono text-xs font-bold border border-rose-300">
+                SRE & 백엔드 장애 수술 플레이북
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">💣</span> 1. N+1 쿼리 폭탄
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  방 100개를 조회했는데 연관된 참여자 조회를 위해 100번의 SQL이 추가 실행되어 DB가 마비되는 현상.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: JPQL `JOIN FETCH` 또는 `@EntityGraph` 적용
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">💀</span> 2. LazyInitializationException
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  Service 계층 밖(Controller/View)에서 지연 로딩 필드에 접근하다가 영속성 세션이 닫혀 발생하는 에러.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: Service 계층 내에서 DTO로 변환 후 반환
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">⚠️</span> 3. 동시성 정원 초과 충돌
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  동시에 2명이 마지막 1자리에 참가하여 정원이 초과되는 동시성 버그.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: `@Version` 낙관적 락 또는 Redis 분산 락
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">🚰</span> 4. HikariCP 커넥션 풀 고갈
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  트랜잭션 내부에서 외부 API를 호출하여 DB 커넥션을 반환하지 못하고 타임아웃 발생.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: 외부 I/O는 `@Transactional` 범위 밖으로 분리
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">🩸</span> 5. OOMKilled (Exit Code 137)
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  JVM 힙 메모리 누수 또는 <code>findAll()</code> 대용량 조회로 컨테이너 강제 사망.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: `Pageable` 페이징 조회 & `-XX:+HeapDumpOnOutOfMemoryError`
+                </div>
+              </div>
+
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <div class="flex items-center gap-2 text-rose-700 font-black text-base">
+                  <span class="text-xl">🔄</span> 6. @Transactional 롤백 실패
+                </div>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                  Checked Exception(예: `Exception`) 발생 시 기본적으로 롤백이 안 되는 문제.
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-950 font-mono text-xs font-bold">
+                  처방: `@Transactional(rollbackFor = Exception.class)` 명시
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
       <!-- ========================================================
            VIEW 1: ROADMAP (학습 로드맵)
            ======================================================== -->
-      <div v-if="currentView === 'roadmap'" class="space-y-8">
+      <div v-else-if="currentView === 'roadmap'" class="space-y-8">
         
         <!-- Hero Panel -->
         <div class="rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-700 p-8 sm:p-12 text-white shadow-lg relative overflow-hidden">
@@ -2464,6 +3136,21 @@ public class LoggingAspect {
     createApp({
       setup() {
 
+        const backendSubTab = ref('oop_solid');
+        const backendSubTabs = [
+          { id: 'oop_solid', title: '💎 1. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
+          { id: 'spring_core', title: '🌱 2. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
+          { id: 'mvc_rest', title: '🌐 3. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
+          { id: 'jpa_database', title: '🗄️ 4. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
+          { id: 'workspace_code', title: '💻 5. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
+          { id: 'troubleshooting', title: '🚨 6. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
+        ];
+
+        function setBackendSubTab(tab) {
+          backendSubTab.value = tab;
+          renderMermaid();
+        }
+
         const mermaidCodeBackendMvc = 'flowchart TD\n    classDef client fill:#f8fafc,stroke:#0284c7,stroke-width:2px,color:#0f172a,font-weight:bold;\n    classDef ctrl fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0369a1,font-weight:bold;\n    classDef srv fill:#e0e7ff,stroke:#4338ca,stroke-width:2px,color:#3730a3,font-weight:bold;\n    classDef repo fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#166534,font-weight:bold;\n    classDef db fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold;\n\n    Client["📱 손님 (스마트폰 앱 / 브라우저)"]:::client\n    Dispatcher["📮 DispatcherServlet (중앙 우체국 안내소)"]\n    Controller["🤵 1. Controller 계층 (카운터 알바생)<br/>@RestController / @PostMapping(\'/api/rooms\')"]:::ctrl\n    Service["👨\u200d🍳 2. Service 계층 (메인 주방장)<br/>@Service / @Transactional 비즈니스 로직 & N빵 정산"]:::srv\n    Repository["❄️ 3. Repository 계층 (창고 관리인)<br/>JpaRepository CRUD 데이터 접근"]:::repo\n    DB[("🗄️ PostgreSQL Database")]:::db\n\n    Client -->|"(1) HTTP POST /api/rooms + JSON"| Dispatcher\n    Dispatcher -->|"(2) 핸들러 매핑"| Controller\n    Controller -->|"(3) RoomRequest DTO 전달"| Service\n    Service -->|"(4) 엔티티 조작 및 저장 요청"| Repository\n    Repository -->|"(5) SQL 자동 실행"| DB\n    DB -.->|"(6) 저장된 레코드 반환"| Repository\n    Repository -.->|"(7) 엔티티 반환"| Service\n    Service -.->|"(8) Response.ok(savedRoom)"| Controller\n    Controller -.->|"(9) JSON 응답 (200 OK)"| Client';
 
         const mermaidCode1 = 'graph TD\n    classDef host fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;\n    classDef container fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    classDef ns fill:#334155,stroke:#64748b,stroke-width:1px,color:#f8fafc;\n\n    Host["🖥️ 물리 호스트 컴퓨터 (Linux Host Kernel)<br/>• 물리 CPU / RAM (cgroups 자원 계량기)<br/>• 물리 파일시스템 (NVMe SSD)<br/>• 물리 랜카드 (eth0, IP: 192.168.1.100)"]:::host\n\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C1["📦 도커 컨테이너 #1 (Spring WAS)"]:::container\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C2["📦 도커 컨테이너 #2 (PostgreSQL DB)"]:::container\n\n    subgraph C1_Box ["📦 도커 컨테이너 #1 (Spring WAS)"]\n        N1_PID["🪪 PID: \'난 PID 1번 대장!\' (spring-boot)"]:::ns\n        N1_NET["☎️ NET: veth0 (IP 172.17.0.2, Port 8080)"]:::ns\n        N1_MNT["📁 MNT: 독립된 가상 루트 /app"]:::ns\n        N1_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N1_UTS["🏷️ UTS: hostname=\'spring-was\'"]:::ns\n        N1_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end\n\n    subgraph C2_Box ["📦 도커 컨테이너 #2 (PostgreSQL DB)"]\n        N2_PID["🪪 PID: \'난 PID 1번 대장!\' (postgres)"]:::ns\n        N2_NET["☎️ NET: veth1 (IP 172.17.0.3, Port 5432)"]:::ns\n        N2_MNT["📁 MNT: 독립된 가상 루트 /var/lib/postgresql"]:::ns\n        N2_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N2_UTS["🏷️ UTS: hostname=\'postgres-db\'"]:::ns\n        N2_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end';
@@ -2509,6 +3196,7 @@ public class LoggingAspect {
         ];
 
         const mainMenus = [
+          { id: 'backend_master', title: '☕ 백엔드 마스터 (Java · Spring · JPA)', icon: 'fa-solid fa-mug-hot', color: '#d97706' },
           { id: 'curriculum_reader', title: '📖 3대 교재 완독 학습관', icon: 'fa-solid fa-book-open-reader', color: '#6366f1' },
           { id: 'docker_track', title: '🐳 도커 마스터 (10대 실습)', icon: 'fa-brands fa-docker', color: '#0284c7' },
           { id: 'k8s_master', title: '☸️ 쿠버네티스 실전 (20대 실습)', icon: 'fa-solid fa-dharmachakra', color: '#7c3aed' },
@@ -5465,6 +6153,9 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
         });
 
         return {
+          backendSubTab,
+          backendSubTabs,
+          setBackendSubTab,
           renderMermaid,
           setCurriculumTab,
           mermaidCodeBackendMvc,
