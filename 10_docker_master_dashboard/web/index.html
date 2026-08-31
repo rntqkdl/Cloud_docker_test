@@ -234,6 +234,269 @@
         </div>
 
         
+        
+        <!-- SUB-TAB 0: REQUEST LIFECYCLE & CODE NAVIGATION ROADMAP -->
+        <div v-if="backendSubTab === 'request_flow'" class="space-y-10">
+          
+          <!-- Hero Banner (Large Font & High Contrast) -->
+          <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-emerald-500/40 text-white space-y-5 shadow-2xl">
+            <div class="flex items-center gap-2">
+              <span class="px-4 py-1.5 rounded-full bg-emerald-500 text-slate-950 text-xs sm:text-sm font-black font-mono">
+                Full Request Lifecycle & Code Navigation Roadmap
+              </span>
+              <span class="text-xs sm:text-sm font-bold text-emerald-300 font-mono">데이터 진입 ➔ 변환 ➔ 저장 ➔ 응답 전수 추적</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+              🚦 손님 요청의 8단계 데이터 여행기 & 코드 읽는 순서
+            </h2>
+            <p class="text-base sm:text-xl text-emerald-100 max-w-5xl leading-relaxed font-medium">
+              손님이 스마트폰에서 <strong>[피자 같이 시켜요 방 만들기]</strong> 버튼을 딱 눌렀을 때, 데이터가 <strong>어떤 클래스를 어떤 순서로 통과하며 변신하는지</strong>를 시각적 흐름도와 8대 체크포인트로 한눈에 꿰뚫어 봅니다.
+            </p>
+          </div>
+
+          <!-- 1. Mermaid Sequence Diagram Box -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-slate-900 text-white space-y-6 shadow-xl border-2 border-slate-800">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <span class="eyebrow text-emerald-400 font-mono text-xs sm:text-sm font-bold flex items-center gap-2">
+                  <i class="fa-solid fa-diagram-project text-emerald-400"></i> 📐 [시퀀스 다이어그램] 손님 요청 ➔ 보안 ➔ 컨트롤러 ➔ 서비스 ➔ JPA ➔ DB 12단계 흐름도
+                </span>
+                <h3 class="text-xl sm:text-2xl font-black text-white mt-1">실제 런타임 데이터 이동 시퀀스</h3>
+              </div>
+              <button @click="copyText(mermaidCodeRequestFlow)" class="text-xs sm:text-sm font-mono px-4 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 transition flex items-center gap-2 font-bold shrink-0">
+                <i class="fa-solid fa-copy"></i> Mermaid 다이어그램 복사
+              </button>
+            </div>
+
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-950 overflow-x-auto flex justify-center shadow-inner">
+              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCodeRequestFlow }}</pre>
+            </div>
+          </div>
+
+          <!-- 2. Developer Code Navigation Top-Down Strategy Box -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-indigo-200 hover:border-indigo-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-indigo-800 font-bold text-xs sm:text-sm">Developer Code Reading Strategy</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🧭 개발자가 코드를 분석할 때 따라가는 5단계 정석 탐색 순서 (탑다운)
+              </h3>
+              <p class="text-sm sm:text-base text-slate-600 font-medium mt-1">새로운 프로젝트에 투입되었을 때, 이 순서대로 파일을 열면 시스템 전체가 5분 만에 파악됩니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div class="p-5 rounded-2xl bg-sky-50 border-2 border-sky-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-8 h-8 rounded-lg bg-sky-600 text-white font-mono font-black text-sm flex items-center justify-center">1</span>
+                  <span class="font-mono text-[11px] font-bold text-sky-800">Controller</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">URL & 메서드 확인</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">어떤 주소(<code>/api/rooms</code>)와 HTTP 메서드(POST)로 요청을 받는지 파악</p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-purple-50 border-2 border-purple-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-8 h-8 rounded-lg bg-purple-600 text-white font-mono font-black text-sm flex items-center justify-center">2</span>
+                  <span class="font-mono text-[11px] font-bold text-purple-800">DTO / Request</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">데이터 포장지 확인</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">손님이 보내는 주문서(<code>RoomRequest</code>)에 어떤 필드(제목, 배달비)가 있는지 확인</p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-emerald-50 border-2 border-emerald-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-mono font-black text-sm flex items-center justify-center">3</span>
+                  <span class="font-mono text-[11px] font-bold text-emerald-800">Service</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">핵심 비즈니스 로직</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">돈 계산, N빵 배달비 정산, 잔액 차감 등 진짜 두뇌 로직을 집중 분석</p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-amber-50 border-2 border-amber-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-8 h-8 rounded-lg bg-amber-600 text-white font-mono font-black text-sm flex items-center justify-center">4</span>
+                  <span class="font-mono text-[11px] font-bold text-amber-800">Entity & Repo</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">DB 테이블 & 쿼리</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">PostgreSQL 테이블 컬럼과 N:1 연관관계(<code>RoomParticipant</code>) 연결 구조 파악</p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-rose-50 border-2 border-rose-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-8 h-8 rounded-lg bg-rose-600 text-white font-mono font-black text-sm flex items-center justify-center">5</span>
+                  <span class="font-mono text-[11px] font-bold text-rose-800">Exception & AOP</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-base">에러 방어 & 보안</h4>
+                <p class="text-xs text-slate-700 font-medium leading-relaxed">잔액 부족 등 예외 발생 시 표준 JSON 에러 처리와 JWT 인증 필터 확인</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 8 Detailed Checkpoints Cards (Large Font, Ultra Readable) -->
+          <div class="space-y-6">
+            <div class="border-b border-slate-200 pb-3">
+              <span class="eyebrow text-emerald-800 font-bold text-xs sm:text-sm">Step-by-Step Checkpoint Anatomy</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🔍 8단계 데이터 이동 체크포인트 상세 해부
+              </h3>
+            </div>
+
+            <!-- Checkpoint 1 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-slate-900 text-white font-mono font-black text-lg flex items-center justify-center">1</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">🛡️ 1단계: 보안 관문 및 JWT 토큰 검사</h4>
+                    <span class="font-mono text-xs text-slate-500 font-bold">JwtAuthenticationFilter.java & SecurityConfig.java</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-bold border border-slate-200">
+                  인터넷 관문 (Security)
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                손님이 보낸 HTTP 헤더의 <code>Authorization: Bearer eyJhbGci...</code> (모바일 전자 신분증)을 검사합니다. 위조되었거나 만료된 토큰이면 컨트롤러에 도달하기 전에 <strong>여기서 즉시 <code>401 Unauthorized</code>로 요청을 거절</strong>합니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 2 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-sky-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-sky-600 text-white font-mono font-black text-lg flex items-center justify-center">2</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">📮 2단계: 중앙 안내소의 교통정리</h4>
+                    <span class="font-mono text-xs text-sky-700 font-bold">DispatcherServlet & HandlerMapping</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 font-mono text-xs font-bold border border-sky-300">
+                  스프링 MVC 총지휘자
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                내장 톰캣(Tomcat)을 통과한 요청을 받아 <em>"이 <code>POST /api/rooms</code> 주소는 누가 담당하지?"</em>를 조사하여, <strong><code>DeliveryRoomController</code>의 <code>createRoom()</code> 메서드로 라우팅</strong>합니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 3 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-indigo-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-mono font-black text-lg flex items-center justify-center">3</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">🤵 3단계: 카운터 매니저의 JSON 포장 풀기</h4>
+                    <span class="font-mono text-xs text-indigo-700 font-bold">DeliveryRoomController.java & RoomRequest.java</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 font-mono text-xs font-bold border border-indigo-300">
+                  요청 파싱 & 검증
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                <code>@RequestBody</code>가 작동하여 JSON 문자열을 자바 주문서 객체(<code>RoomRequest DTO</code>)로 자동 번역합니다. 카운터는 절대 복잡한 계산을 직접 하지 않고 <strong>주문서를 그대로 들고 메인 주방장(<code>DeliveryRoomService</code>)에게 전달</strong>합니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 4 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-teal-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-teal-600 text-white font-mono font-black text-lg flex items-center justify-center">4</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">⏱️ 4단계: AOP 횡단 비서의 스톱워치 가동</h4>
+                    <span class="font-mono text-xs text-teal-700 font-bold">LoggingAspect.java (@Aspect & @Around)</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-teal-100 text-teal-900 font-mono text-xs font-bold border border-teal-300">
+                  실행 시간 자동 측정
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                주방장 코드를 전혀 건드리지 않고, <code>@Around</code>가 메서드 진입 순간을 가로채서 <strong><code>[AOP 시작] createRoom() 실행</code></strong> 로그를 찍고 시작 시간을 기록합니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 5 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-mono font-black text-lg flex items-center justify-center">5</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">👨‍🍳 5단계: 메인 주방장의 비즈니스 계산</h4>
+                    <span class="font-mono text-xs text-emerald-700 font-bold">DeliveryRoomService.java (@Transactional)</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 font-mono text-xs font-bold border border-emerald-300">
+                  비즈니스 로직 & 정산
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                <code>@Transactional</code> 안전 문을 열고: <strong>1. 회원 존재 검증 ➔ 2. 배달방 엔티티 조립 ➔ 3. 방장을 1번 참여자로 등록 ➔ 4. N분의 1 배달비 계산</strong>을 원자적으로 완벽하게 수행합니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 6 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-amber-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-amber-600 text-white font-mono font-black text-lg flex items-center justify-center">6</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">❄️ 6단계: 창고지기와 SQL 자동 생성 및 DB 저장</h4>
+                    <span class="font-mono text-xs text-amber-700 font-bold">DeliveryRoomRepository.java & PostgreSQL DB</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">
+                  JPA 영속성 컨텍스트
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                <code>deliveryRoomRepository.save(room)</code> 호출 시, 개발자가 SQL을 안 짰어도 <strong>JPA가 <code>INSERT INTO delivery_room ...</code> SQL을 자동 생성하여 PostgreSQL DB에 안전하게 꽂아 넣습니다.</strong>
+              </p>
+            </div>
+
+            <!-- Checkpoint 7 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-purple-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-purple-600 text-white font-mono font-black text-lg flex items-center justify-center">7</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">🔒 7단계: 트랜잭션 확정 & 스톱워치 종료</h4>
+                    <span class="font-mono text-xs text-purple-700 font-bold">DB Commit & LoggingAspect.java</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-900 font-mono text-xs font-bold border border-purple-300">
+                  원자성 확정
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                에러가 없으면 DB에 영구 반영(<code>commit</code>)되고, <code>LoggingAspect</code>가 <strong><code>[AOP 종료] createRoom() executed in 8 ms</code></strong>를 출력하며 시간 측정을 마칩니다.
+              </p>
+            </div>
+
+            <!-- Checkpoint 8 -->
+            <div class="p-7 sm:p-9 rounded-3xl bg-white border-2 border-slate-200 hover:border-rose-400 shadow-sm space-y-4 transition">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-3">
+                  <span class="w-10 h-10 rounded-xl bg-rose-600 text-white font-mono font-black text-lg flex items-center justify-center">8</span>
+                  <div>
+                    <h4 class="text-xl sm:text-2xl font-black text-slate-900">📬 8단계: 손님에게 최종 JSON 응답 발송</h4>
+                    <span class="font-mono text-xs text-rose-700 font-bold">Response.ok(savedRoom) ➔ 200 OK JSON</span>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-900 font-mono text-xs font-bold border border-rose-300">
+                  JSON 직렬화 완료
+                </span>
+              </div>
+              <p class="text-base sm:text-lg text-slate-800 font-medium leading-relaxed">
+                결과 객체를 공통 응답 상자(<code>Response.ok(savedRoom)</code>)에 담아 반환하면, <strong>스프링이 이를 <code>200 OK</code> JSON 데이터로 변환하여 손님의 스마트폰 화면에 방 개설 완료 화면을 띄워줍니다!</strong>
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+
         <!-- SUB-TAB 1: ANNOTATIONS 30 CORE MASTERPIECE -->
         <div v-if="backendSubTab === 'annotations'" class="space-y-8">
           
@@ -3247,7 +3510,8 @@ public class LoggingAspect {
     createApp({
       setup() {
 
-        const backendSubTab = ref('annotations');
+        const backendSubTab = ref('request_flow');
+        const mermaidCodeRequestFlow = 'sequenceDiagram\n    autonumber\n    actor Client as 📱 손님 (스마트폰 앱)\n    participant Sec as 🛡️ Security Filter (JWT 검증)\n    participant Dispatcher as 📮 DispatcherServlet (중앙 안내소)\n    participant AOP as ⏱️ LoggingAspect (AOP 비서)\n    participant Controller as 🤵 DeliveryRoomController (카운터)\n    participant Service as 👨\u200d🍳 DeliveryRoomService (메인 주방장)\n    participant Repo as ❄️ DeliveryRoomRepository (창고지기)\n    participant DB as 🗄️ PostgreSQL DB (식자재 금고)\n\n    Client->>Sec: 1. POST /api/rooms + JSON {"title": "피자방", "fee": 3000}\n    Sec->>Dispatcher: 2. JWT 신분증 유효성 통과 확인\n    Dispatcher->>Controller: 3. URL 보고 createRoom() 매핑 & DTO 변환\n    Controller->>AOP: 4. 서비스 호출 전 시간 측정 시작 (start time)\n    AOP->>Service: 5. createRoom(request) 비즈니스 로직 실행\n    Note over Service: @Transactional 시작!<br/>1. 방 생성<br/>2. 방장을 1번 참가자로 자동 등록\n    Service->>Repo: 6. deliveryRoomRepository.save(room)\n    Repo->>DB: 7. INSERT INTO delivery_room ... SQL 자동 전송\n    DB-->>Repo: 8. 생성된 ID(101번) 반환\n    Repo-->>Service: 9. 영속 엔티티 반환\n    Note over Service: @Transactional commit 완료!\n    Service-->>AOP: 10. 비즈니스 결과 반환\n    AOP-->>Controller: 11. 시간 측정 종료 (소요 시간 8ms 기록)\n    Controller-->>Client: 12. 200 OK + Response.ok(savedRoom) JSON 발송!';
 
         const searchAnnotationQuery = ref('');
         const selectedAnnotationCategory = ref('ALL');
@@ -3547,13 +3811,14 @@ public class OrderService {
         ];
 
         const backendSubTabs = [
-          { id: 'annotations', title: '📑 1. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
-          { id: 'oop_solid', title: '💎 2. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
-          { id: 'spring_core', title: '🌱 3. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
-          { id: 'mvc_rest', title: '🌐 4. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
-          { id: 'jpa_database', title: '🗄️ 5. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
-          { id: 'workspace_code', title: '💻 6. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
-          { id: 'troubleshooting', title: '🚨 7. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
+          { id: 'request_flow', title: '🚦 1. 손님 요청 8단계 여행기 & 코드 읽는 순서 (전체 흐름)', icon: 'fa-solid fa-route' },
+          { id: 'annotations', title: '📑 2. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
+          { id: 'oop_solid', title: '💎 3. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
+          { id: 'spring_core', title: '🌱 4. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
+          { id: 'mvc_rest', title: '🌐 5. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
+          { id: 'jpa_database', title: '🗄️ 6. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
+          { id: 'workspace_code', title: '💻 7. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
+          { id: 'troubleshooting', title: '🚨 8. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
         ];
 
         function setBackendSubTab(tab) {
@@ -6564,6 +6829,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
 
         return {
           backendSubTab,
+          mermaidCodeRequestFlow,
           backendSubTabs,
           setBackendSubTab,
           searchAnnotationQuery,
