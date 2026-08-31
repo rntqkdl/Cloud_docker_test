@@ -2334,6 +2334,107 @@ public class DeliveryRoomService {
                 </div>
               </div>
 
+            
+              <!-- 7. StockTrading2: StockService.java (Dirty Checking & Fast-Fail) -->
+              <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+                <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                      <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                      <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                    </div>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-sky-400 flex items-center gap-1.5">
+                      <i class="fa-solid fa-chart-line text-sky-400"></i> 7. StockTrading2: StockService.java
+                    </span>
+                    <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                      Day 4 종합실습: Dirty Checking(변경 감지) & Fast-Fail 검증
+                    </span>
+                  </div>
+                  <span class="text-xs font-mono text-slate-400">com.sk.skala.stock.service.StockService</span>
+                </div>
+                <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                  <pre class="text-slate-200"><span class="text-yellow-400">@Service</span>
+<span class="text-yellow-400">@RequiredArgsConstructor</span> <span class="text-slate-500">// 🌟 final 변수를 스프링이 생성자로 자동 주입!</span>
+<span class="text-blue-400">public class</span> <span class="text-emerald-400">StockService</span> {
+
+    <span class="text-blue-400">private final</span> <span class="text-emerald-400">StockRepository</span> <span class="text-slate-200">stockRepository</span>;
+
+    <span class="text-slate-500">/**
+     * 🌟 [Dirty Checking (변경 감지)의 기적]
+     * stockRepository.save()를 호출하지 않아도 @Transactional 안에서
+     * stock.updateStock()으로 값만 바꾸면 트랜잭션 종료 시 JPA가 UPDATE SQL 자동 실행!
+     */</span>
+    <span class="text-yellow-400">@Transactional</span>
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">StockDto</span> <span class="text-yellow-300">updateStockById</span>(<span class="text-emerald-400">Long</span> <span class="text-slate-200">id</span>, <span class="text-emerald-400">StockDto</span> <span class="text-slate-200">dto</span>) {
+        <span class="text-emerald-400">Stock</span> <span class="text-slate-200">stock</span> = <span class="text-slate-200">stockRepository</span>.<span class="text-yellow-300">findById</span>(<span class="text-slate-200">id</span>)
+                .<span class="text-yellow-300">orElseThrow</span>(() -> <span class="text-blue-400">new</span> <span class="text-emerald-400">IllegalArgumentException</span>(<span class="text-green-300">"해당 주식을 찾을 수 없습니다. id="</span> + <span class="text-slate-200">id</span>));
+
+        <span class="text-slate-200">stock</span>.<span class="text-yellow-300">updateStock</span>(<span class="text-slate-200">dto</span>.<span class="text-yellow-300">getName</span>(), <span class="text-slate-200">dto</span>.<span class="text-yellow-300">getCurrentPrice</span>());
+        <span class="text-purple-400">return</span> <span class="text-emerald-400">StockDto</span>.<span class="text-yellow-300">fromEntity</span>(<span class="text-slate-200">stock</span>);
+    }
+
+    <span class="text-slate-500">/**
+     * 🌟 [Fast-Fail 선제 검증 패턴]
+     * DB에서 없는 데이터를 삭제하려 할 때 500 서버 에러를 내지 않고
+     * existsById로 0.001초 만에 확인 후 안전하게 삭제!
+     */</span>
+    <span class="text-yellow-400">@Transactional</span>
+    <span class="text-blue-400">public void</span> <span class="text-yellow-300">deleteStockById</span>(<span class="text-emerald-400">Long</span> <span class="text-slate-200">id</span>) {
+        <span class="text-purple-400">if</span> (!<span class="text-slate-200">stockRepository</span>.<span class="text-yellow-300">existsById</span>(<span class="text-slate-200">id</span>)) {
+            <span class="text-purple-400">throw new</span> <span class="text-emerald-400">IllegalArgumentException</span>(<span class="text-green-300">"삭제할 주식이 존재하지 않습니다. id="</span> + <span class="text-slate-200">id</span>);
+        }
+        <span class="text-slate-200">stockRepository</span>.<span class="text-yellow-300">deleteById</span>(<span class="text-slate-200">id</span>);
+    }
+}</pre>
+                </div>
+              </div>
+
+              <!-- 8. StockTrading2: StockController.java (@Valid & 15종 REST API) -->
+              <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+                <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                      <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                      <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                      <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                    </div>
+                    <span class="font-mono text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                      <i class="fa-solid fa-cubes text-emerald-400"></i> 8. StockTrading2: StockController.java
+                    </span>
+                    <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                      @Valid 400 검증 & 204 No Content
+                    </span>
+                  </div>
+                  <span class="text-xs font-mono text-slate-400">com.sk.skala.stock.controller.StockController</span>
+                </div>
+                <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                  <pre class="text-slate-200"><span class="text-yellow-400">@Tag</span>(<span class="text-slate-300">name</span> = <span class="text-green-300">"Stock Controller"</span>, <span class="text-slate-300">description</span> = <span class="text-green-300">"주식 정보 관리 및 실시간 시세 API"</span>)
+<span class="text-yellow-400">@RestController</span>
+<span class="text-yellow-400">@RequestMapping</span>(<span class="text-green-300">"/api/stocks"</span>)
+<span class="text-yellow-400">@RequiredArgsConstructor</span>
+<span class="text-blue-400">public class</span> <span class="text-emerald-400">StockController</span> {
+
+    <span class="text-blue-400">private final</span> <span class="text-emerald-400">StockService</span> <span class="text-slate-200">stockService</span>;
+
+    <span class="text-slate-500">// 🌟 PUT /api/stocks/{id} : @Valid 로 가격 0원 이하 잘못된 데이터 사전 차단 (400 Bad Request)</span>
+    <span class="text-yellow-400">@PutMapping</span>(<span class="text-green-300">"/{id}"</span>)
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">ResponseEntity</span>&lt;<span class="text-emerald-400">StockDto</span>&gt; <span class="text-yellow-300">updateStock</span>(
+            <span class="text-yellow-400">@PathVariable</span> <span class="text-emerald-400">Long</span> <span class="text-slate-200">id</span>, 
+            <span class="text-yellow-400">@Valid</span> <span class="text-yellow-400">@RequestBody</span> <span class="text-emerald-400">StockDto</span> <span class="text-slate-200">stockDto</span>) {
+        <span class="text-purple-400">return</span> <span class="text-emerald-400">ResponseEntity</span>.<span class="text-yellow-300">ok</span>(<span class="text-slate-200">stockService</span>.<span class="text-yellow-300">updateStockById</span>(<span class="text-slate-200">id</span>, <span class="text-slate-200">stockDto</span>));
+    }
+
+    <span class="text-slate-500">// 🌟 DELETE /api/stocks/{id} : 성공 시 바디 없이 204 No Content 반환 (REST 표준)</span>
+    <span class="text-yellow-400">@DeleteMapping</span>(<span class="text-green-300">"/{id}"</span>)
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">ResponseEntity</span>&lt;<span class="text-emerald-400">Void</span>&gt; <span class="text-yellow-300">deleteStock</span>(<span class="text-yellow-400">@PathVariable</span> <span class="text-emerald-400">Long</span> <span class="text-slate-200">id</span>) {
+        <span class="text-slate-200">stockService</span>.<span class="text-yellow-300">deleteStockById</span>(<span class="text-slate-200">id</span>);
+        <span class="text-purple-400">return</span> <span class="text-emerald-400">ResponseEntity</span>.<span class="text-yellow-300">noContent</span>().<span class="text-yellow-300">build</span>();
+    }
+}</pre>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -5076,9 +5177,9 @@ public class OrderService {
           { id: 'annotations', title: '📑 3. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
           { id: 'oop_solid', title: '💎 4. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
           { id: 'spring_core', title: '🌱 5. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
-          { id: 'mvc_rest', title: '🌐 6. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
-          { id: 'jpa_database', title: '🗄️ 7. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
-          { id: 'workspace_code', title: '💻 8. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
+          { id: 'mvc_rest', title: '🌐 6. Spring MVC 3계층 & StockTrading 15종 REST API', icon: 'fa-solid fa-network-wired' },
+          { id: 'jpa_database', title: '🗄️ 7. JPA 영속성 컨텍스트 4대 기적 (Dirty Checking)', icon: 'fa-solid fa-database' },
+          { id: 'workspace_code', title: '💻 8. 실전 코드 전수 해부 (SKALA-DELIVERY & StockTrading)', icon: 'fa-solid fa-laptop-code' },
           { id: 'troubleshooting', title: '🚨 9. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
         ];
 
