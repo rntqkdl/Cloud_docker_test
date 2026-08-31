@@ -866,6 +866,244 @@ dependencyManagement {
 
         
         
+        
+        <!-- SUB-TAB 0: ENVIRONMENT SETUP CS & BACKEND ESSENTIALS -->
+        <div v-if="backendSubTab === 'env_setup'" class="space-y-10">
+          
+          <!-- Hero Banner -->
+          <div class="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-amber-900 via-orange-950 to-slate-950 border-2 border-amber-500/40 text-white space-y-5 shadow-2xl">
+            <div class="flex items-center gap-2">
+              <span class="px-4 py-1.5 rounded-full bg-amber-500 text-slate-950 text-xs sm:text-sm font-black font-mono">
+                Backend Environment Engineering
+              </span>
+              <span class="text-xs sm:text-sm font-bold text-yellow-300 font-mono">JDK · Gradle · 환경변수 · 포트 · YAML 완전 정복</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+              🛠️ 1장. 백엔드 개발환경 설정의 본질과 컴퓨터 공학(CS) 원리
+            </h2>
+            <p class="text-base sm:text-xl text-amber-100 max-w-5xl leading-relaxed font-medium">
+              "설치하라는 대로 설치했는데 왜 이걸 깔았는지 모르겠다"는 의문을 100% 해소합니다! <strong>JDK·JVM의 통역 원리부터 빌드 도구 Gradle의 장보기 자동화, 환경변수(PATH)의 주소록 비밀, 포트(Port) 충돌 방어, YAML 설정의 들여쓰기 마법</strong>까지 비전공자의 눈높이로 완벽하게 꿰뚫어 봅니다.
+            </p>
+          </div>
+
+          <!-- Section 1: JDK vs JRE vs JVM 3-Tier -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-amber-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-amber-800 font-bold text-xs sm:text-sm">1. Java Execution Ecosystem</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                ☕ JDK vs JRE vs JVM — 왜 자바 21(Java 21)을 깔아야 하는가?
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- JDK -->
+              <div class="p-6 rounded-2xl bg-amber-50/80 border-2 border-amber-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">🧰</span>
+                  <span class="px-2.5 py-1 rounded bg-amber-200 text-amber-950 font-mono text-xs font-bold">개발자용</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-lg">JDK (Java Development Kit)</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <strong>💡 요리사의 만능 조리기구 세트:</strong> 자바 코드(<code>.java</code>)를 컴퓨터가 실행할 수 있는 바이트코드(<code>.class</code>)로 번역하는 컴파일러(<code>javac</code>)와 디버깅 도구가 모두 들어있는 종합 선물 세트입니다.
+                </p>
+              </div>
+
+              <!-- JRE -->
+              <div class="p-6 rounded-2xl bg-sky-50/80 border-2 border-sky-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">🏠</span>
+                  <span class="px-2.5 py-1 rounded bg-sky-200 text-sky-950 font-mono text-xs font-bold">실행 환경</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-lg">JRE (Java Runtime Environment)</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <strong>💡 가스레인지와 주방 시설:</strong> 개발은 안 하고 오직 이미 만들어진 자바 프로그램(<code>.jar</code>)을 돌리기만 할 때 필요한 기본 주방 시설과 표준 라이브러리 모음입니다.
+                </p>
+              </div>
+
+              <!-- JVM -->
+              <div class="p-6 rounded-2xl bg-emerald-50/80 border-2 border-emerald-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-3xl">🤖</span>
+                  <span class="px-2.5 py-1 rounded bg-emerald-200 text-emerald-950 font-mono text-xs font-bold">만능 통역관</span>
+                </div>
+                <h4 class="font-black text-slate-900 text-lg">JVM (Java Virtual Machine)</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <strong>💡 윈도우/맥/리눅스 동시통역관:</strong> 윈도우용, 맥북용 프로그램을 따로 만들 필요 없이 자바 코드를 각 운영체제의 기계어로 실시간 번역해 주는 가상 컴퓨터입니다. ("Write Once, Run Anywhere!")
+                </p>
+              </div>
+            </div>
+
+            <!-- Why Java 21 LTS? -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 space-y-2">
+              <span class="font-bold text-amber-900 flex items-center gap-2">
+                <i class="fa-solid fa-circle-question text-amber-600"></i> 왜 하필 Java 21 버전인가요?
+              </span>
+              <p class="leading-relaxed font-medium">
+                Java 21은 기업에서 5년 이상 장기 지원하는 <strong>LTS(Long Term Support) 공식 표준 버전</strong>입니다.  
+                Spring Boot 3.x와 Spring AI 1.0은 Java 17 및 Java 21의 가상 스레드(Virtual Thread), 레코드(Record), 패턴 매칭 등 최신 성능 최적화 기능을 필수로 요구하기 때문에 Java 21을 사용합니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- Section 2: Gradle vs Maven & build.gradle -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-sky-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-sky-800 font-bold text-xs sm:text-sm">2. Build Automation Tool</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                📦 Gradle vs Maven — build.gradle은 무슨 일을 하는 파일인가?
+              </h3>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-sky-50/70 border-2 border-sky-200 space-y-3">
+              <span class="eyebrow text-sky-900 font-black text-xs flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping text-sky-600"></i> 💡 비전공자 1초 핵심 비유: 마트 장보기 자동 주문서
+              </span>
+              <p class="text-sm sm:text-base text-sky-950 font-semibold leading-relaxed">
+                우리가 Spring AI나 톰캣 웹서버를 직접 코드로 다 짤 수는 없습니다.  
+                <code>build.gradle</code>에 <em>"스프링 웹 줘, OpenAI 스타터 줘, Lombok 줘"</em>라고 이름만 적어두면, <strong>Gradle이라는 똑똑한 배달원이 전 세계 오픈소스 창고(Maven Central)에서 수백 개의 라이브러리를 0.1초 만에 다운로드하여 내 프로젝트에 착 조립</strong>해 줍니다!
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- ./gradlew vs gradle -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <h4 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
+                  <i class="fa-solid fa-terminal text-slate-700"></i> 왜 `gradle` 대신 `./gradlew`를 쓸까요?
+                </h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <strong>Gradle Wrapper(gradlew)의 마법:</strong>  
+                  팀원마다 컴퓨터에 깔린 Gradle 버전이 다르면 빌드가 터집니다. <code>./gradlew</code>는 프로젝트에 박혀 있는 정확한 버전(8.14.3)을 자동으로 실행해 주어, <strong>어떤 컴퓨터에서 돌려도 100% 동일하게 실행되는 환경 격리 기술</strong>입니다.
+                </p>
+              </div>
+
+              <!-- BOM Magic -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <h4 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
+                  <i class="fa-solid fa-boxes-packing text-emerald-600"></i> BOM (Bill of Materials)이란?
+                </h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  <strong>부품 버전 맞춤 세트:</strong>  
+                  OpenAI 라이브러리는 v1.0인데 Ollama 라이브러리가 v0.8이면 충돌이 납니다. <code>spring-ai-bom</code>은 모든 AI 부품들이 완벽하게 호환되는 황금 조합 버전을 한곳에서 통일 관리해 주는 안전벨트입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Environment Variables & PATH -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-purple-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-purple-800 font-bold text-xs sm:text-sm">3. OS Environment Variables & Security</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🌍 환경변수(Environment Variables)와 PATH의 비밀
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- PATH -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <span class="font-mono font-black text-xl text-purple-700">PATH</span>
+                <h4 class="font-black text-slate-900 text-base">컴퓨터의 전역 내비게이션</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  터미널 어디서든 <code>java</code>나 <code>ollama</code>를 쳤을 때, 컴퓨터가 그 실행 파일이 어느 폴더에 숨어있는지 0.001초 만에 찾아낼 수 있도록 등록해 둔 <strong>전역 주소록</strong>입니다.
+                </p>
+              </div>
+
+              <!-- JAVA_HOME -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <span class="font-mono font-black text-xl text-sky-700">JAVA_HOME</span>
+                <h4 class="font-black text-slate-900 text-base">자바가 설치된 본부 주소</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  스프링 부트, 톰캣, Gradle 같은 모든 자바 프로그램들이 <em>"진짜 자바 엔진(JDK 21)이 어디 있지?"</em>를 찾아갈 때 가장 먼저 확인하는 <strong>공식 본부 팻말</strong>입니다.
+                </p>
+              </div>
+
+              <!-- OPENAI_API_KEY -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <span class="font-mono font-black text-xl text-rose-700">API_KEY 환경변수</span>
+                <h4 class="font-black text-slate-900 text-base">금고에 넣어둔 마스터 비밀키</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  깃허브(Git)에 소스코드를 올릴 때 비밀키가 유출되어 수천만 원 요금 폭탄이 터지는 것을 막기 위해, <strong>코드에는 적지 않고 컴퓨터 OS 금고에만 넣어두는 보안 기술</strong>입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Port Numbers & Socket Communication -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-emerald-800 font-bold text-xs sm:text-sm">4. Network Ports & Sockets</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                🚪 포트(Port: 8080, 8085, 8088, 5432, 11434)의 세계
+              </h3>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-emerald-50/70 border-2 border-emerald-200 space-y-3">
+              <span class="eyebrow text-emerald-900 font-black text-xs flex items-center gap-2">
+                <i class="fa-solid fa-door-open text-emerald-600"></i> 💡 비전공자 1초 핵심 비유: 아파트 동(IP)과 호수(Port)
+              </span>
+              <p class="text-sm sm:text-base text-emerald-950 font-semibold leading-relaxed">
+                IP 주소(<code>localhost</code>, <code>127.0.0.1</code>)가 <strong>"아파트 101동"</strong>이라면, 포트 번호는 <strong>"101호(톰캣), 102호(대시보드), 103호(Ollama), 104호(DB)"</strong> 같은 각 방의 문 번호입니다!  
+                한 방에는 딱 하나의 프로그램만 들어갈 수 있기 때문에, 두 프로그램이 같은 방 번호를 쓰면 <code>Port already in use</code> 충돌 에러가 발생합니다.
+              </p>
+            </div>
+
+            <!-- Port Allocation Matrix in our Workspace -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 font-mono text-xs">
+              <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1 border border-slate-800">
+                <span class="text-emerald-400 font-bold text-sm">포트 8088</span>
+                <p class="text-slate-300 font-sans font-medium text-xs">Vue 3 마스터 대시보드 웹 UI</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1 border border-slate-800">
+                <span class="text-yellow-400 font-bold text-sm">포트 8085</span>
+                <p class="text-slate-300 font-sans font-medium text-xs">Spring AI Lab REST 서버</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1 border border-slate-800">
+                <span class="text-sky-400 font-bold text-sm">포트 8080</span>
+                <p class="text-slate-300 font-sans font-medium text-xs">SKALA-DELIVERY-API 백엔드</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1 border border-slate-800">
+                <span class="text-purple-400 font-bold text-sm">포트 11434</span>
+                <p class="text-slate-300 font-sans font-medium text-xs">로컬 Ollama LLM 엔진</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1 border border-slate-800">
+                <span class="text-rose-400 font-bold text-sm">포트 5432</span>
+                <p class="text-slate-300 font-sans font-medium text-xs">PostgreSQL / pgvector DB</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: YAML & Profile Isolation -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-rose-400 shadow-md space-y-6 transition">
+            <div class="border-b border-slate-200 pb-4">
+              <span class="eyebrow text-rose-800 font-bold text-xs sm:text-sm">5. Configuration File Format & Profile Separation</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+                📜 YAML(application.yml)과 로컬·개발·운영 프로파일(@Profile) 분리
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- YAML Rules -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <h4 class="font-black text-slate-900 text-base sm:text-lg">왜 YAML은 스페이스 2칸 들여쓰기를 쓸까요?</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  옛날 <code>.properties</code> 파일은 <code>spring.ai.openai.chat.options.model=...</code> 처럼 중복 글자가 너무 많았습니다.  
+                  YAML은 <strong>스페이스 2칸 들여쓰기로 부모-자식 계층 관계</strong>를 깔끔하게 표현하는 인간 친화적 설정 언어입니다. (Tab 키를 쓰면 문법 에러가 나므로 꼭 띄어쓰기 2칸을 씁니다!)
+                </p>
+              </div>
+
+              <!-- Profile Separation -->
+              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
+                <h4 class="font-black text-slate-900 text-base sm:text-lg">로컬 vs 운영 환경 분리 (Profile)</h4>
+                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                  개발할 때는 내 컴퓨터의 0원 Ollama와 가짜 DB(H2)를 쓰고, 실제 고객 서비스에서는 미국 OpenAI 슈퍼컴퓨터와 진짜 오라클/PostgreSQL DB에 붙도록 <strong>코드 수정 없이 설정 파일만 갈아 끼우는 기술(<code>application-local.yml</code> vs <code>application-prod.yml</code>)</strong>입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
         <!-- SUB-TAB 0: REQUEST LIFECYCLE & CODE NAVIGATION ROADMAP -->
         <div v-if="backendSubTab === 'request_flow'" class="space-y-10">
           
@@ -4484,14 +4722,15 @@ public class OrderService {
         ];
 
         const backendSubTabs = [
-          { id: 'request_flow', title: '🚦 1. 손님 요청 8단계 여행기 & 코드 읽는 순서 (전체 흐름)', icon: 'fa-solid fa-route' },
-          { id: 'annotations', title: '📑 2. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
-          { id: 'oop_solid', title: '💎 3. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
-          { id: 'spring_core', title: '🌱 4. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
-          { id: 'mvc_rest', title: '🌐 5. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
-          { id: 'jpa_database', title: '🗄️ 6. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
-          { id: 'workspace_code', title: '💻 7. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
-          { id: 'troubleshooting', title: '🚨 8. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
+          { id: 'env_setup', title: '🛠️ 1. 개발환경 설정의 본질 & CS 원리 (JDK·Gradle·환경변수·포트·YAML)', icon: 'fa-solid fa-screwdriver-wrench' },
+          { id: 'request_flow', title: '🚦 2. 손님 요청 8단계 여행기 & 코드 읽는 순서 (전체 흐름)', icon: 'fa-solid fa-route' },
+          { id: 'annotations', title: '📑 3. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
+          { id: 'oop_solid', title: '💎 4. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
+          { id: 'spring_core', title: '🌱 5. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
+          { id: 'mvc_rest', title: '🌐 6. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
+          { id: 'jpa_database', title: '🗄️ 7. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
+          { id: 'workspace_code', title: '💻 8. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
+          { id: 'troubleshooting', title: '🚨 9. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
         ];
 
         function setBackendSubTab(tab) {
