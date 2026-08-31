@@ -1104,6 +1104,336 @@ return chatClient.prompt()
       </div>
 
       
+        
+        <!-- ========================================================
+             SUBTAB 8: DAY 1 FINAL MINI LAB - MINUTES SUMMARY BOT
+             ======================================================== -->
+        <div v-else-if="springAiSubTab === 'minilab_minutes_bot'" class="space-y-10">
+          
+          <!-- Header Banner -->
+          <div class="rounded-2xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 p-8 text-white shadow-lg space-y-4 border border-emerald-500/30">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="eyebrow bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-xs font-black font-mono">
+                Day 1 Final Hands-on Mini Lab
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full bg-teal-400 text-slate-950 text-xs font-bold font-mono">
+                16/16 Unit Tests 100% Passed (All Green)
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-bold font-mono">
+                포트 8080 라이브 가동 완료
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+              🎙️ Day 1 최종 보스: "회의록 요약봇" 4대 STEP & 16개 테스트 완전 정복
+            </h2>
+            <p class="text-slate-200 text-sm sm:text-base max-w-4xl leading-relaxed font-medium">
+              손님이 1시간 동안 떠든 긴 회의록(<code>minutes-sample.txt</code>)을 받아 <strong>3줄 요약(STEP 1) ➔ 3단 찬합 액션아이템 표(STEP 2) ➔ 실시간 SSE 타자 스트리밍(STEP 3) ➔ 완료(done) 및 오류(error) 이벤트 도장(STEP 4)</strong>까지 16개 단위 테스트를 100% 통과하며 구축한 Spring AI 실전 마스터클래스입니다.
+            </p>
+          </div>
+
+          <!-- 4 STEP Architecture Overview Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="bg-white rounded-2xl p-5 border-2 border-emerald-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-mono text-xs font-black">STEP 1</span>
+                <span class="text-xs font-bold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 4/4 PASSED</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900">3줄 핵심 요약봇</h3>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                <code>summaryPrompt</code> 편지지의 <code>{maxSentences}</code> 구멍에 숫자 3을 꽂고, <code>.chatResponse()</code>로 토큰 영수증을 장부에 기록한 뒤 알맹이 텍스트를 반환합니다.
+              </p>
+              <div class="bg-slate-900 text-emerald-300 p-2.5 rounded-xl font-mono text-2xs overflow-x-auto">
+                chat.prompt().system(s -> s.text(...).param(...)).user(...).call().chatResponse();
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border-2 border-indigo-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800 font-mono text-xs font-black">STEP 2</span>
+                <span class="text-xs font-bold text-indigo-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 3/3 PASSED</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900">3단 찬합 구조화 리포트</h3>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                줄글 대신 <code>MeetingReport</code> 자바 레코드 객체로 받습니다. <code>.entity(MeetingReport.class)</code> 1줄로 수동 JSON 파싱 코드 0줄의 기적을 달성합니다.
+              </p>
+              <div class="bg-slate-900 text-indigo-300 p-2.5 rounded-xl font-mono text-2xs overflow-x-auto">
+                return chat.prompt().system(reportPrompt).user(minutes).call().entity(MeetingReport.class);
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border-2 border-cyan-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-cyan-100 text-cyan-800 font-mono text-xs font-black">STEP 3</span>
+                <span class="text-xs font-bold text-cyan-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 2/2 PASSED</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900">실시간 글자 물줄기</h3>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                음료수 캔(상자)이 아니라 탄산음료 디스펜서처럼 <code>.stream().content()</code>로 실시간 글자 조각(<code>Flux&lt;String&gt;</code>)을 화면에 뿜어냅니다.
+              </p>
+              <div class="bg-slate-900 text-cyan-300 p-2.5 rounded-xl font-mono text-2xs overflow-x-auto">
+                return chat.prompt().system(...).user(...).stream().content();
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border-2 border-amber-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 font-mono text-xs font-black">STEP 4</span>
+                <span class="text-xs font-bold text-amber-600 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 3/3 PASSED</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900">완료(done) & 오류(error)</h3>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                배달이 끝나면 <code>done</code> 벨을 울려 브라우저가 문을 닫게 하고, 중간에 끊기면 <code>error</code> 문자를 보내 손님의 무한 대기를 원천 차단합니다.
+              </p>
+              <div class="bg-slate-900 text-amber-300 p-2.5 rounded-xl font-mono text-2xs overflow-x-auto">
+                .concatWith(Mono.just(doneEvent)).onErrorResume(e -> Mono.just(errorEvent))
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Deep-dive 1: STEP 1 vs STEP 2 vs STEP 3 Master Table -->
+          <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <h3 class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-table-list text-emerald-600"></i> STEP 1 vs STEP 2 vs STEP 3 데이터 파이프라인 전수 비교
+              </h3>
+              <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-mono text-xs font-bold">MinutesService.java 해부</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white font-mono">
+                    <th class="p-3 rounded-tl-xl">비교 항목</th>
+                    <th class="p-3 text-emerald-300">🌟 STEP 1 (요약봇: summarize)</th>
+                    <th class="p-3 text-indigo-300">🌟 STEP 2 (리포트봇: report)</th>
+                    <th class="p-3 text-cyan-300 rounded-tr-xl">🌟 STEP 3 (스트리밍봇: streamSummary)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 font-sans">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900 bg-slate-50 font-mono">1. .system() 규칙</td>
+                    <td class="p-3"><code>summaryPrompt</code> + <code>param("maxSentences", 3)</code></td>
+                    <td class="p-3"><code>reportPrompt</code> (3단 찬합 규격 레시피)</td>
+                    <td class="p-3"><code>summaryPrompt</code> + <code>param("maxSentences", 3)</code></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900 bg-slate-50 font-mono">2. .user() 식재료</td>
+                    <td class="p-3 text-emerald-700 font-bold"><code>minutes</code> (손님이 가져온 회의록)</td>
+                    <td class="p-3 text-indigo-700 font-bold"><code>minutes</code> (손님이 가져온 회의록)</td>
+                    <td class="p-3 text-cyan-700 font-bold"><code>minutes</code> (손님이 가져온 회의록)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900 bg-slate-50 font-mono">3. 호출 통신 방식</td>
+                    <td class="p-3"><code>.call()</code> (블로킹: 끝날 때까지 대기)</td>
+                    <td class="p-3"><code>.call()</code> (블로킹: 끝날 때까지 대기)</td>
+                    <td class="p-3 text-cyan-700 font-bold"><code>.stream()</code> (논블로킹 실시간 파이프)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900 bg-slate-50 font-mono">4. 답장 수령 형태</td>
+                    <td class="p-3"><code>.chatResponse()</code> (종합 영수증 상자)</td>
+                    <td class="p-3"><code>.entity(MeetingReport.class)</code> (자동 조립)</td>
+                    <td class="p-3 text-cyan-700 font-bold"><code>.content()</code> (글자 조각 물줄기)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-900 bg-slate-50 font-mono">5. 최종 반환형</td>
+                    <td class="p-3 font-mono text-emerald-700 font-bold">String (순수 3줄 텍스트)</td>
+                    <td class="p-3 font-mono text-indigo-700 font-bold">MeetingReport (자바 Record DTO)</td>
+                    <td class="p-3 font-mono text-cyan-700 font-bold">Flux&lt;String&gt; (리액티브 스트림)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Deep-dive 2: 16 Tests All-Green Terminal Output -->
+          <div class="bg-slate-950 rounded-2xl p-6 sm:p-8 border border-emerald-500/30 text-white space-y-4 shadow-xl">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="font-mono text-xs font-bold text-emerald-400">./gradlew test --rerun-tasks 실측 검증 콘솔</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 font-mono text-2xs border border-emerald-500/30">16 Tests PASSED in 8s</span>
+            </div>
+            <pre class="font-mono text-xs text-slate-300 bg-slate-900/90 p-4 rounded-xl overflow-x-auto leading-relaxed border border-slate-800">
+ApplicationContextTest > 키가_없어도_기동된다() PASSED 🟢
+MinutesControllerTest > 정리_결과가_JSON_으로_나간다() PASSED 🟢
+MinutesControllerTest > 빈_회의록은_400_이다() PASSED 🟢
+MinutesControllerTest > 뼈대가_뜬다() PASSED 🟢
+
+StepTests > STEP 4 · 완료와 오류를 이벤트로 구분한다 > 도중에_끊기면_error_이벤트로_알린다() PASSED 🟢
+StepTests > STEP 4 · 완료와 오류를 이벤트로 구분한다 > 마지막에_done_이벤트가_한_번_나간다() PASSED 🟢
+StepTests > STEP 4 · 완료와 오류를 이벤트로 구분한다 > 조각_내용은_그대로_전달되고_done_으로_끝난다() PASSED 🟢
+
+StepTests > STEP 3 · 스트리밍으로 내보낸다 > 조각으로_나뉘어_도착한다() PASSED 🟢
+StepTests > STEP 3 · 스트리밍으로 내보낸다 > 스트리밍도_같은_프롬프트를_쓴다() PASSED 🟢
+
+StepTests > STEP 2 · 구조화 출력으로 받는다 > 정리용_프롬프트를_쓴다() PASSED 🟢
+StepTests > STEP 2 · 구조화 출력으로 받는다 > 담당자별_할_일이_채워진다() PASSED 🟢
+StepTests > STEP 2 · 구조화 출력으로 받는다 > JSON_을_객체로_받는다() PASSED 🟢
+
+StepTests > STEP 1 · 요약을 만든다 > maxSentences_자리를_설정값으로_채운다() PASSED 🟢
+StepTests > STEP 1 · 요약을 만든다 > 모델_응답을_그대로_돌려준다() PASSED 🟢
+StepTests > STEP 1 · 요약을 만든다 > 회의록_본문을_user_로_넘긴다() PASSED 🟢
+StepTests > STEP 1 · 요약을 만든다 > 프롬프트_파일을_system_으로_넘긴다() PASSED 🟢
+
+BUILD SUCCESSFUL in 8s 🌟
+16 actionable tasks: 16 executed</pre>
+          </div>
+
+        </div>
+
+        <!-- ========================================================
+             SUBTAB 9: ZERO TO HERO BACKEND FOUNDATIONS
+             ======================================================== -->
+        <div v-else-if="springAiSubTab === 'zero_to_hero_backend'" class="space-y-10">
+          
+          <!-- Header Banner -->
+          <div class="rounded-2xl bg-gradient-to-r from-amber-900 via-orange-950 to-slate-900 p-8 text-white shadow-lg space-y-4 border border-amber-500/30">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="eyebrow bg-amber-500 text-slate-950 px-3 py-1 rounded-full text-xs font-black font-mono">
+                Zero-Base Absolute Beginner Guide
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full bg-yellow-400 text-slate-950 text-xs font-bold font-mono">
+                5살 아이도 이해하는 백엔드 완전 정복
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+              🐣 백엔드 0단계 정복: 변수·함수·객체·생성자·@Valid·JPA
+            </h2>
+            <p class="text-amber-100 text-sm sm:text-base max-w-4xl leading-relaxed font-medium">
+              외계어처럼 느껴지던 자바와 스프링 부트 코드를 <strong>마트 주문표, 자판기 일꾼, 붕어빵 틀과 갓 구운 붕어빵, 출입국 심사대, 그리고 철제 금고 창고지기</strong> 비유로 1초 만에 머릿속에 시각화합니다.
+            </p>
+          </div>
+
+          <!-- 3 Visual Reading Rules -->
+          <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <h3 class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-eye text-amber-600"></i> 코드를 볼 때 눈이 움직여야 하는 "3대 시선 공식"
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-2">
+                <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-bold text-xs font-mono">규칙 1</span>
+                <h4 class="font-bold text-slate-900 text-sm">[위에서 ➔ 아래로]</h4>
+                <p class="text-xs text-slate-600 font-sans">책 읽듯이 무조건 1번 줄부터 순서대로 읽어 내려갑니다.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+                <span class="px-2 py-0.5 rounded bg-blue-200 text-blue-900 font-bold text-xs font-mono">규칙 2</span>
+                <h4 class="font-bold text-slate-900 text-sm">[바깥에서 ➔ 안으로]</h4>
+                <p class="text-xs text-slate-600 font-sans"><code>{ 중괄호 }</code> 문을 열고 방 안으로 들어가서 세부 로직을 봅니다.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-xs font-mono">규칙 3</span>
+                <h4 class="font-bold text-slate-900 text-sm">[오른쪽에서 ➔ 왼쪽으로]</h4>
+                <p class="text-xs text-slate-600 font-sans"><code>=</code>(등호)를 만나면 오른쪽 계산이 먼저 끝나고 왼쪽 바구니에 담깁니다!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Core Concepts Grid (6 Master Cards) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Card 1: Variable & Function -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-amber-100 text-amber-800 text-sm"><i class="fa-solid fa-box"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">1. 상자(변수) vs 자판기 일꾼(함수 return / void)</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <strong>변수</strong>: <code>int total = 100;</code> ➔ 100을 total 바구니에 보관<br/>
+                • <strong>함수</strong>: 자판기처럼 재료를 넣으면 덜컹 일하고 손에 <code>return</code>으로 결과물을 쥐여줌!<br/>
+                • <strong>void</strong>: 불 끄기처럼 물건을 안 돌려주고 일만 하고 퇴근하는 일꾼!
+              </p>
+              <div class="bg-slate-900 text-amber-300 p-3 rounded-xl font-mono text-2xs">
+                public String makeJuice(String fruit) { return fruit + " 주스"; } // ➔ "딸기 주스" 반환
+              </div>
+            </div>
+
+            <!-- Card 2: Class, Object, new, this -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-blue-100 text-blue-800 text-sm"><i class="fa-solid fa-fish"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">2. 붕어빵 쇠틀(Class) vs 진짜 붕어빵(Object) vs this.</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <strong>Class</strong>: 붕어빵 쇠틀 (설계도, 아직 못 먹음)<br/>
+                • <strong>new</strong>: 밀가루 붓고 불 켜서 진짜 붕어빵 1마리 굽기!<br/>
+                • <strong>this.flavor</strong>: 붕어빵 뱃속의 진짜 앙꼬! <code>changeFlavor()</code>가 없으면 평생 팥만 먹음!
+              </p>
+              <div class="bg-slate-900 text-blue-300 p-3 rounded-xl font-mono text-2xs">
+                FishBread bread1 = new FishBread("슈크림"); // ➔ 태어날 때부터 슈크림 장착!
+              </div>
+            </div>
+
+            <!-- Card 3: Why parentheses () -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-rose-100 text-rose-800 text-sm"><i class="fa-solid fa-car"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">3. 왜 () 소괄호를 붙일까? (데이터 vs 시동 스위치)</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <code>myCar.color</code> (괄호 없음): 주차장에 멈춰있는 차의 <strong>색깔(데이터)</strong>만 봄<br/>
+                • <code>myCar.run()</code> (괄호 있음): 운전석에서 엑셀을 밟아 <strong>엔진(기능)을 지금 당장 실행</strong>하라는 스위치!
+              </p>
+              <div class="bg-slate-900 text-rose-300 p-3 rounded-xl font-mono text-2xs">
+                myCar.run(); // ➔ 괄호()는 찰칵 누르는 동작 시동 버튼!
+              </div>
+            </div>
+
+            <!-- Card 4: Constructor & @Value -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-emerald-100 text-emerald-800 text-sm"><i class="fa-solid fa-sliders"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">4. 생성자 & @Value("${app.max-sentences}") 돋보기</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <strong>생성자</strong>: 태어나는 순간 앙꼬(전화기, 숫자)를 쥐여주는 산부인과 의사!<br/>
+                • <strong>${app.max-sentences}</strong>: <code>application.yml</code> 장부에서 <code>app</code> 아래 <code>max-sentences</code>(3)를 찾아오는 주소 검색기!
+              </p>
+              <div class="bg-slate-900 text-emerald-300 p-3 rounded-xl font-mono text-2xs">
+                public MinutesService(ChatClient chat, @Value("${app.max-sentences}") int maxSentences)
+              </div>
+            </div>
+
+            <!-- Card 5: Controller & @Valid & req.text() -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-purple-100 text-purple-800 text-sm"><i class="fa-solid fa-shield-halved"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">5. @Valid 심사관 & req.text()의 1글자 단위 해부</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <code>@NotBlank</code>: 서류에 붙은 빈칸 금지 표지판<br/>
+                • <code>@Valid</code>: 표지판을 보고 어기면 400 에러 호루라기를 부는 출입국 심사관!<br/>
+                • <code>MinutesRequest req</code>: 서류 양식(Type)과 손님이 낸 진짜 서류 한 장(req)!<br/>
+                • <code>req.text()</code>: Java 21 Record가 <code>String text</code>를 보고 공짜로 선물해 준 전용 꺼내기 함수!
+              </p>
+              <div class="bg-slate-900 text-purple-300 p-3 rounded-xl font-mono text-2xs">
+                public String summary(@Valid @RequestBody MinutesRequest req) { return minutesService.summarize(req.text()); }
+              </div>
+            </div>
+
+            <!-- Card 6: JPA Repository 6 Words -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="p-2 rounded-xl bg-teal-100 text-teal-800 text-sm"><i class="fa-solid fa-database"></i></span>
+                <h4 class="font-bold text-slate-900 text-base">6. JPA 리포지토리 6단어 완전 해부</h4>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed font-sans">
+                • <code>interface</code>: 코드는 안 짤 테니 스프링이 진짜 일꾼 로봇을 채워 넣어라!<br/>
+                • <code>extends JpaRepository</code>: 본사의 100가지 만능 창고 기술(save, find, delete)을 공짜로 물려받기!<br/>
+                • <code>&lt;Minutes, Long&gt;</code>: 회의록(Minutes) 물건을 담고, 번호표(@Id)는 큰 숫자(Long)라는 맞춤 설정!
+              </p>
+              <div class="bg-slate-900 text-teal-300 p-3 rounded-xl font-mono text-2xs">
+                public interface MinutesRepository extends JpaRepository&lt;Minutes, Long&gt; {}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
         <!-- ========================================================
            VIEW: BACKEND MASTER (Java · Spring Boot · JPA · SOLID)
            ======================================================== -->
@@ -4822,7 +5152,9 @@ public class LoggingAspect {
           { id: 'fluent_chaining', title: '🍔 4. 햄버거 주문서로 배우는 Fluent API 4단계', icon: 'fa-solid fa-burger' },
           { id: 'config_secrets', title: '⚙️ 5. 환경설정의 비밀 (build.gradle BOM & yml)', icon: 'fa-solid fa-gears' },
           { id: 'real_code_4', title: '💻 6. VS Code 실전 코드 4대장 라인별 전수 해부', icon: 'fa-solid fa-laptop-code' },
-          { id: 'di_this_mastery', title: '🧩 7. 5살도 이해하는 DI·this·변수명 100점 정복', icon: 'fa-solid fa-puzzle-piece' }
+          { id: 'di_this_mastery', title: '🧩 7. 5살도 이해하는 DI·this·변수명 100점 정복', icon: 'fa-solid fa-puzzle-piece' },
+          { id: 'minilab_minutes_bot', title: '🎙️ 8. [Day 1 최종 실습] 회의록 요약봇 4대 STEP 16개 테스트 전수 해부', icon: 'fa-solid fa-microphone-lines' },
+          { id: 'zero_to_hero_backend', title: '🐣 9. 5살도 이해하는 백엔드 0단계 정복 (변수·함수·객체·생성자·@Valid·JPA)', icon: 'fa-solid fa-graduation-cap' }
         ];
 
         function setSpringAiSubTab(tab) {
