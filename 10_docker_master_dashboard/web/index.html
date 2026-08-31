@@ -399,11 +399,18 @@
             <span>📗 3권: 실습 연계 맵 (33쪽)</span>
           </button>
 
-          <button @click="curriculumTab = 'osi7'"
+          <button @click="curriculumTab = 'osi7'; renderMermaid();"
                   :class="curriculumTab === 'osi7' ? 'bg-indigo-700 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-indigo-800 border border-indigo-300 font-bold'"
                   class="px-5 py-3 rounded-xl text-sm sm:text-base transition flex items-center gap-2.5 shrink-0">
             <i class="fa-solid fa-network-wired text-lg"></i>
             <span>🌐 4관: 컴퓨터 공학 & 네트워크 OSI 7계층 실전 완전정복관</span>
+          </button>
+
+          <button @click="curriculumTab = 'backend'; renderMermaid();"
+                  :class="curriculumTab === 'backend' ? 'bg-amber-700 text-white font-black shadow-md' : 'bg-white hover:bg-slate-100 text-amber-900 border border-amber-300 font-bold'"
+                  class="px-5 py-3 rounded-xl text-sm sm:text-base transition flex items-center gap-2.5 shrink-0">
+            <i class="fa-solid fa-mug-hot text-lg"></i>
+            <span>☕ 5관: 백엔드 Java & Spring Boot & JPA 실전 정복관 (7대 교재 집대성)</span>
           </button>
         </div>
 
@@ -1987,6 +1994,8 @@
 
     createApp({
       setup() {
+
+        const mermaidCodeBackendMvc = 'flowchart TD\n    classDef client fill:#f8fafc,stroke:#0284c7,stroke-width:2px,color:#0f172a,font-weight:bold;\n    classDef ctrl fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0369a1,font-weight:bold;\n    classDef srv fill:#e0e7ff,stroke:#4338ca,stroke-width:2px,color:#3730a3,font-weight:bold;\n    classDef repo fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#166534,font-weight:bold;\n    classDef db fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold;\n\n    Client["📱 손님 (스마트폰 앱 / 브라우저)"]:::client\n    Dispatcher["📮 DispatcherServlet (중앙 우체국 안내소)"]\n    Controller["🤵 1. Controller 계층 (카운터 알바생)<br/>@RestController / @PostMapping(\'/api/rooms\')"]:::ctrl\n    Service["👨\u200d🍳 2. Service 계층 (메인 주방장)<br/>@Service / @Transactional 비즈니스 로직 & N빵 정산"]:::srv\n    Repository["❄️ 3. Repository 계층 (창고 관리인)<br/>JpaRepository CRUD 데이터 접근"]:::repo\n    DB[("🗄️ PostgreSQL Database")]:::db\n\n    Client -->|"(1) HTTP POST /api/rooms + JSON"| Dispatcher\n    Dispatcher -->|"(2) 핸들러 매핑"| Controller\n    Controller -->|"(3) RoomRequest DTO 전달"| Service\n    Service -->|"(4) 엔티티 조작 및 저장 요청"| Repository\n    Repository -->|"(5) SQL 자동 실행"| DB\n    DB -.->|"(6) 저장된 레코드 반환"| Repository\n    Repository -.->|"(7) 엔티티 반환"| Service\n    Service -.->|"(8) Response.ok(savedRoom)"| Controller\n    Controller -.->|"(9) JSON 응답 (200 OK)"| Client';
 
         const mermaidCode1 = 'graph TD\n    classDef host fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#ffffff,font-weight:bold;\n    classDef container fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#ffffff;\n    classDef ns fill:#334155,stroke:#64748b,stroke-width:1px,color:#f8fafc;\n\n    Host["🖥️ 물리 호스트 컴퓨터 (Linux Host Kernel)<br/>• 물리 CPU / RAM (cgroups 자원 계량기)<br/>• 물리 파일시스템 (NVMe SSD)<br/>• 물리 랜카드 (eth0, IP: 192.168.1.100)"]:::host\n\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C1["📦 도커 컨테이너 #1 (Spring WAS)"]:::container\n    Host -->|"clone() 시스템 콜: 6개 VR 안경 씌우기"| C2["📦 도커 컨테이너 #2 (PostgreSQL DB)"]:::container\n\n    subgraph C1_Box ["📦 도커 컨테이너 #1 (Spring WAS)"]\n        N1_PID["🪪 PID: \'난 PID 1번 대장!\' (spring-boot)"]:::ns\n        N1_NET["☎️ NET: veth0 (IP 172.17.0.2, Port 8080)"]:::ns\n        N1_MNT["📁 MNT: 독립된 가상 루트 /app"]:::ns\n        N1_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N1_UTS["🏷️ UTS: hostname=\'spring-was\'"]:::ns\n        N1_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end\n\n    subgraph C2_Box ["📦 도커 컨테이너 #2 (PostgreSQL DB)"]\n        N2_PID["🪪 PID: \'난 PID 1번 대장!\' (postgres)"]:::ns\n        N2_NET["☎️ NET: veth1 (IP 172.17.0.3, Port 5432)"]:::ns\n        N2_MNT["📁 MNT: 독립된 가상 루트 /var/lib/postgresql"]:::ns\n        N2_IPC["🍪 IPC: 독립 전용 메모리 공간"]:::ns\n        N2_UTS["🏷️ UTS: hostname=\'postgres-db\'"]:::ns\n        N2_USER["👑 USER: 컨테이너 내 root (호스트에선 nobody)"]:::ns\n    end';
         const mermaidCode2 = 'flowchart TD\n    classDef client fill:#f8fafc,stroke:#0284c7,stroke-width:2px,color:#0f172a,font-weight:bold;\n    classDef web fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0369a1,font-weight:bold;\n    classDef was fill:#e0e7ff,stroke:#4338ca,stroke-width:2px,color:#3730a3,font-weight:bold;\n    classDef db fill:#dcfce7,stroke:#15803d,stroke-width:2px,color:#166534,font-weight:bold;\n\n    Client["📱 손님 (스마트폰 브라우저)"]:::client\n    Web["🏢 Tier 1: Web Server (Nginx, Port 80)<br/>• 정적 파일(HTML/CSS/JS/이미지) 0.001초 응답<br/>• HTTPS SSL 암호화 종단 및 Reverse Proxy"]:::web\n    WAS["👨\u200d🍳 Tier 2: WAS (Spring Boot / Tomcat, Port 8080)<br/>• 동적 비즈니스 로직 계산 (진짜 두뇌 주방장)<br/>• JWT 로그인 검증 / 10% 쿠폰 & 결제 계산"]:::was\n    DB["❄️ Tier 3: Database (PostgreSQL, Port 5432)<br/>• 영구 보관 금고 (회원 명부 & 잔액 장부)<br/>• ACID 원자성 트랜잭션 보장"]:::db\n\n    Client -->|"(1) HTTP GET / (메뉴판 요청)"| Web\n    Web -.->|"(2) 정적 HTML/CSS 즉시 전송 (0.001초)"| Client\n    Web -->|"(3) HTTP POST /api/order (주문/결제 동적 전달)"| WAS\n    WAS -->|"(4) SQL: SELECT balance FROM accounts"| DB\n    DB -->|"(5) SQL Result: 잔액 50,000원 확인"| WAS\n    WAS -.->|"(6) JSON: { status: \'SUCCESS\', orderId: 101 }"| Web\n    Web -.->|"(7) 최종 결제 완료 화면 표시"| Client';
@@ -4982,6 +4991,7 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
         });
 
         return {
+          mermaidCodeBackendMvc,
           mermaidCode1,
           mermaidCode2,
           mermaidCode3,
