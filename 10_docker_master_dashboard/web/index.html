@@ -577,218 +577,242 @@ dependencyManagement {
 
         </div>
 
-        <!-- SUB-TAB 6: REAL WORKSPACE 4 CODES -->
+        <!-- SUB-TAB 6: REAL WORKSPACE 4 CODES (VS CODE EDITOR STYLING WITH PRISTINE LINE BREAKS) -->
         <div v-else-if="springAiSubTab === 'real_code_4'" class="space-y-8">
           
           <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
             <div class="border-b border-slate-200 pb-4">
-              <span class="eyebrow text-emerald-800 font-bold text-xs sm:text-sm">6. Real Workspace Code Anatomy</span>
+              <span class="eyebrow text-emerald-800 font-bold text-xs sm:text-sm">6. Real Workspace Code Anatomy (VS Code Standard)</span>
               <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
-                💻 6장. 실전 코드 4대장 라인별 전수 해부 (`spring-ai-lab`)
+                💻 6장. 실제 VS Code 에디터 코드 4대장 라인별 전수 해부 (`spring-ai-lab`)
               </h2>
+              <p class="text-sm sm:text-base text-slate-600 font-medium mt-1">
+                실제 VS Code에서 작성된 소스코드 그대로 깔끔한 줄바꿈과 들여쓰기를 적용하여, 한 줄 한 줄 어떤 역할을 하는지 직관적으로 해부합니다.
+              </p>
             </div>
 
             <!-- Code 1: HelloAiController.java -->
-            <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-mono text-xs font-bold">교재 35쪽</span>
-                  <h4 class="font-black text-slate-900 text-base sm:text-lg">1. HelloAiController.java — 첫 실행 검증 컨트롤러</h4>
+            <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+              <!-- VS Code Window Header -->
+              <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  </div>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-emerald-400"></i> HelloAiController.java
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                    교재 35쪽 첫 실행 검증 컨트롤러
+                  </span>
                 </div>
-                <span class="text-xs font-mono text-slate-500">com.example.springai.controller</span>
+                <span class="text-xs font-mono text-slate-400">src/main/java/com/example/springai/controller/HelloAiController.java</span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                <code>@GetMapping("/hello")</code>로 요청을 받아, <code>ChatClient</code>의 4단계 Fluent API(<code>prompt ➔ user ➔ call ➔ content</code>)로 초고속 답변을 반환합니다.
-              </p>
-              <div class="p-4 rounded-xl bg-slate-900 text-emerald-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre select-all">
-@RestController
-public class HelloAiController {
-    private final ChatClient chat;
 
-    public HelloAiController(ChatClient chat) {
-        this.chat = chat; // @Primary OpenAI ChatClient 주입
+              <!-- Code Content with Pristine Line Breaks & Highlights -->
+              <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                <pre class="text-slate-200"><span class="text-purple-400">package</span> <span class="text-slate-300">com.example.springai.controller;</span>
+
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.ai.chat.client.ChatClient;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.GetMapping;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.RequestParam;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.RestController;</span>
+
+<span class="text-slate-500">/**
+ * 🍄 교재 35페이지 첫 실행 검증용 컨트롤러 (HelloAiController)
+ * 
+ * [비전공자 1초 해설]:
+ * - 손님이 브라우저에서 'http://localhost:8085/hello?q=질문'을 입력하면,
+ * - OpenAI(GPT-4o-mini) 모델이 실시간으로 답변을 작성하여 그대로 리턴합니다!
+ */</span>
+<span class="text-yellow-400">@RestController</span> <span class="text-slate-500">// 🌟 자바 객체/문자열을 순수 데이터(HTTP 응답)로 즉시 반환하는 카운터 매니저</span>
+<span class="text-blue-400">public class</span> <span class="text-emerald-400">HelloAiController</span> {
+
+    <span class="text-slate-500">// 🌟 AI 모델에게 요청을 보내는 표준 창구 (전화기)</span>
+    <span class="text-blue-400">private final</span> <span class="text-emerald-400">ChatClient</span> <span class="text-slate-200">chat</span>;
+
+    <span class="text-slate-500">/**
+     * 🌟 생성자 의존성 주입 (DI)
+     * 스프링이 AiConfig에서 만들어둔 @Primary ChatClient(OpenAI)를 자동으로 주입해 줍니다.
+     */</span>
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">HelloAiController</span>(<span class="text-emerald-400">ChatClient</span> <span class="text-slate-200">chat</span>) {
+        <span class="text-blue-400">this</span>.<span class="text-slate-200">chat</span> = <span class="text-slate-200">chat</span>;
     }
 
-    @GetMapping("/hello")
-    public String hello(@RequestParam(defaultValue = "안녕하세요") String q) {
-        return chat.prompt()
-                .user(q)
-                .call()
-                .content();
+    <span class="text-slate-500">/**
+     * 🌟 교재 35쪽 핵심 메서드: /hello
+     * 
+     * @param q 손님이 전달한 질문 (미입력 시 기본값: "안녕하세요")
+     * @return AI 모델이 생성한 답변 텍스트 문자열
+     */</span>
+    <span class="text-yellow-400">@GetMapping</span>(<span class="text-green-300">"/hello"</span>)
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">String</span> <span class="text-yellow-300">hello</span>(<span class="text-yellow-400">@RequestParam</span>(<span class="text-slate-300">defaultValue</span> = <span class="text-green-300">"안녕하세요"</span>) <span class="text-emerald-400">String</span> <span class="text-slate-200">q</span>) {
+        
+        <span class="text-slate-500">// 🌟 [교재 핵심] Fluent API 4단계 체이닝:
+        // 1. prompt()  ➔ "인공지능에게 보낼 편지지를 펼친다!" (요청 구성 시작)
+        // 2. user(q)   ➔ "손님이 입력한 질문(q)을 편지지에 적는다!" (사용자 프롬프트)
+        // 3. call()    ➔ "우체통에 넣고 답변이 올 때까지 기다린다!" (동기 통신 호출)
+        // 4. content() ➔ "답장 봉투를 뜯어서 알맹이 글자만 꺼낸다!" (텍스트 반환)</span>
+        <span class="text-purple-400">return</span> <span class="text-slate-200">chat</span>.<span class="text-yellow-300">prompt</span>()
+                .<span class="text-yellow-300">user</span>(<span class="text-slate-200">q</span>)
+                .<span class="text-yellow-300">call</span>()
+                .<span class="text-yellow-300">content</span>();
     }
-}</div>
+}</pre>
+              </div>
             </div>
 
             <!-- Code 2: ChatController.java -->
-            <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded bg-sky-600 text-white font-mono text-xs font-bold">교재 41쪽</span>
-                  <h4 class="font-black text-slate-900 text-base sm:text-lg">2. ChatController.java — 정규 RESTful API 대화 창구</h4>
+            <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+              <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  </div>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-sky-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-sky-400"></i> ChatController.java
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                    교재 41쪽 REST API 대화 창구
+                  </span>
                 </div>
-                <span class="text-xs font-mono text-slate-500">com.example.springai.controller</span>
+                <span class="text-xs font-mono text-slate-400">src/main/java/com/example/springai/controller/ChatController.java</span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                <code>@RequestMapping("/api/chat")</code> 공통 경로를 바탕으로 다양한 파라미터와 프롬프트를 확장할 수 있는 표준 엔드포인트입니다.
-              </p>
-              <div class="p-4 rounded-xl bg-slate-900 text-sky-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre select-all">
-@RestController
-@RequestMapping("/api/chat")
-public class ChatController {
-    private final ChatClient chatClient;
 
-    public ChatController(ChatClient chatClient) {
-        this.chatClient = chatClient;
+              <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                <pre class="text-slate-200"><span class="text-purple-400">package</span> <span class="text-slate-300">com.example.springai.controller;</span>
+
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.ai.chat.client.ChatClient;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.GetMapping;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.RequestMapping;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.RequestParam;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.web.bind.annotation.RestController;</span>
+
+<span class="text-slate-500">/**
+ * 💬 교재 41페이지 정규 REST API 대화형 컨트롤러 (ChatController)
+ */</span>
+<span class="text-yellow-400">@RestController</span>
+<span class="text-yellow-400">@RequestMapping</span>(<span class="text-green-300">"/api/chat"</span>) <span class="text-slate-500">// 🌟 공통 URL 접두사 매핑</span>
+<span class="text-blue-400">public class</span> <span class="text-emerald-400">ChatController</span> {
+
+    <span class="text-blue-400">private final</span> <span class="text-emerald-400">ChatClient</span> <span class="text-slate-200">chatClient</span>;
+
+    <span class="text-slate-500">// 🌟 생성자 주입</span>
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">ChatController</span>(<span class="text-emerald-400">ChatClient</span> <span class="text-slate-200">chatClient</span>) {
+        <span class="text-blue-400">this</span>.<span class="text-slate-200">chatClient</span> = <span class="text-slate-200">chatClient</span>;
     }
 
-    @GetMapping
-    public String chat(@RequestParam String message) {
-        return chatClient.prompt()
-                .user(message)
-                .call()
-                .content();
+    <span class="text-slate-500">// 🌟 GET http://localhost:8085/api/chat?message=질문내용</span>
+    <span class="text-yellow-400">@GetMapping</span>
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">String</span> <span class="text-yellow-300">chat</span>(<span class="text-yellow-400">@RequestParam</span> <span class="text-emerald-400">String</span> <span class="text-slate-200">message</span>) {
+        <span class="text-purple-400">return</span> <span class="text-slate-200">chatClient</span>.<span class="text-yellow-300">prompt</span>()
+                .<span class="text-yellow-300">user</span>(<span class="text-slate-200">message</span>)
+                .<span class="text-yellow-300">call</span>()
+                .<span class="text-yellow-300">content</span>();
     }
-}</div>
+}</pre>
+              </div>
             </div>
 
             <!-- Code 3: AiConfig.java -->
-            <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded bg-purple-600 text-white font-mono text-xs font-bold">멀티 프로바이더</span>
-                  <h4 class="font-black text-slate-900 text-base sm:text-lg">3. AiConfig.java — @Primary OpenAI & 로컬 Ollama 빈 구성</h4>
+            <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+              <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  </div>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-purple-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-purple-400"></i> AiConfig.java
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                    멀티 프로바이더 설정 (@Primary)
+                  </span>
                 </div>
-                <span class="text-xs font-mono text-slate-500">com.example.springai.config</span>
+                <span class="text-xs font-mono text-slate-400">src/main/java/com/example/springai/config/AiConfig.java</span>
               </div>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                스프링 컨테이너에 <code>OpenAI(GPT-4o-mini)</code>를 기본값(<code>@Primary</code>)으로 등록하고, 0원 로컬 <code>Ollama(qwen2.5:3b)</code>를 보조 창구로 등록합니다.
-              </p>
-              <div class="p-4 rounded-xl bg-slate-900 text-purple-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre select-all">
-@Configuration
-public class AiConfig {
-    @Primary
-    @Bean
-    public ChatClient chatClient(OpenAiChatModel openAiChatModel) {
-        return ChatClient.builder(openAiChatModel).build();
+
+              <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                <pre class="text-slate-200"><span class="text-purple-400">package</span> <span class="text-slate-300">com.example.springai.config;</span>
+
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.ai.chat.client.ChatClient;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.ai.ollama.OllamaChatModel;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.ai.openai.OpenAiChatModel;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.context.annotation.Bean;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.context.annotation.Configuration;</span>
+<span class="text-purple-400">import</span> <span class="text-slate-300">org.springframework.context.annotation.Primary;</span>
+
+<span class="text-slate-500">/**
+ * ⚙️ Spring AI 멀티 프로바이더 설정 클래스 (AiConfig)
+ */</span>
+<span class="text-yellow-400">@Configuration</span>
+<span class="text-blue-400">public class</span> <span class="text-emerald-400">AiConfig</span> {
+
+    <span class="text-slate-500">/**
+     * 🌟 1순위 기본 ChatClient (OpenAI GPT-4o-mini)
+     * @Primary: 컨트롤러에서 ChatClient를 주입받을 때 1등으로 선택됩니다!
+     */</span>
+    <span class="text-yellow-400">@Primary</span>
+    <span class="text-yellow-400">@Bean</span>
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">ChatClient</span> <span class="text-yellow-300">chatClient</span>(<span class="text-emerald-400">OpenAiChatModel</span> <span class="text-slate-200">openAiChatModel</span>) {
+        <span class="text-purple-400">return</span> <span class="text-emerald-400">ChatClient</span>.<span class="text-yellow-300">builder</span>(<span class="text-slate-200">openAiChatModel</span>).<span class="text-yellow-300">build</span>();
     }
 
-    @Bean(name = "ollamaChatClient")
-    public ChatClient ollamaChatClient(OllamaChatModel ollamaChatModel) {
-        return ChatClient.builder(ollamaChatModel).build();
+    <span class="text-slate-500">/**
+     * 🌟 2순위 로컬 전용 ChatClient (Ollama qwen2.5:3b)
+     * 0원 로컬 GPU 가속으로 호출하고 싶을 때 사용하는 보조 창구입니다.
+     */</span>
+    <span class="text-yellow-400">@Bean</span>(<span class="text-slate-300">name</span> = <span class="text-green-300">"ollamaChatClient"</span>)
+    <span class="text-blue-400">public</span> <span class="text-emerald-400">ChatClient</span> <span class="text-yellow-300">ollamaChatClient</span>(<span class="text-emerald-400">OllamaChatModel</span> <span class="text-slate-200">ollamaChatModel</span>) {
+        <span class="text-purple-400">return</span> <span class="text-emerald-400">ChatClient</span>.<span class="text-yellow-300">builder</span>(<span class="text-slate-200">ollamaChatModel</span>).<span class="text-yellow-300">build</span>();
     }
-}</div>
+}</pre>
+              </div>
             </div>
 
             <!-- Code 4: application.yml -->
-            <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded bg-amber-600 text-white font-mono text-xs font-bold">환경설정</span>
-                  <h4 class="font-black text-slate-900 text-base sm:text-lg">4. application.yml — 포트 8085 및 API Key 매핑</h4>
-                </div>
-                <span class="text-xs font-mono text-slate-500">src/main/resources</span>
-              </div>
-              <div class="p-4 rounded-xl bg-slate-900 text-amber-300 font-mono text-xs overflow-x-auto leading-relaxed whitespace-pre select-all">
-server:
-  port: 8085
-
-spring:
-  application:
-    name: spring-ai-lab
-  ai:
-    openai:
-      api-key: ${OPENAI_API_KEY:sk-proj-0LH6...}
-      chat:
-        options:
-          model: gpt-4o-mini
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        options:
-          model: qwen2.5:3b</div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- SUB-TAB 7: INTERACTIVE LIVE AI TESTER (8085 CONSOLE) -->
-        <div v-else-if="springAiSubTab === 'live_tester'" class="space-y-8">
-          
-          <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-emerald-400 shadow-md space-y-6 transition">
-            <div class="border-b border-slate-200 pb-4">
-              <span class="eyebrow text-emerald-800 font-bold text-xs sm:text-sm">7. Interactive Live AI Console</span>
-              <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
-                🚀 7장. 8085 Spring AI 실시간 대화 테스터 (Live Console)
-              </h2>
-              <p class="text-sm sm:text-base text-slate-600 font-medium mt-1">
-                현재 백그라운드에서 가동 중인 성민님의 Spring AI 서버(포트 8085)로 질문을 실시간 전송하고 OpenAI GPT-4o-mini의 응답을 직접 확인해 보세요!
-              </p>
-            </div>
-
-            <!-- Console Box -->
-            <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 text-white space-y-5 shadow-xl border border-slate-800">
-              
-              <!-- Endpoint Selector -->
-              <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+              <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
                 <div class="flex items-center gap-3">
-                  <span class="text-xs font-mono font-bold text-slate-400">호출 엔드포인트:</span>
-                  <label class="flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer text-emerald-400">
-                    <input type="radio" v-model="springAiEndpoint" value="hello" class="accent-emerald-500">
-                    <span>GET /hello (교재 35쪽)</span>
-                  </label>
-                  <label class="flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer text-sky-400">
-                    <input type="radio" v-model="springAiEndpoint" value="chat" class="accent-sky-500">
-                    <span>GET /api/chat (교재 41쪽)</span>
-                  </label>
-                </div>
-
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 font-mono text-xs font-bold border border-emerald-800 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 포트 8085 연결됨
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  </div>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-amber-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-amber-400"></i> application.yml
                   </span>
-                  <span v-if="springAiLatency > 0" class="px-2.5 py-1 rounded bg-slate-800 text-yellow-300 font-mono text-xs font-bold border border-slate-700">
-                    ⏱️ {{ springAiLatency }} ms
+                  <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                    환경설정 명세서
                   </span>
                 </div>
+                <span class="text-xs font-mono text-slate-400">src/main/resources/application.yml</span>
               </div>
 
-              <!-- Input Area -->
-              <div class="space-y-2">
-                <label class="block text-xs font-mono font-bold text-slate-300">질문 프롬프트 입력:</label>
-                <div class="flex flex-col sm:flex-row items-stretch gap-3">
-                  <input type="text" v-model="springAiInput" @keyup.enter="sendSpringAiTest"
-                         placeholder="AI에게 질문할 내용을 입력하세요..."
-                         class="flex-1 px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl font-mono text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-black transition">
-                  <button @click="sendSpringAiTest" :disabled="springAiLoading"
-                          class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 text-white font-extrabold text-sm sm:text-base rounded-xl transition shadow-md flex items-center justify-center gap-2 shrink-0">
-                    <i v-if="springAiLoading" class="fa-solid fa-spinner fa-spin"></i>
-                    <i v-else class="fa-solid fa-paper-plane"></i>
-                    <span>{{ springAiLoading ? 'AI 응답 작성 중...' : '실시간 전송' }}</span>
-                  </button>
-                </div>
-              </div>
+              <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                <pre class="text-slate-200"><span class="text-purple-400">server:</span>
+  <span class="text-sky-300">port:</span> <span class="text-yellow-300">8085</span>
 
-              <!-- Quick Prompt Buttons -->
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-xs text-slate-400 font-bold mr-1">추천 질문:</span>
-                <button v-for="q in ['Spring AI 장점 3줄 요약', 'ChatClient와 ChatModel 차이점은?', 'RAG가 무엇인가요?', 'Java 21의 가상 스레드란?']" :key="q"
-                        @click="springAiInput = q; sendSpringAiTest();"
-                        class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 transition">
-                  {{ q }}
-                </button>
+<span class="text-purple-400">spring:</span>
+  <span class="text-sky-300">application:</span>
+    <span class="text-sky-300">name:</span> <span class="text-green-300">spring-ai-lab</span>
+  <span class="text-purple-400">ai:</span>
+    <span class="text-sky-300">openai:</span>
+      <span class="text-sky-300">api-key:</span> <span class="text-green-300">${OPENAI_API_KEY:sk-proj-0LH6...}</span>
+      <span class="text-sky-300">chat:</span>
+        <span class="text-sky-300">options:</span>
+          <span class="text-sky-300">model:</span> <span class="text-green-300">gpt-4o-mini</span>
+    <span class="text-sky-300">ollama:</span>
+      <span class="text-sky-300">base-url:</span> <span class="text-green-300">http://localhost:11434</span>
+      <span class="text-sky-300">chat:</span>
+        <span class="text-sky-300">options:</span>
+          <span class="text-sky-300">model:</span> <span class="text-green-300">qwen2.5:3b</span></pre>
               </div>
-
-              <!-- Response Box -->
-              <div class="space-y-2 pt-2 border-t border-slate-800">
-                <span class="block text-xs font-mono font-bold text-slate-400">🤖 Spring AI (OpenAI GPT-4o-mini) 실시간 응답:</span>
-                <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 font-sans text-sm sm:text-base text-emerald-300 leading-relaxed whitespace-pre-wrap min-h-[100px] select-all">
-                  <span v-if="springAiLoading" class="text-slate-500 animate-pulse">인공지능 모델이 답변을 생성하는 중입니다...</span>
-                  <span v-else-if="!springAiResponse" class="text-slate-600">위의 '실시간 전송' 버튼을 누르면 8085 포트의 실제 Spring AI 서버 응답이 여기에 출력됩니다.</span>
-                  <span v-else>{{ springAiResponse }}</span>
-                </div>
-              </div>
-
             </div>
 
           </div>
@@ -4127,8 +4151,7 @@ public class LoggingAspect {
           { id: 'hybrid_strategy', title: '⚖️ 3. 0원 로컬 Ollama vs 클라우드 OpenAI 전략', icon: 'fa-solid fa-scale-balanced' },
           { id: 'fluent_chaining', title: '🍔 4. 햄버거 주문서로 배우는 Fluent API 4단계', icon: 'fa-solid fa-burger' },
           { id: 'config_secrets', title: '⚙️ 5. 환경설정의 비밀 (build.gradle BOM & yml)', icon: 'fa-solid fa-gears' },
-          { id: 'real_code_4', title: '💻 6. 실전 코드 4대장 라인별 전수 해부', icon: 'fa-solid fa-laptop-code' },
-          { id: 'live_tester', title: '🚀 7. 8085 Spring AI 실시간 대화 테스터', icon: 'fa-solid fa-terminal' }
+          { id: 'real_code_4', title: '💻 6. VS Code 실전 코드 4대장 라인별 전수 해부', icon: 'fa-solid fa-laptop-code' }
         ];
 
         function setSpringAiSubTab(tab) {
@@ -4158,33 +4181,7 @@ public class LoggingAspect {
     ChatModel -.->|설정 전환| OpenAI
     ChatModel -.->|설정 전환| Claude`;
 
-        // Live AI Console state
-        const springAiInput = ref('Spring AI의 핵심 장점을 비전공자도 이해하기 쉽게 한 문장으로 알려줘');
-        const springAiLoading = ref(false);
-        const springAiResponse = ref('');
-        const springAiLatency = ref(0);
-        const springAiEndpoint = ref('hello');
 
-        async function sendSpringAiTest() {
-          if (!springAiInput.value.trim() || springAiLoading.value) return;
-          springAiLoading.value = true;
-          springAiResponse.value = '';
-          const startTime = Date.now();
-          try {
-            const url = springAiEndpoint.value === 'hello' 
-              ? `http://localhost:8085/hello?q=${encodeURIComponent(springAiInput.value)}`
-              : `http://localhost:8085/api/chat?message=${encodeURIComponent(springAiInput.value)}`;
-            const res = await fetch(url);
-            const text = await res.text();
-            springAiLatency.value = Date.now() - startTime;
-            springAiResponse.value = text;
-          } catch (err) {
-            springAiLatency.value = Date.now() - startTime;
-            springAiResponse.value = `❌ 서버 연결 오류 (포트 8085 확인 필요): ${err.message}`;
-          } finally {
-            springAiLoading.value = false;
-          }
-        }
 
         const backendSubTab = ref('request_flow');
         const mermaidCodeRequestFlow = 'sequenceDiagram\n    autonumber\n    actor Client as 📱 손님 (스마트폰 앱)\n    participant Sec as 🛡️ Security Filter (JWT 검증)\n    participant Dispatcher as 📮 DispatcherServlet (중앙 안내소)\n    participant AOP as ⏱️ LoggingAspect (AOP 비서)\n    participant Controller as 🤵 DeliveryRoomController (카운터)\n    participant Service as 👨\u200d🍳 DeliveryRoomService (메인 주방장)\n    participant Repo as ❄️ DeliveryRoomRepository (창고지기)\n    participant DB as 🗄️ PostgreSQL DB (식자재 금고)\n\n    Client->>Sec: 1. POST /api/rooms + JSON {"title": "피자방", "fee": 3000}\n    Sec->>Dispatcher: 2. JWT 신분증 유효성 통과 확인\n    Dispatcher->>Controller: 3. URL 보고 createRoom() 매핑 & DTO 변환\n    Controller->>AOP: 4. 서비스 호출 전 시간 측정 시작 (start time)\n    AOP->>Service: 5. createRoom(request) 비즈니스 로직 실행\n    Note over Service: @Transactional 시작!<br/>1. 방 생성<br/>2. 방장을 1번 참가자로 자동 등록\n    Service->>Repo: 6. deliveryRoomRepository.save(room)\n    Repo->>DB: 7. INSERT INTO delivery_room ... SQL 자동 전송\n    DB-->>Repo: 8. 생성된 ID(101번) 반환\n    Repo-->>Service: 9. 영속 엔티티 반환\n    Note over Service: @Transactional commit 완료!\n    Service-->>AOP: 10. 비즈니스 결과 반환\n    AOP-->>Controller: 11. 시간 측정 종료 (소요 시간 8ms 기록)\n    Controller-->>Client: 12. 200 OK + Response.ok(savedRoom) JSON 발송!';
@@ -7509,12 +7506,6 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           springAiSubTabs,
           setSpringAiSubTab,
           mermaidCodeSpringAiArch,
-          springAiInput,
-          springAiLoading,
-          springAiResponse,
-          springAiLatency,
-          springAiEndpoint,
-          sendSpringAiTest,
           backendSubTab,
           mermaidCodeRequestFlow,
           backendSubTabs,
