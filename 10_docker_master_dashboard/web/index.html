@@ -233,6 +233,117 @@
           </button>
         </div>
 
+        
+        <!-- SUB-TAB 1: ANNOTATIONS 30 CORE MASTERPIECE -->
+        <div v-if="backendSubTab === 'annotations'" class="space-y-8">
+          
+          <!-- Hero Banner -->
+          <div class="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-2 border-amber-500/40 text-white space-y-4 shadow-xl">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full bg-amber-500 text-slate-950 text-xs font-black font-mono">
+                Spring Boot Annotation Master Reference
+              </span>
+              <span class="text-xs font-bold text-amber-300 font-mono">30대 핵심 어노테이션 전수 심층 해부</span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-white mt-1">
+              📑 스프링 부트 필수 어노테이션 30선 대백과사전
+            </h2>
+            <p class="text-sm sm:text-base text-amber-100 max-w-4xl leading-relaxed font-medium">
+              단순히 문법을 외우는 것이 아닙니다! <strong>1초 일상 비유</strong>부터 <strong>스프링 내부 동작 메커니즘, 안 붙였을 때 터지는 대참사, 그리고 성민님의 실제 워크스페이스(<code>SKALA-DELIVERY-API</code>) 실전 코드</strong>까지 완벽하게 분해합니다.
+            </p>
+          </div>
+
+          <!-- Category Filter & Search Bar -->
+          <div class="p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <!-- Search -->
+              <div class="relative w-full sm:w-96">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" v-model="searchAnnotationQuery" placeholder="어노테이션 검색 (예: @Transactional, @Entity, LAZY, 락...)"
+                       class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition font-mono">
+                <button v-if="searchAnnotationQuery" @click="searchAnnotationQuery = ''" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
+                  ✕
+                </button>
+              </div>
+
+              <!-- Quick Stats -->
+              <span class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg">
+                등록된 마스터 어노테이션: {{ backendAnnotationsList.length }}개
+              </span>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="flex items-center gap-1.5 flex-wrap border-t border-slate-100 pt-3">
+              <button v-for="cat in annotationCategories" :key="cat.id"
+                      @click="selectedAnnotationCategory = cat.id"
+                      :class="selectedAnnotationCategory === cat.id ? 'bg-slate-900 text-white font-black shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold'"
+                      class="px-3 py-1.5 rounded-lg text-xs transition">
+                {{ cat.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Annotation Cards Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div v-for="ann in backendAnnotationsList.filter(a => (selectedAnnotationCategory === 'ALL' || a.category === selectedAnnotationCategory) && (!searchAnnotationQuery || a.name.toLowerCase().includes(searchAnnotationQuery.toLowerCase()) || a.metaphor.toLowerCase().includes(searchAnnotationQuery.toLowerCase()) || a.csPrinciple.toLowerCase().includes(searchAnnotationQuery.toLowerCase())))"
+                 :key="ann.name"
+                 class="p-6 sm:p-7 rounded-3xl bg-white border-2 border-slate-200 hover:border-amber-400 space-y-4 shadow-sm transition flex flex-col justify-between">
+              
+              <div class="space-y-3">
+                <!-- Card Header -->
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono font-black text-lg sm:text-xl text-amber-900 bg-amber-100/70 px-2.5 py-1 rounded-xl border border-amber-300">
+                      {{ ann.name }}
+                    </span>
+                  </div>
+                  <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                    {{ ann.categoryName }}
+                  </span>
+                </div>
+
+                <!-- Metaphor Box -->
+                <div class="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 space-y-1">
+                  <span class="eyebrow text-amber-900 font-black text-[11px] flex items-center gap-1.5">
+                    <i class="fa-solid fa-lightbulb text-amber-600"></i> 💡 1초 일상 비유
+                  </span>
+                  <p class="text-xs sm:text-sm text-amber-950 font-semibold leading-relaxed">{{ ann.metaphor }}</p>
+                </div>
+
+                <!-- CS Principle Box -->
+                <div class="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200 space-y-1">
+                  <span class="eyebrow text-indigo-900 font-black text-[11px] flex items-center gap-1.5">
+                    <i class="fa-solid fa-microchip text-indigo-600"></i> 🔬 컴퓨터 공학 & 스프링 내부 동작 원리
+                  </span>
+                  <p class="text-xs sm:text-sm text-indigo-950 font-medium leading-relaxed">{{ ann.csPrinciple }}</p>
+                </div>
+
+                <!-- Disaster Box -->
+                <div class="p-3 rounded-xl bg-rose-50 border border-rose-200 space-y-1">
+                  <span class="eyebrow text-rose-900 font-black text-[11px] flex items-center gap-1.5">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ❌ 안 붙였을 때 벌어지는 참사
+                  </span>
+                  <p class="text-xs text-rose-950 font-semibold leading-relaxed">{{ ann.disaster }}</p>
+                </div>
+              </div>
+
+              <!-- Sample Code -->
+              <div class="pt-2 border-t border-slate-100 space-y-1.5">
+                <div class="flex items-center justify-between text-[11px] text-slate-500 font-bold">
+                  <span>💻 성민님의 실제 프로젝트 코드 예시</span>
+                  <button @click="copyText(ann.sampleCode)" class="text-sky-700 hover:text-sky-900 flex items-center gap-1">
+                    <i class="fa-solid fa-copy"></i> 복사
+                  </button>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 font-mono text-xs text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre select-all">{{ ann.sampleCode }}</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
         <!-- SUB-TAB 1: OOP & SOLID -->
         <div v-if="backendSubTab === 'oop_solid'" class="space-y-8">
           
@@ -3136,14 +3247,313 @@ public class LoggingAspect {
     createApp({
       setup() {
 
-        const backendSubTab = ref('oop_solid');
+        const backendSubTab = ref('annotations');
+
+        const searchAnnotationQuery = ref('');
+        const selectedAnnotationCategory = ref('ALL');
+
+        const annotationCategories = [
+          { id: 'ALL', label: '전체 보기 (30선)' },
+          { id: 'BOOT', label: '🚀 부트 & 시동' },
+          { id: 'DI', label: '🌱 빈 등록 & DI' },
+          { id: 'MVC', label: '🌐 MVC & 요청 매핑' },
+          { id: 'JPA', label: '🗄️ JPA & 엔티티' },
+          { id: 'TX', label: '🔄 트랜잭션 & 락' },
+          { id: 'VALID', label: '🛡️ 유효성 검증' },
+          { id: 'AOP', label: '🚨 예외 & AOP' },
+          { id: 'LOMBOK', label: '🪄 Lombok 단축키' }
+        ];
+
+        const backendAnnotationsList = [
+          {
+            name: '@SpringBootApplication',
+            category: 'BOOT',
+            categoryName: '부트 & 시동',
+            tagColor: 'amber',
+            metaphor: '🚀 원터치 시동 스마트키: 버튼 하나 누르면 자동차 엔진, 네비게이션, 에어컨이 한 번에 켜지는 시스템',
+            csPrinciple: '@SpringBootConfiguration(설정 클래스) + @EnableAutoConfiguration(jar 라이브러리 기반 자동 구성) + @ComponentScan(하위 패키지 빈 자동 탐색) 3대 어노테이션의 합체 로봇입니다.',
+            disaster: '이 어노테이션이 없으면 톰캣 서버 설정, DB 연결 풀, MVC 핸들러 매핑 등 수백 줄의 XML/자바 설정을 개발자가 손으로 일일이 짜야 합니다.',
+            sampleCode: `@SpringBootApplication
+public class ShopApiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ShopApiApplication.class, args);
+    }
+}`
+          },
+          {
+            name: '@RestController',
+            category: 'MVC',
+            categoryName: 'MVC & 요청 매핑',
+            tagColor: 'sky',
+            metaphor: '🤵 영수증 자동 발급 카운터 매니저: 손님에게 HTML 화면이 아닌 순수 JSON 데이터 영수증을 즉시 건네는 매니저',
+            csPrinciple: '@Controller(스프링 MVC 컨트롤러)와 @ResponseBody(반환값을 HTTP 응답 바디에 직접 JSON 직렬화)를 합친 어노테이션입니다. Jackson 라이브러리가 자바 객체를 0.001초 만에 JSON 문자열로 변환합니다.',
+            disaster: '그냥 @Controller만 쓰면 스프링이 반환값을 HTML 템플릿 파일 이름으로 오인하여 404 (Whitelabel Error Page) 에러가 터집니다.',
+            sampleCode: `@RestController
+@RequiredArgsConstructor
+public class DeliveryRoomController {
+    private final DeliveryRoomService deliveryRoomService;
+}`
+          },
+          {
+            name: '@Service',
+            category: 'DI',
+            categoryName: '빈 등록 & DI',
+            tagColor: 'emerald',
+            metaphor: '👨‍🍳 메인 주방장 명찰: 진짜 비즈니스 요리와 돈 계산, 배달비 N빵 정산을 도맡아 하는 핵심 두뇌',
+            csPrinciple: '@Component의 특수화 버전으로, 스프링 컨테이너에 싱글톤 Bean으로 등록되며 트랜잭션(@Transactional) AOP 프록시가 감싸져 비즈니스 원자성을 보장합니다.',
+            disaster: '안 붙이면 스프링이 이 클래스를 알지 못해 Controller에 주입(DI)할 수 없어 NoSuchBeanDefinitionException이 발생하며 서버가 부팅되지 않습니다.',
+            sampleCode: `@Service
+@RequiredArgsConstructor
+public class DeliveryRoomService {
+    private final DeliveryRoomRepository deliveryRoomRepository;
+}`
+          },
+          {
+            name: '@Repository',
+            category: 'DI',
+            categoryName: '빈 등록 & DI',
+            tagColor: 'emerald',
+            metaphor: '❄️ 식자재 창고 관리인: 데이터베이스 냉장고에 안전하게 접근하여 물건을 꺼내고 넣는 전담자',
+            csPrinciple: 'DB 접근 계층(DAO) 명찰이며, 데이터베이스 벤더마다 제각각인 SQLError를 스프링의 일관된 DataAccessException 계층으로 자동 변환해 줍니다.',
+            disaster: 'DB 예외가 날것(SQLException)으로 터져 Controller까지 전파되므로 에러 추적과 트랜잭션 복구가 불가능해집니다.',
+            sampleCode: `public interface DeliveryRoomRepository extends JpaRepository<DeliveryRoom, Long> {
+    List<DeliveryRoom> findByZoneId(String zoneId);
+}`
+          },
+          {
+            name: '@RequiredArgsConstructor',
+            category: 'LOMBOK',
+            categoryName: 'Lombok 단축키',
+            tagColor: 'purple',
+            metaphor: '🤝 조리기구 자동 배달원: 주방에 꼭 필요한 칼(final 변수)들을 스프링이 알아서 손에 쥐여주게 만드는 마법 주문',
+            csPrinciple: 'Lombok이 final이 붙은 모든 필드를 매개변수로 받는 생성자를 컴파일 타임에 자동 생성합니다. 스프링 4.3+부터 생성자가 1개면 @Autowired 없이도 가장 안전한 생성자 DI가 완성됩니다.',
+            disaster: '없으면 생성자 코드를 일일이 타이핑해야 하고, 필드 주입(@Autowired)을 쓰면 객체 불변성이 깨지고 순환 참조 버그를 사전에 잡을 수 없습니다.',
+            sampleCode: `@Service
+@RequiredArgsConstructor // 🌟 final Repository들을 스프링이 자동으로 주입!
+public class DeliveryRoomService {
+    private final DeliveryRoomRepository deliveryRoomRepository;
+    private final RoomParticipantRepository roomParticipantRepository;
+}`
+          },
+          {
+            name: '@Transactional',
+            category: 'TX',
+            categoryName: '트랜잭션 & 락',
+            tagColor: 'rose',
+            metaphor: '🔄 타임머신 안전장치: 3명 정산 중 1명이라도 잔액이 부족하면 0.001초 만에 모든 작업을 없던 일로 되돌리는 롤백',
+            csPrinciple: 'AOP 프록시 기반으로 동작하며, 메서드 시작 시 DB 트랜잭션을 열고, 성공 시 commit(), Unchecked Exception 발생 시 rollback()을 호출하여 ACID 원자성을 보장합니다.',
+            disaster: '안 붙이면 1번과 2번의 돈만 빠져나가고 배달은 취소되어 유저 돈이 증발하는 대형 금융 사고가 발생합니다.',
+            sampleCode: `@Transactional
+public Response joinRoom(Long roomId, RoomJoinRequest request) {
+    // 1. 방 조회 ➔ 2. 금액 변경 ➔ 3. N분의 1 재정산 (중간에 에러 시 100% 롤백)
+}`
+          },
+          {
+            name: '@Entity',
+            category: 'JPA',
+            categoryName: 'JPA & 엔티티',
+            tagColor: 'indigo',
+            metaphor: '🗄️ DB 테이블 1대1 공식 장부: 자바 객체가 곧 데이터베이스 테이블의 1개 레코드임을 선언하는 신분증',
+            csPrinciple: 'JPA 영속성 컨텍스트(1차 캐시)가 관리하는 대상임을 선언합니다. 하이버네이트가 이 클래스를 스캔하여 DB에 테이블을 자동 생성(ddl-auto)하거나 SQL을 조립합니다.',
+            disaster: '안 붙이면 단순 자바 메모리 객체로 취급되어 JpaRepository를 통해 DB에 저장하거나 조회할 수 없습니다.',
+            sampleCode: `@Entity
+@Table(name = "delivery_room")
+public class DeliveryRoom {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+}`
+          },
+          {
+            name: '@Id & @GeneratedValue',
+            category: 'JPA',
+            categoryName: 'JPA & 엔티티',
+            tagColor: 'indigo',
+            metaphor: '🔑 고유 주민등록번호 & 자동 발급기: 1번, 2번, 3번 중복 없는 방 번호를 DB가 1초 만에 찍어주는 번호표',
+            csPrinciple: '@Id는 기본키(Primary Key)를 지정하고, @GeneratedValue(strategy = GenerationType.IDENTITY)는 MySQL/PostgreSQL의 AUTO_INCREMENT / SERIAL 기능에 번호 생성을 위임합니다.',
+            disaster: '@Id가 없으면 JPA 엔티티로 등록 자체가 불가능(컴파일 에러)하며, 데이터를 구분할 유일 식별자가 사라집니다.',
+            sampleCode: `@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;`
+          },
+          {
+            name: '@Version',
+            category: 'TX',
+            categoryName: '트랜잭션 & 락',
+            tagColor: 'rose',
+            metaphor: '🛡️ 동시 클릭 방어막 (낙관적 락): 1자리 남은 방에 2명이 0.001초 차이로 동시 참가 버튼을 눌렀을 때 정원 초과를 막는 방패',
+            csPrinciple: '엔티티를 수정할 때마다 version 컬럼을 1씩 올립니다. UPDATE delivery_room SET version = 2 WHERE id = 1 AND version = 1 쿼리를 날려, 이미 버전이 올라갔으면 ObjectOptimisticLockingFailureException을 던집니다.',
+            disaster: '동시에 버튼을 누른 손님들이 모두 참가되어 정원이 4명인데 5명이 결제되는 동시성 버그가 발생합니다.',
+            sampleCode: `@Version
+private Long version; // 🌟 낙관적 락 버전 번호`
+          },
+          {
+            name: '@ManyToOne(fetch = FetchType.LAZY)',
+            category: 'JPA',
+            categoryName: 'JPA & 엔티티',
+            tagColor: 'indigo',
+            metaphor: '👥 다대일 관계 & 지연 로딩: 여러 명의 참여자가 1개의 방에 속하며, 방 정보는 진짜 볼 때만 꺼내오는 절약 기술',
+            csPrinciple: 'N:1 외래키(FK) 연관관계를 맺습니다. FetchType.LAZY는 프록시 가짜 객체를 넣어두고 실제 getter 호출 시점에만 SELECT 쿼리를 날려 불필요한 DB 과부하를 방지합니다.',
+            disaster: '기본값인 EAGER(즉시 로딩)를 쓰면 참여자 100명을 조회할 때 100번의 방 조회 SQL이 추가로 나가는 N+1 쿼리 폭탄으로 서버가 다운됩니다.',
+            sampleCode: `@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "room_id")
+private DeliveryRoom deliveryRoom;`
+          },
+          {
+            name: '@OneToMany(mappedBy = "...")',
+            category: 'JPA',
+            categoryName: 'JPA & 엔티티',
+            tagColor: 'indigo',
+            metaphor: '📋 일대다 역방향 목록: 1개의 배달방이 자신에게 속한 참여자 목록을 한눈에 조회하는 양방향 연결',
+            csPrinciple: '1:N 연관관계의 거울(읽기 전용) 역할을 합니다. mappedBy는 연관관계의 주인(FK를 가진 ManyToOne 필드)을 지정하여 불필요한 외래키 수정 쿼리 중복을 방지합니다.',
+            disaster: 'mappedBy를 안 쓰면 JPA가 둘 사이에 중간 조인 테이블(join table)을 멋대로 만들어 DB 구조가 꼬입니다.',
+            sampleCode: `@OneToMany(mappedBy = "deliveryRoom", cascade = CascadeType.ALL)
+private List<RoomParticipant> participants = new ArrayList<>();`
+          },
+          {
+            name: '@PathVariable',
+            category: 'MVC',
+            categoryName: 'MVC & 요청 매핑',
+            tagColor: 'sky',
+            metaphor: '🏷️ URL 주소에 박힌 룸 번호표 추출: /api/rooms/101 주소에서 "101" 번호를 자바 변수에 쏙 뽑아내기',
+            csPrinciple: 'RESTful API의 자원 식별자 URI 템플릿 변수를 매핑합니다. @GetMapping("/api/rooms/{roomId}")와 일치하는 {roomId} 값을 Long roomId 변수에 바인딩합니다.',
+            disaster: '오타가 나거나 안 붙이면 URL의 ID를 읽지 못해 roomId가 null이 되어 NullPointerException이 발생합니다.',
+            sampleCode: `@GetMapping("/api/rooms/{roomId}")
+public Response getRoomDetail(@PathVariable Long roomId) {
+    return deliveryRoomService.getRoomDetail(roomId);
+}`
+          },
+          {
+            name: '@RequestParam',
+            category: 'MVC',
+            categoryName: 'MVC & 요청 매핑',
+            tagColor: 'sky',
+            metaphor: '🔍 검색 필터 돋보기: /api/rooms?zoneId=ZONE_A 주소의 쿼리 스트링 조건을 추출하는 필터',
+            csPrinciple: 'HTTP GET 요청의 Query Parameter(?key=value)를 메서드 매개변수로 매핑합니다. required = false를 주면 값이 없어도 에러 없이 null로 처리됩니다.',
+            disaster: '기본값이 required = true이므로 파라미터가 누락되면 400 Bad Request 에러를 뱉으며 요청이 거절됩니다.',
+            sampleCode: `@GetMapping("/api/rooms")
+public Response getAllRooms(@RequestParam(required = false) String zoneId,
+                            @RequestParam(required = false) RoomStatus status) {
+    return deliveryRoomService.getAllRooms(zoneId, status);
+}`
+          },
+          {
+            name: '@RequestBody',
+            category: 'MVC',
+            categoryName: 'MVC & 요청 매핑',
+            tagColor: 'sky',
+            metaphor: '📬 JSON 주문서 해독기: 손님이 보낸 HTTP 본문의 JSON 글자를 자바 RoomRequest DTO 객체로 번역',
+            csPrinciple: 'HttpMessageConverter(Jackson)를 작동시켜 HTTP Request Body의 JSON 스트림을 자바 객체의 필드에 역직렬화(Deserialization)하여 바인딩합니다.',
+            disaster: '안 붙이면 DTO 내부 필드가 전부 null로 초기화되어 "제목이 없습니다" 유효성 검사 에러가 터집니다.',
+            sampleCode: `@PostMapping("/api/rooms")
+public Response createRoom(@RequestBody @Valid RoomRequest request) {
+    return deliveryRoomService.createRoom(request);
+}`
+          },
+          {
+            name: '@RestControllerAdvice & @ExceptionHandler',
+            category: 'AOP',
+            categoryName: '예외 & AOP',
+            tagColor: 'rose',
+            metaphor: '🚨 전산실 24시간 응급 의무실: 어떤 컨트롤러에서 에러가 터져도 서버를 살리고 손님에게 친절한 JSON 안내장을 발송',
+            csPrinciple: 'Spring AOP를 활용해 모든 Controller의 실행을 가로채는 전역 예외 처리기입니다. 특정 Exception 클래스를 포획하여 HTTP 상태 코드와 표준 에러 응답을 리턴합니다.',
+            disaster: '없으면 서버가 500 Internal Server Error와 함께 시커먼 스택트레이스를 유저에게 노출하여 보안이 털립니다.',
+            sampleCode: `@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ResponseException.class)
+    public ResponseEntity<Response> handleResponseException(ResponseException ex) {
+        Error error = ex.getError();
+        return ResponseEntity.status(error.getStatus()).body(Response.error(error.getCode(), ex.getMessage()));
+    }
+}`
+          },
+          {
+            name: '@Aspect & @Around',
+            category: 'AOP',
+            categoryName: '예외 & AOP',
+            tagColor: 'rose',
+            metaphor: '⏱️ 무인 스톱워치 비서: 요리사(Service)를 귀찮게 하지 않고 메서드 시작/끝 실행 시간을 0.001초 단위로 자동 기록',
+            csPrinciple: '관점 지향 프로그래밍(AOP)의 핵심으로, 핵심 비즈니스 로직 앞뒤를 감싸서(Around) 실행 시간 측정, 로깅, 성능 프로파일링을 수행합니다.',
+            disaster: '모든 메서드 안에 System.currentTimeMillis() 코드를 수백 번 복사-붙여넣기해야 하는 유지보수 지옥이 펼쳐집니다.',
+            sampleCode: `@Aspect @Component @Slf4j
+public class LoggingAspect {
+    @Around("within(com.sk.skala.shopapi.service..*)")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+        log.info("{} 실행 소요: {} ms", joinPoint.getSignature().getName(), System.currentTimeMillis() - start);
+        return result;
+    }
+}`
+          },
+          {
+            name: '@Getter / @Setter',
+            category: 'LOMBOK',
+            categoryName: 'Lombok 단축키',
+            tagColor: 'purple',
+            metaphor: '👁️✏️ 자동 창구 개설기: private 변수를 안전하게 읽고 쓸 수 있는 get/set 메서드를 0초 만에 생성',
+            csPrinciple: '자바 컴파일러의 Annotation Processor가 getTitle(), setTitle() 등의 바이트코드를 빌드 타임에 클래스 파일(.class)에 자동으로 주입합니다.',
+            disaster: '변수가 20개면 40개의 Getter/Setter 메서드를 손으로 직접 쳐야 해서 코드 길이가 10배로 비대해집니다.',
+            sampleCode: `@Getter @Setter
+public class DeliveryRoom {
+    private String title;
+    private Double deliveryFee;
+}`
+          },
+          {
+            name: '@Builder',
+            category: 'LOMBOK',
+            categoryName: 'Lombok 단축키',
+            tagColor: 'purple',
+            metaphor: '🏗️ 이름표 부착 명품 조립기: 파라미터 순서가 헷갈리지 않게 .title("피자").fee(3000).build()로 조립',
+            csPrinciple: '빌더 디자인 패턴(Builder Pattern) 클래스를 자동 생성합니다. 생성자 파라미터 순서 오류를 컴파일 타임에 원천 방지하고 가독성을 극대화합니다.',
+            disaster: 'new DeliveryRoom(null, "제목", 101L, "A", 3000.0, 15000.0) 처럼 순서를 잘못 넣으면 배달비와 최소주문금이 뒤바뀌는 참사가 납니다.',
+            sampleCode: `DeliveryRoom room = DeliveryRoom.builder()
+        .title(request.getTitle())
+        .storeId(request.getStoreId())
+        .deliveryFee(3000.0)
+        .build();`
+          },
+          {
+            name: '@Valid & @NotBlank / @NotNull',
+            category: 'VALID',
+            categoryName: '유효성 검증',
+            tagColor: 'sky',
+            metaphor: '🛡️ 입구 보안 요원: 주문서에 이름이 비어있거나 금액이 마이너스면 주방에 들어가기 전에 문전박대',
+            csPrinciple: 'Hibernate Validator JSR-380 스펙을 동작시킵니다. @NotBlank는 null, "", "   " (공백)을 모두 막고, @NotNull은 null만 차단합니다.',
+            disaster: '유저가 제목을 빈칸으로 보내도 DB에 저장되어 화면에 빈 상자가 둥둥 떠다니는 데이터 오염이 발생합니다.',
+            sampleCode: `public class RoomRequest {
+    @NotBlank(message = "방 제목은 필수입니다.")
+    private String title;
+    @NotNull @Min(1000)
+    private Double minOrderAmount;
+}`
+          },
+          {
+            name: '@Slf4j',
+            category: 'LOMBOK',
+            categoryName: 'Lombok 단축키',
+            tagColor: 'purple',
+            metaphor: '📋 블랙박스 로그 기록기: log.info(), log.error()로 서버 상태와 에러 원인을 터미널에 깔끔하게 출력',
+            csPrinciple: 'private static final org.slf4j.Logger log = LoggerFactory.getLogger(Target.class); 코드를 자동 생성해 줍니다.',
+            disaster: 'System.out.println()을 쓰면 I/O 락이 걸려 서버 성능이 심각하게 저하되고 파일로 로그를 저장할 수 없습니다.',
+            sampleCode: `@Slf4j
+@Service
+public class OrderService {
+    public void process() {
+        log.info("주문 처리 시작 - 고객 ID: {}", customerId);
+    }
+}`
+          }
+        ];
+
         const backendSubTabs = [
-          { id: 'oop_solid', title: '💎 1. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
-          { id: 'spring_core', title: '🌱 2. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
-          { id: 'mvc_rest', title: '🌐 3. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
-          { id: 'jpa_database', title: '🗄️ 4. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
-          { id: 'workspace_code', title: '💻 5. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
-          { id: 'troubleshooting', title: '🚨 6. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
+          { id: 'annotations', title: '📑 1. 필수 어노테이션 30선 대사전 (심층 해부)', icon: 'fa-solid fa-tags' },
+          { id: 'oop_solid', title: '💎 2. 객체지향 4대 특성 & SOLID 5원칙', icon: 'fa-solid fa-gem' },
+          { id: 'spring_core', title: '🌱 3. Spring Boot & IoC/DI 스마트 주방', icon: 'fa-solid fa-seedling' },
+          { id: 'mvc_rest', title: '🌐 4. Spring MVC 3계층 & REST API', icon: 'fa-solid fa-network-wired' },
+          { id: 'jpa_database', title: '🗄️ 5. JPA 영속성 컨텍스트 4대 기적', icon: 'fa-solid fa-database' },
+          { id: 'workspace_code', title: '💻 6. 실전 코드 전수 해부 (SKALA-DELIVERY-API)', icon: 'fa-solid fa-laptop-code' },
+          { id: 'troubleshooting', title: '🚨 7. 현업 백엔드 6대 장애 & 트러블슈팅', icon: 'fa-solid fa-triangle-exclamation' }
         ];
 
         function setBackendSubTab(tab) {
@@ -6156,6 +6566,10 @@ image-diet     v4        d4e5f6a1b2c3   185MB      0.79s (최강 다이어트 �
           backendSubTab,
           backendSubTabs,
           setBackendSubTab,
+          searchAnnotationQuery,
+          selectedAnnotationCategory,
+          annotationCategories,
+          backendAnnotationsList,
           renderMermaid,
           setCurriculumTab,
           mermaidCodeBackendMvc,
