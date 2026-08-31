@@ -535,40 +535,114 @@ return chatClient.prompt()
           
           <div class="p-8 sm:p-10 rounded-3xl bg-white border-2 border-slate-200 hover:border-purple-400 shadow-md space-y-6 transition">
             <div class="border-b border-slate-200 pb-4">
-              <span class="eyebrow text-purple-800 font-bold text-xs sm:text-sm">5. Configuration Secrets & Priority Rules</span>
+              <span class="eyebrow text-purple-800 font-bold text-xs sm:text-sm">5. Configuration Secrets & Dependency Management</span>
               <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
-                ⚙️ 5장. 환경설정의 비밀 (build.gradle BOM & yml 우선순위 5단계)
+                ⚙️ 5장. build.gradle BOM 마법과 환경설정 우선순위 5단계
               </h2>
+              <p class="text-sm sm:text-base text-slate-600 font-medium mt-1">
+                스프링 AI의 수많은 하위 모듈 버전을 단 한 줄로 통일 관리하는 BOM(Bill of Materials)과 실제 <code>build.gradle</code> 전체 소스코드를 해부합니다.
+              </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <!-- BOM Secret -->
-              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-                <h4 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
-                  <i class="fa-solid fa-box-open text-purple-600"></i> 1. Spring AI BOM (Bill of Materials)
-                </h4>
-                <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                  OpenAI, Ollama, VectorStore 등 수십 개의 스타터 라이브러리 버전을 일일이 적지 않고, <code>spring-ai-bom:1.0.0-M6</code> 하나로 <strong>전체 버전 충돌을 0으로 통일 관리</strong>합니다.
-                </p>
-                <div class="p-3 rounded-xl bg-slate-900 text-purple-300 font-mono text-xs overflow-x-auto whitespace-pre">
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.ai:spring-ai-bom:1.0.0-M6'
-    }
-}</div>
+            <!-- VS Code Editor: build.gradle (dependencyManagement & dependencies) -->
+            <div class="rounded-2xl border-2 border-slate-800 bg-slate-950 overflow-hidden shadow-xl space-y-0">
+              <div class="bg-slate-900 px-5 py-3 flex items-center justify-between border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  </div>
+                  <span class="font-mono text-xs sm:text-sm font-bold text-purple-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-file-code text-purple-400"></i> build.gradle
+                  </span>
+                  <span class="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
+                    BOM 의존성 관리 & 라이브러리 명세서
+                  </span>
+                </div>
+                <span class="text-xs font-mono text-slate-400">spring-ai-lab/build.gradle</span>
               </div>
 
-              <!-- Priority 5 Stages (PDF Page 37) -->
-              <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-3">
-                <h4 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
-                  <i class="fa-solid fa-layer-group text-sky-600"></i> 2. 설정이 겹치면 무엇이 이기나? (우선순위 5단계)
-                </h4>
-                <div class="space-y-1.5 font-mono text-xs text-slate-800">
-                  <div class="p-2 rounded bg-rose-100 text-rose-950 font-bold">1위 (가장 강함): 커맨드라인 인자 (--spring.ai...)</div>
-                  <div class="p-2 rounded bg-amber-100 text-amber-950 font-bold">2위: OS 환경변수 (SPRING_AI_OPENAI_API_KEY)</div>
-                  <div class="p-2 rounded bg-sky-100 text-sky-950">3위: application-{profile}.yml</div>
-                  <div class="p-2 rounded bg-slate-200 text-slate-950">4위: application.yml (공통 기본값)</div>
-                  <div class="p-2 rounded bg-slate-100 text-slate-600">5위 (가장 약함): 자바 코드 내 @Value 기본값</div>
+              <div class="p-5 sm:p-6 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed select-all">
+                <pre class="text-slate-200"><span class="text-slate-500">// 🌟 1. 플러그인 설정: 스프링 부트 및 의존성 관리자 장착</span>
+<span class="text-yellow-400">plugins</span> {
+    <span class="text-yellow-300">id</span> <span class="text-green-300">'java'</span>
+    <span class="text-yellow-300">id</span> <span class="text-green-300">'org.springframework.boot'</span> <span class="text-purple-400">version</span> <span class="text-green-300">'3.3.4'</span>
+    <span class="text-yellow-300">id</span> <span class="text-green-300">'io.spring.dependency-management'</span> <span class="text-purple-400">version</span> <span class="text-green-300">'1.1.6'</span>
+}
+
+<span class="text-slate-500">// 🌟 2. 자바 21 LTS 툴체인 설정</span>
+<span class="text-yellow-400">java</span> {
+    <span class="text-yellow-400">toolchain</span> {
+        <span class="text-slate-200">languageVersion</span> = <span class="text-slate-300">JavaLanguageVersion</span>.<span class="text-yellow-300">of</span>(<span class="text-yellow-300">21</span>)
+    }
+}
+
+<span class="text-slate-500">// 🌟 3. 원격 라이브러리 저장소 (Spring Milestone 포함)</span>
+<span class="text-yellow-400">repositories</span> {
+    <span class="text-yellow-300">mavenCentral</span>()
+    <span class="text-yellow-300">maven</span> { <span class="text-slate-200">url</span> <span class="text-green-300">'https://repo.spring.io/milestone'</span> }
+}
+
+<span class="text-slate-500">/**
+ * 🌟 4. [핵심] Spring AI BOM (Bill of Materials) 의존성 관리 블록
+ * 
+ * [비전공자 1초 해설]:
+ * - 아래 dependencies에 'spring-ai-openai'나 'spring-ai-ollama'를 넣을 때
+ * - 뒤에 버전을 일일이 적지 않아도, 이 BOM이 '1.0.0-M6' 황금 호환 버전으로 자동 통일해 줍니다!
+ */</span>
+<span class="text-yellow-400">dependencyManagement</span> {
+    <span class="text-yellow-400">imports</span> {
+        <span class="text-yellow-300">mavenBom</span> <span class="text-green-300">'org.springframework.ai:spring-ai-bom:1.0.0-M6'</span>
+    }
+}
+
+<span class="text-slate-500">// 🌟 5. 실제 프로젝트에 조립되는 부품 목록</span>
+<span class="text-yellow-400">dependencies</span> {
+    <span class="text-slate-500">// 톰캣 웹 서버 및 REST API</span>
+    <span class="text-yellow-300">implementation</span> <span class="text-green-300">'org.springframework.boot:spring-boot-starter-web'</span>
+
+    <span class="text-slate-500">// OpenAI (GPT-4o / GPT-4o-mini) 스타터 드라이버</span>
+    <span class="text-yellow-300">implementation</span> <span class="text-green-300">'org.springframework.ai:spring-ai-openai-spring-boot-starter'</span>
+
+    <span class="text-slate-500">// 로컬 Ollama (qwen2.5:3b) 스타터 드라이버 (0원 로컬 GPU 가속)</span>
+    <span class="text-yellow-300">implementation</span> <span class="text-green-300">'org.springframework.ai:spring-ai-ollama-spring-boot-starter'</span>
+
+    <span class="text-slate-500">// Swagger UI 브라우저 대화형 테스트 화면</span>
+    <span class="text-yellow-300">implementation</span> <span class="text-green-300">'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'</span>
+
+    <span class="text-slate-500">// Lombok Getter/Setter 자동화</span>
+    <span class="text-yellow-300">compileOnly</span> <span class="text-green-300">'org.projectlombok:lombok'</span>
+    <span class="text-yellow-300">annotationProcessor</span> <span class="text-green-300">'org.projectlombok:lombok'</span>
+}</pre>
+              </div>
+            </div>
+
+            <!-- Priority 5 Stages Matrix -->
+            <div class="p-6 rounded-2xl bg-slate-50 border-2 border-slate-200 space-y-4">
+              <h4 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-sky-600"></i> 설정이 겹칠 때의 덮어쓰기 우선순위 5단계 (교재 37쪽)
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 font-mono text-xs text-center">
+                <div class="p-3.5 rounded-xl bg-rose-900 text-rose-200 font-bold border border-rose-700">
+                  <span class="text-[10px] text-rose-300 block">1위 (최강자)</span>
+                  커맨드라인 인자<br/><span class="text-[11px] font-normal text-rose-100">--server.port=...</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-amber-900 text-amber-200 font-bold border border-amber-700">
+                  <span class="text-[10px] text-amber-300 block">2위</span>
+                  OS 환경변수<br/><span class="text-[11px] font-normal text-amber-100">SPRING_AI_OPENAI...</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-sky-900 text-sky-200 font-bold border border-sky-700">
+                  <span class="text-[10px] text-sky-300 block">3위</span>
+                  프로파일 YML<br/><span class="text-[11px] font-normal text-sky-100">application-dev.yml</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-800 text-slate-200 font-bold border border-slate-700">
+                  <span class="text-[10px] text-slate-400 block">4위</span>
+                  기본 YML<br/><span class="text-[11px] font-normal text-slate-300">application.yml</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-900 text-slate-400 font-bold border border-slate-800">
+                  <span class="text-[10px] text-slate-500 block">5위 (최약체)</span>
+                  코드 기본값<br/><span class="text-[11px] font-normal text-slate-400">@Value("${...:def}")</span>
                 </div>
               </div>
             </div>
