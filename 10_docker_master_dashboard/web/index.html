@@ -350,8 +350,11 @@ return chatClient.prompt()
                 </button>
               </div>
 
-              <div class="p-4 sm:p-6 rounded-2xl bg-slate-950 overflow-x-auto flex justify-center shadow-inner">
-                <pre class="mermaid text-xs sm:text-sm">{{ mermaidCodeSpringAiArch }}</pre>
+              <div class="p-4 sm:p-6 rounded-2xl bg-slate-950 flex flex-col items-center gap-6 shadow-inner">
+                <img src="/img/spring_ai_arch.jpg" alt="Spring AI Architecture Diagram" class="w-full max-w-4xl rounded-2xl border border-slate-800 shadow-2xl object-contain">
+                <div class="w-full overflow-x-auto border-t border-slate-800/80 pt-4">
+                  <pre class="mermaid text-xs sm:text-sm flex justify-center">{{ mermaidCodeSpringAiArch }}</pre>
+                </div>
               </div>
             </div>
 
@@ -4743,8 +4746,11 @@ public class LoggingAspect {
               </button>
             </div>
 
-            <div class="p-4 rounded-xl bg-slate-950 overflow-x-auto flex justify-center">
-              <pre class="mermaid text-xs sm:text-sm">{{ mermaidCode4 }}</pre>
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-950 flex flex-col items-center gap-6 shadow-inner">
+              <img src="/img/k8s_infra_arch.jpg" alt="Kubernetes Infrastructure Architecture Diagram" class="w-full max-w-4xl rounded-2xl border border-slate-800 shadow-2xl object-contain">
+              <div class="w-full overflow-x-auto border-t border-slate-800/80 pt-4">
+                <pre class="mermaid text-xs sm:text-sm flex justify-center">{{ mermaidCode4 }}</pre>
+              </div>
             </div>
           </div>
         </div>
